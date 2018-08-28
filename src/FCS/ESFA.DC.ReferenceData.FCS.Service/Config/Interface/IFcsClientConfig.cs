@@ -8,9 +8,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Config.Interface
     {
         string FeedUri { get; }
 
-        string AADInstance { get; }
-
-        string Tenant { get; }
+        string Authority { get; }
 
         string ResourceId { get; }
 

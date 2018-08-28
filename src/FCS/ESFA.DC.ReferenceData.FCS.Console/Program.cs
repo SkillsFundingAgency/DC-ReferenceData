@@ -20,12 +20,11 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             return new FcsClientConfig()
             {
-                AADInstance = appSettings["AADInstance"],
+                Authority = appSettings["Authority"],
                 AppKey = appSettings["AppKey"],
                 ClientId = appSettings["ClientId"],
                 FeedUri = appSettings["FeedUri"],
                 ResourceId = appSettings["ResourceId"],
-                Tenant = appSettings["Tenant"]
             };
         }
     }
