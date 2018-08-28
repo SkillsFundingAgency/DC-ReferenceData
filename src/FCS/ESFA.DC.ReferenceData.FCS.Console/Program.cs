@@ -1,9 +1,7 @@
 ﻿using System.Configuration;
-using System.Threading.Tasks;
 using ESFA.DC.ReferenceData.FCS.Service;
 using ESFA.DC.ReferenceData.FCS.Service.Config;
 using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
-using RestSharp;
 
 namespace ESFA.DC.ReferenceData.FCS.Console
 {
@@ -15,7 +13,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var accessTokenProvider = new AccessTokenProvider(fcsClientConfig);
 
-            var httpClient = new FcsHttpClientFactory(accessTokenProvider, fcsClientConfig).Create();
+            var httpClient = new FcsHttpClientFactory(accessTokenProvider).Create();
 
             var syndicationFeedService = new SyndicationFeedService(httpClient);
 

@@ -1,20 +1,18 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
-using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
-using RestSharp;
 
 namespace ESFA.DC.ReferenceData.FCS.Service
 {
     public class FcsHttpClientFactory : IHttpClientFactory
     {
-        private readonly IAccessTokenProvider _accessTokenProvider;
-        private readonly IFcsClientConfig _fcsClientConfig;
+        private const string MediaType = @"application/vnd.sfa.contract.v1+atom+xml";
 
-        public FcsHttpClientFactory(IAccessTokenProvider accessTokenProvider, IFcsClientConfig fcsClientConfig)
+        private readonly IAccessTokenProvider _accessTokenProvider;
+
+        public FcsHttpClientFactory(IAccessTokenProvider accessTokenProvider)
         {
             _accessTokenProvider = accessTokenProvider;
-            _fcsClientConfig = fcsClientConfig;
         }
 
         public HttpClient Create()
@@ -22,7 +20,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             var httpClient = new HttpClient();
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessTokenProvider.ProvideAsync().Result);
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.sfa.contract.v1+atom+xml"));
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
             
             return httpClient;
         }
