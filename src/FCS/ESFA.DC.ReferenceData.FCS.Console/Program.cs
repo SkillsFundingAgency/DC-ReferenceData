@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Threading.Tasks;
 using ESFA.DC.ReferenceData.FCS.Service;
 using ESFA.DC.ReferenceData.FCS.Service.Config;
 using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
@@ -10,6 +11,10 @@ namespace ESFA.DC.ReferenceData.FCS.Console
         static void Main(string[] args)
         {
             var fcsClientConfig = BuildConfig();   
+
+            var accessTokenProvider = new AccessTokenProvider(fcsClientConfig);
+
+            var accesToken = accessTokenProvider.ProvideAsync().Result;
 
             var syndicationFeedService = new SyndicationFeedService(null);
         }
