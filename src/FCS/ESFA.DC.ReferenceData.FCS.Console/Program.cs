@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 using ESFA.DC.ReferenceData.FCS.Service;
+using ESFA.DC.ReferenceData.FCS.Service.Config;
+using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
 
 namespace ESFA.DC.ReferenceData.FCS.Console
 {
@@ -12,11 +9,24 @@ namespace ESFA.DC.ReferenceData.FCS.Console
     {
         static void Main(string[] args)
         {
-            var appSettings = ConfigurationManager.AppSettings;
+            var fcsClientConfig = BuildConfig();   
 
             var syndicationFeedService = new SyndicationFeedService(null);
+        }
 
+        private static IFcsClientConfig BuildConfig()
+        {
+            var appSettings = ConfigurationManager.AppSettings;
 
+            return new FcsClientConfig()
+            {
+                AADInstance = appSettings["AADInstance"],
+                AppKey = appSettings["AppKey"],
+                ClientId = appSettings["ClientId"],
+                FeedUri = appSettings["FeedUri"],
+                ResourceId = appSettings["ResourceId"],
+                Tenant = appSettings["Tenant"]
+            };
         }
     }
 }

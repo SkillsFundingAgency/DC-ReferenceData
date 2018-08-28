@@ -328,3 +328,4 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/src/FCS/ESFA.DC.ReferenceData.FCS.Console/Config/AppSettings.config
