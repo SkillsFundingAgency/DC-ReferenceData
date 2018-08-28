@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ESFA.DC.ReferenceData.FCS.Service;
 using ESFA.DC.ReferenceData.FCS.Service.Config;
 using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
+using RestSharp;
 
 namespace ESFA.DC.ReferenceData.FCS.Console
 {
@@ -14,9 +15,11 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var accessTokenProvider = new AccessTokenProvider(fcsClientConfig);
 
-            var accesToken = accessTokenProvider.ProvideAsync().Result;
+            var httpClient = new FcsHttpClientFactory(accessTokenProvider, fcsClientConfig).Create();
 
-            var syndicationFeedService = new SyndicationFeedService(null);
+            var syndicationFeedService = new SyndicationFeedService(httpClient);
+
+            var syndicationFeed = syndicationFeedService.LoadFromUriAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards").Result;
         }
 
         private static IFcsClientConfig BuildConfig()
