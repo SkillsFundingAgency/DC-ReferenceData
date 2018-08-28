@@ -19,6 +19,12 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var syndicationFeedService = new SyndicationFeedService(httpClient);
 
+            var fcsSyndicationFeedParserService = new FcsSyndicationFeedParserService();
+
+            var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService);
+
+            var startPage = fcsFeedService.FindFirstPageFromEntryPoint(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards").Result;
+
             var syndicationFeed = syndicationFeedService.LoadFromUriAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards").Result;
         }
 
