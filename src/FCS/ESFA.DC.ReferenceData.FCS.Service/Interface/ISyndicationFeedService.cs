@@ -5,6 +5,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Interface
 {
     public interface ISyndicationFeedService
     {
-        Task<SyndicationFeed> LoadFromUriAsync(string uri);
+        Task<SyndicationFeed> LoadSyndicationFeedFromUriAsync(string uri);
     }
 }

@@ -28,7 +28,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
             do
             {
-                currentSyndicationFeed = await _syndicationFeedService.LoadFromUriAsync(previousArchive);
+                currentSyndicationFeed = await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(previousArchive);
 
                 previousArchive = _fcsSyndicationFeedParserService.PreviousArchiveLink(currentSyndicationFeed);
             } while (previousArchive != null);
@@ -43,7 +43,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
             do
             {
-                var feed = await _syndicationFeedService.LoadFromUriAsync(nextPage);
+                var feed = await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(nextPage);
 
                 foreach (var contract in feed.Items.Select(_fcsSyndicationFeedParserService.RetrieveContractFromSyndicationItem))
                 {

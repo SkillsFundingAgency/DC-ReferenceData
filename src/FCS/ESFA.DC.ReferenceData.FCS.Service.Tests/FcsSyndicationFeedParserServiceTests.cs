@@ -133,6 +133,9 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
         {
             string summaryText = @"{UKPRN: 10001951, contractNumber: ""MAIN-3005"", version: 1}";
 
+            //Receiving this from the Feed, not correct Json
+            //string summaryText = @"{UKPRN: 10001951, contractNumber: MAIN-3005, version: 1}";
+
             var syndicationItem = new SyndicationItem
             {
                 Summary = new TextSyndicationContent(summaryText)

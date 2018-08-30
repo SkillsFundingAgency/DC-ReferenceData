@@ -21,10 +21,10 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             var syndicationFeedServiceMock = new Mock<ISyndicationFeedService>();
             var fcsSyndicationFeedParserServiceMock = new Mock<IFcsSyndicationFeedParserService>();
 
-            syndicationFeedServiceMock.Setup(s => s.LoadFromUriAsync(uriOne)).Returns(Task.FromResult(syndicationFeedOne));
+            syndicationFeedServiceMock.Setup(s => s.LoadSyndicationFeedFromUriAsync(uriOne)).Returns(Task.FromResult(syndicationFeedOne));
             fcsSyndicationFeedParserServiceMock.Setup(s => s.PreviousArchiveLink(syndicationFeedOne)).Returns(uriTwo);
 
-            syndicationFeedServiceMock.Setup(s => s.LoadFromUriAsync(uriTwo)).Returns(Task.FromResult(syndicationFeedTwo));
+            syndicationFeedServiceMock.Setup(s => s.LoadSyndicationFeedFromUriAsync(uriTwo)).Returns(Task.FromResult(syndicationFeedTwo));
             fcsSyndicationFeedParserServiceMock.Setup(s => s.PreviousArchiveLink(syndicationFeedTwo)).Returns(null as string);
 
             fcsSyndicationFeedParserServiceMock.Setup(s => s.CurrentArchiveLink(syndicationFeedTwo)).Returns(uriTwo);
