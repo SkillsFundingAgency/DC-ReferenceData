@@ -4,6 +4,7 @@ using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Text;
 using System.Threading.Tasks;
+using ESFA.DC.Serialization.Interfaces;
 using FluentAssertions;
 using Xunit;
 
@@ -87,9 +88,9 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             NewService().CurrentArchiveLink(syndicationFeed).Should().BeNull();
         }
 
-        private FcsSyndicationFeedParserService NewService()
+        private FcsSyndicationFeedParserService NewService(IXmlSerializationService xmlSerializationService = null)
         {
-            return new FcsSyndicationFeedParserService();
+            return new FcsSyndicationFeedParserService(xmlSerializationService);
         }
     }
 }

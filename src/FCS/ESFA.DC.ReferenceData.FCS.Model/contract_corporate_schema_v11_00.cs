@@ -1827,7 +1827,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model {
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sfa:schemas:contract")]
     public partial class contractDeliverablesTypeContractDeliverable {
         
-        private contractDeliverablesTypeContractDeliverable[][] contractDeliverablesField;
+        private contractDeliverablesTypeContractDeliverable[] contractDeliverablesField;
         
         private deliverableType deliverableField;
         
@@ -1851,7 +1851,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("contractDeliverable", typeof(contractDeliverablesTypeContractDeliverable), IsNullable=false)]
-        public contractDeliverablesTypeContractDeliverable[][] contractDeliverables {
+        public contractDeliverablesTypeContractDeliverable[] contractDeliverables {
             get {
                 return this.contractDeliverablesField;
             }

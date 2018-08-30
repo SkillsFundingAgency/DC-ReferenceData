@@ -33,6 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ESFA.DC.Serialization.Interfaces, Version=0.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ESFA.DC.Serialization.Interfaces.0.1.4-beta0001\lib\netstandard2.0\ESFA.DC.Serialization.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ESFA.DC.Serialization.Xml, Version=0.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ESFA.DC.Serialization.Xml.0.1.4-beta0001\lib\netstandard2.0\ESFA.DC.Serialization.Xml.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.19.8.16603, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
@@ -78,6 +84,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.FCS.Model\ESFA.DC.ReferenceData.FCS.Model.csproj">
+      <Project>{E7474D7B-857A-4EEF-8BAE-449DC2AA3F5A}</Project>
+      <Name>ESFA.DC.ReferenceData.FCS.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ReferenceData.FCS.Service\ESFA.DC.ReferenceData.FCS.Service.csproj">
       <Project>{45a07469-48c5-4b48-9d09-02c0c7dac216}</Project>
       <Name>ESFA.DC.ReferenceData.FCS.Service</Name>
