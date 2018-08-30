@@ -38,7 +38,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             {
                 using (var xmlWriter = XmlWriter.Create(stringWriter))
                 {
-                    syndicationItem.GetAtom10Formatter().WriteTo(xmlWriter);
+                    syndicationItem.Content.WriteTo(xmlWriter, "temp", "temp");
                 }
                 
                 var contract = XDocument.Parse(stringWriter.ToString()).Descendants().First(x => x.Name.LocalName == "contract");
