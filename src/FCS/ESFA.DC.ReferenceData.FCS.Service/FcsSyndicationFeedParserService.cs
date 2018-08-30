@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using System.ServiceModel.Syndication;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
 using ESFA.DC.Serialization.Interfaces;
@@ -15,11 +13,14 @@ namespace ESFA.DC.ReferenceData.FCS.Service
     {
         private const string PreviousArchive = "prev-archive";
         private const string CurrentArchive = "current";
+        private const string NextArchive = "next-archive";
         private readonly IXmlSerializationService _xmlserializationService;
+        private readonly IJsonSerializationService _jsonSerializationService;
 
-        public FcsSyndicationFeedParserService(IXmlSerializationService xmlSerializationService)
+        public FcsSyndicationFeedParserService(IXmlSerializationService xmlSerializationService, IJsonSerializationService jsonSerializationService)
         {
             _xmlserializationService = xmlSerializationService;
+            _jsonSerializationService = jsonSerializationService;
         }
         
         public string CurrentArchiveLink(SyndicationFeed syndicationFeed)
@@ -30,6 +31,16 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         public string PreviousArchiveLink(SyndicationFeed syndicationFeed)
         {
             return RetrieveLinkForRelationshipType(syndicationFeed, PreviousArchive);
+        }
+
+        public string NextArchiveLink(SyndicationFeed syndicationFeed)
+        {
+            return RetrieveLinkForRelationshipType(syndicationFeed, NextArchive);
+        }
+
+        public AtomItemSummary RetrieveAtomItemSummaryFromSyndicationItem(SyndicationItem syndicationItem)
+        {
+            return _jsonSerializationService.Deserialize<AtomItemSummary>(syndicationItem.Summary.Text);
         }
 
         public contract RetrieveContractFromSyndicationItem(SyndicationItem syndicationItem)

@@ -10,6 +10,10 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Interface
 
         string CurrentArchiveLink(SyndicationFeed syndicationFeed);
 
+        string NextArchiveLink(SyndicationFeed syndicationFeed);
+
         contract RetrieveContractFromSyndicationItem(SyndicationItem syndicationItem);
+
+        AtomItemSummary RetrieveAtomItemSummaryFromSyndicationItem(SyndicationItem syndicationItem);
     }
 }

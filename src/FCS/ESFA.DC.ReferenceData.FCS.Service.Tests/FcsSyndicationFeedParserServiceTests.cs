@@ -5,6 +5,7 @@ using System.ServiceModel.Syndication;
 using System.Text;
 using System.Threading.Tasks;
 using ESFA.DC.Serialization.Interfaces;
+using ESFA.DC.Serialization.Json;
 using FluentAssertions;
 using Xunit;
 
@@ -88,9 +89,65 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             NewService().CurrentArchiveLink(syndicationFeed).Should().BeNull();
         }
 
-        private FcsSyndicationFeedParserService NewService(IXmlSerializationService xmlSerializationService = null)
+
+        [Fact]
+        public void NextArchiveLink_Found()
         {
-            return new FcsSyndicationFeedParserService(xmlSerializationService);
+            var uriString = "http://abc.def/";
+
+            var syndicationFeed = new SyndicationFeed()
+            {
+                Links = { new SyndicationLink(new Uri(uriString), "next-archive", null, null, 0) }
+            };
+
+            NewService().NextArchiveLink(syndicationFeed).Should().Be(uriString);
+        }
+
+        [Fact]
+        public void NextArchiveLink_Null_NotFound()
+        {
+            var uriString = "http://abc.def/";
+
+            var syndicationFeed = new SyndicationFeed()
+            {
+                Links = { new SyndicationLink(new Uri(uriString), "current", null, null, 0) }
+            };
+
+            NewService().NextArchiveLink(syndicationFeed).Should().BeNull();
+        }
+
+        [Fact]
+        public void NextArchiveLink_Null_NullUri()
+        {
+
+            var syndicationFeed = new SyndicationFeed()
+            {
+                Links = { new SyndicationLink(null, "next-archive", null, null, 0) }
+            };
+
+            NewService().NextArchiveLink(syndicationFeed).Should().BeNull();
+        }
+
+        [Fact]
+        public void AtomItemSummaryFromSyndicationItem()
+        {
+            string summaryText = @"{UKPRN: 10001951, contractNumber: ""MAIN-3005"", version: 1}";
+
+            var syndicationItem = new SyndicationItem
+            {
+                Summary = new TextSyndicationContent(summaryText)
+            };
+
+            var atomItemSummary = NewService(jsonSerializationService: new JsonSerializationService()).RetrieveAtomItemSummaryFromSyndicationItem(syndicationItem);
+
+            atomItemSummary.UKPRN.Should().Be(10001951);
+            atomItemSummary.contractNumber.Should().Be("MAIN-3005");
+            atomItemSummary.version.Should().Be(1);
+        }
+
+        private FcsSyndicationFeedParserService NewService(IXmlSerializationService xmlSerializationService = null, IJsonSerializationService jsonSerializationService = null)
+        {
+            return new FcsSyndicationFeedParserService(xmlSerializationService, jsonSerializationService);
         }
     }
 }

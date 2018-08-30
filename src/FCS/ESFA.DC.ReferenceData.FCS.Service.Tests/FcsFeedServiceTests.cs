@@ -29,7 +29,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
 
             fcsSyndicationFeedParserServiceMock.Setup(s => s.CurrentArchiveLink(syndicationFeedTwo)).Returns(uriTwo);
 
-            NewService(syndicationFeedServiceMock.Object, fcsSyndicationFeedParserServiceMock.Object).FindFirstPageFromEntryPoint(uriOne).Result.Should().Be(uriTwo);
+            NewService(syndicationFeedServiceMock.Object, fcsSyndicationFeedParserServiceMock.Object).FindFirstPageFromEntryPointAsync(uriOne).Result.Should().Be(uriTwo);
         }
 
         private FcsFeedService NewService(ISyndicationFeedService syndicationFeedService = null, IFcsSyndicationFeedParserService fcsSyndicationFeedParserService = null)
