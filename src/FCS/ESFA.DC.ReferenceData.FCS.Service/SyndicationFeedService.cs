@@ -16,9 +16,9 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             _httpClient = httpClient;
         }
 
-        public async Task<SyndicationFeed> LoadSyndicationFeedFromUriAsync(string uri)
+        public async Task<SyndicationFeed> LoadSyndicationFeedFromUriAsync(string uri, CancellationToken cancellationToken)
         {
-            var response = await _httpClient.GetAsync(uri, CancellationToken.None);
+            var response = await _httpClient.GetAsync(uri, cancellationToken);
 
             using (var contentStream = await response.Content.ReadAsStreamAsync())
             {

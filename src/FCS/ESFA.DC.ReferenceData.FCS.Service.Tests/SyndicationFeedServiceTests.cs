@@ -33,7 +33,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
 
             var httpClient = new HttpClient(httpMessageHandlerMock.Object);
 
-            var syndicationFeed = await NewService(httpClient).LoadSyndicationFeedFromUriAsync("http://any.test.uri");
+            var syndicationFeed = await NewService(httpClient).LoadSyndicationFeedFromUriAsync("http://any.test.uri", CancellationToken.None);
 
             syndicationFeed.Items.Should().HaveCount(1);
             syndicationFeed.Id.Should().Be("uuid:12537fce-65bc-4f58-bb2d-183f8c3ad069");

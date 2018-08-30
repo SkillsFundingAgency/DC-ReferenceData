@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Linq;
+using System.Threading;
 using ESFA.DC.ReferenceData.FCS.Service;
 using ESFA.DC.ReferenceData.FCS.Service.Config;
 using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
@@ -24,9 +25,9 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService);
 
-            var startPage = fcsFeedService.FindFirstPageFromEntryPointAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards").Result;
+            var startPage = fcsFeedService.FindFirstPageFromEntryPointAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result;
 
-            var contracts = fcsFeedService.LoadContractsFromFeedToEndAsync(startPage).Result.ToList();
+            var contracts = fcsFeedService.LoadContractsFromFeedToEndAsync(startPage, CancellationToken.None).Result.ToList();
         }
 
         private static IFcsClientConfig BuildConfig()
