@@ -52,13 +52,13 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                     syndicationItem.Content.WriteTo(xmlWriter, "temp", "temp");
                 }
                 
-                var contract = XDocument.Parse(stringWriter.ToString()).Descendants().First(x => x.Name.LocalName == "contract");
+                var contract = XDocument.Parse(stringWriter.ToString()).Descendants().Where(x => x.Name.LocalName == "contract").ToList();
 
                 using (var memoryStream = new MemoryStream())
                 {
                     using (var xmlWriter = XmlWriter.Create(memoryStream))
                     { 
-                        contract.WriteTo(xmlWriter);
+                        contract.First().WriteTo(xmlWriter);
                     }
 
                     memoryStream.Seek(0, SeekOrigin.Begin);
