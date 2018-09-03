@@ -119,6 +119,121 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contract.EndDate.Should().BeNull();
         }
 
+        [Fact]
+        public void FlattenContractAllocations()
+        {
+            var contractAllocation = new contractAllocationsContractAllocation()
+            {
+                contractAllocations = new[]
+                {
+                    new contractAllocationsContractAllocation(),
+                    new contractAllocationsContractAllocation(),
+                    new contractAllocationsContractAllocation(),
+                }
+            };
+
+            NewService().FlattenContractAllocations(contractAllocation).Should().HaveCount(4);
+        }
+
+        [Fact]
+        public void FlattenContractAllocations_TwoLevels()
+        {
+            var contractAllocation = new contractAllocationsContractAllocation()
+            {
+                contractAllocations = new[]
+                {
+                    new contractAllocationsContractAllocation(),
+                    new contractAllocationsContractAllocation(),
+                    new contractAllocationsContractAllocation()
+                    {
+                        contractAllocations = new []
+                        {
+                            new contractAllocationsContractAllocation(),
+                            new contractAllocationsContractAllocation(),
+                        }
+                    },
+                }
+            };
+
+            NewService().FlattenContractAllocations(contractAllocation).Should().HaveCount(6);
+        }
+
+        [Fact]
+        public void MapContractAllocation()
+        {
+            var contractAllocationNumber = "contractAllocationNumber";
+            var fundingStreamCode = "fundingStreamCode";
+            var fundingStreamPeriodCode = "fundingStreamPeriodCode";
+            var period = "period";
+            var periodTypeCode = periodTypeCodeType.LEVY;
+            var uopCode = "uopCode";
+            var startDate = new DateTime(2017, 1, 1);
+            var endDate = new DateTime(2018, 1, 1);
+                
+            var fcsContractAllocation = new contractAllocationsContractAllocation()
+            {
+                contractAllocationNumber = contractAllocationNumber,
+                fundingStream = new fundingStream() { fundingStreamCode = fundingStreamCode },
+                period = new period()
+                {
+                    period1 = period,
+                    periodType = new periodTypeType() { periodTypeCode = periodTypeCode }
+                },
+                uopCode = uopCode,
+                startDateSpecified = true,
+                startDate = startDate,
+                endDateSpecified = true,
+                endDate = endDate,
+            };
+
+            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation);
+
+            contractAllocation.ContractAllocationNumber.Should().Be(contractAllocationNumber);
+            contractAllocation.FundingStreamCode.Should().Be(fundingStreamCode);
+            contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
+            contractAllocation.Period.Should().Be(period);
+            contractAllocation.PeriodTypeCode.Should().Be("LEVY");
+            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.StartDate.Should().Be(startDate);
+            contractAllocation.EndDate.Should().Be(endDate);
+        }
+
+        [Fact]
+        public void MapContractAllocation_NullDates()
+        {
+            var contractAllocationNumber = "contractAllocationNumber";
+            var fundingStreamCode = "fundingStreamCode";
+            var fundingStreamPeriodCode = "fundingStreamPeriodCode";
+            var period = "period";
+            var periodTypeCode = periodTypeCodeType.LEVY;
+            var uopCode = "uopCode";
+
+            var fcsContractAllocation = new contractAllocationsContractAllocation()
+            {
+                contractAllocationNumber = contractAllocationNumber,
+                fundingStream = new fundingStream() { fundingStreamCode = fundingStreamCode },
+                period = new period()
+                {
+                    period1 = period,
+                    periodType = new periodTypeType() { periodTypeCode = periodTypeCode }
+                },
+                uopCode = uopCode,
+                startDateSpecified = false,
+                endDateSpecified = false,
+            };
+
+            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation);
+
+            contractAllocation.ContractAllocationNumber.Should().Be(contractAllocationNumber);
+            contractAllocation.FundingStreamCode.Should().Be(fundingStreamCode);
+            contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
+            contractAllocation.Period.Should().Be(period);
+            contractAllocation.PeriodTypeCode.Should().Be("LEVY");
+            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.StartDate.Should().BeNull();
+            contractAllocation.EndDate.Should().BeNull();
+        }
+
         private ContractMappingService NewService()
         {
             return new ContractMappingService();

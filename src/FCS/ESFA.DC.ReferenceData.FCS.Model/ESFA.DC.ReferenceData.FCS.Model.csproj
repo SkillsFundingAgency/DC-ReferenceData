@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="AtomItemSummary.cs" />
     <Compile Include="Contract.cs" />
+    <Compile Include="ContractAllocation.cs" />
     <Compile Include="Contractor.cs" />
     <Compile Include="contract_corporate_schema_v11_00.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

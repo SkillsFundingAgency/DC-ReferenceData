@@ -39,9 +39,29 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             };
         }
 
+        public ContractAllocation MapContractAllocation(contractAllocationsContractAllocation contractAllocation)
+        {
+            return new ContractAllocation()
+            {
+                ContractAllocationNumber = contractAllocation.contractAllocationNumber,
+                FundingStreamCode = contractAllocation.fundingStream.fundingStreamCode,
+                FundingStreamPeriodCode = contractAllocation.fundingStreamPeriodCode,
+                Period = contractAllocation.period.period1,
+                PeriodTypeCode = contractAllocation.period.periodType.periodTypeCode.ToString(),
+                UoPCode = contractAllocation.uopCode,
+                StartDate = contractAllocation.startDateSpecified ? contractAllocation.startDate : default(DateTime?),
+                EndDate = contractAllocation.endDateSpecified ? contractAllocation.endDate : null,
+            };
+        }
+
         public ICollection<contractType> FlattenContracts(contractType contract)
         {
             return Flatten(contract, c => c.contracts);
+        }
+
+        public ICollection<contractAllocationsContractAllocation> FlattenContractAllocations(contractAllocationsContractAllocation contractAllocation)
+        {
+            return Flatten(contractAllocation, a => a.contractAllocations);
         }
 
         private ICollection<T> Flatten<T>(T obj, Func<T, IEnumerable<T>> selector)

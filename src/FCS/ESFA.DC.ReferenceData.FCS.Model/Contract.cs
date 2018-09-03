@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ESFA.DC.ReferenceData.FCS.Model
 {
@@ -11,5 +12,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
+
+        public List<ContractAllocation> ContractAllocations { get; set; }
     }
 }
