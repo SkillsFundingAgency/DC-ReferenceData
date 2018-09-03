@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
 
@@ -11,7 +9,13 @@ namespace ESFA.DC.ReferenceData.FCS.Service
     {
         public Contractor Map(contract contract)
         {
-            return MapContractor(contract.contractor);
+            var contractor = MapContractor(contract.contractor);
+
+            var contracts = FlattenContracts(contract);
+            
+            
+
+            return contractor;
         }
 
         public Contractor MapContractor(contractor contractor)
@@ -24,29 +28,48 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             };
         }
 
+        public Contract MapContract(contract contract)
+        {
+            return new Contract()
+            {
+                ContractNumber = contract.contractNumber,
+                ContractVersionNumber = contract.contractVersionNumber,
+                StartDate = contract.startDateSpecified ? contract.startDate : null,
+                EndDate = contract.endDateSpecified ? contract.endDate : null,
+            };
+        }
+
         public ICollection<contractType> FlattenContracts(contractType contract)
         {
-            var contractCollection = new List<contractType>();
+            return Flatten(contract, c => c.contracts);
+        }
 
-            Func<contractType, ICollection<contractType>, ICollection<contractType>> recursiveFunction = null;
+        private ICollection<T> Flatten<T>(T obj, Func<T, IEnumerable<T>> selector)
+        {
+            var collection = new List<T>();
 
-            recursiveFunction = (con, contracts) =>
+            Func<T, ICollection<T>, ICollection<T>> recursiveFunc = null;
+
+            recursiveFunc = (con, objectCollection) =>
             {
+                objectCollection.Add(con);
 
-                contracts.Add(con);
+                var selectedEnumerable = selector(obj);
 
-                if (contract.contracts != null && contract.contracts.Any())
+                if (selectedEnumerable != null)
                 {
-                    foreach (var c in contract.contracts)
+                    foreach (var o in selectedEnumerable)
                     {
-                        recursiveFunction(c, contracts);
+                        recursiveFunc(o, objectCollection);
                     }
                 }
 
-                return contracts;
+                return objectCollection;
             };
 
-            return recursiveFunction.Invoke(contract, contractCollection);
+            recursiveFunc.Invoke(obj, collection);
+
+            return collection;
         }
     }
 }

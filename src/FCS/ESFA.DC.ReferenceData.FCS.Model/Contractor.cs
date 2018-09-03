@@ -13,5 +13,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
         public int Ukprn { get; set; }
 
         public string LegalName { get; set; }
+
+        public List<Contract> Contracts { get; set; }
     }
 }
