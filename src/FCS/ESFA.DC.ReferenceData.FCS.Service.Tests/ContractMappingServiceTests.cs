@@ -174,6 +174,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             {
                 contractAllocationNumber = contractAllocationNumber,
                 fundingStream = new fundingStream() { fundingStreamCode = fundingStreamCode },
+                fundingStreamPeriodCode = fundingStreamPeriodCode,
                 period = new period()
                 {
                     period1 = period,
@@ -212,6 +213,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             {
                 contractAllocationNumber = contractAllocationNumber,
                 fundingStream = new fundingStream() { fundingStreamCode = fundingStreamCode },
+                fundingStreamPeriodCode = fundingStreamPeriodCode,
                 period = new period()
                 {
                     period1 = period,
@@ -232,6 +234,101 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractAllocation.UoPCode.Should().Be(uopCode);
             contractAllocation.StartDate.Should().BeNull();
             contractAllocation.EndDate.Should().BeNull();
+        }
+
+        [Fact]
+        public void MapContractDeliverable()
+        {
+            var description = "description";
+            var deliverableCode = 1;
+            var unitCost = 1.2m;
+            var plannedVolume = 2;
+            var plannedValue = 1.3m;
+
+            var fcsContractDeliverable = new contractDeliverablesTypeContractDeliverable()
+            {
+                deliverableDescription = description,
+                deliverable = new deliverableType() {  deliverableCode = deliverableCode },
+                unitCostSpecified = true,
+                unitCost = unitCost,
+                plannedVolumeSpecified = true,
+                plannedVolume = plannedVolume,
+                plannedValueSpecified = true,
+                plannedValue = plannedValue
+            };
+
+            var contractDeliverable = NewService().MapContractDeliverable(fcsContractDeliverable);
+
+            contractDeliverable.Description.Should().Be(description);
+            contractDeliverable.DeliverableCode.Should().Be(deliverableCode);
+            contractDeliverable.UnitCost.Should().Be(unitCost);
+            contractDeliverable.PlannedVolume.Should().Be(plannedVolume);
+            contractDeliverable.PlannedValue.Should().Be(plannedValue);
+        }
+
+
+        [Fact]
+        public void MapContractDeliverable_Nulls()
+        {
+            var description = "description";
+            var deliverableCode = 1;
+
+            var fcsContractDeliverable = new contractDeliverablesTypeContractDeliverable()
+            {
+                deliverableDescription = description,
+                deliverable = new deliverableType() { deliverableCode = deliverableCode },
+                unitCostSpecified = false,
+                plannedVolumeSpecified = false,
+                plannedValueSpecified = false,
+            };
+
+            var contractDeliverable = NewService().MapContractDeliverable(fcsContractDeliverable);
+
+            contractDeliverable.Description.Should().Be(description);
+            contractDeliverable.DeliverableCode.Should().Be(deliverableCode);
+            contractDeliverable.UnitCost.Should().BeNull();
+            contractDeliverable.PlannedVolume.Should().BeNull();
+            contractDeliverable.PlannedValue.Should().BeNull();
+        }
+
+        [Fact]
+        public void FlattenContractDeliverables()
+        {
+            var contractDeliverable = new contractDeliverablesTypeContractDeliverable()
+            {
+                contractDeliverables = new[]
+                {
+                    new contractDeliverablesTypeContractDeliverable(),
+                    new contractDeliverablesTypeContractDeliverable(),
+                    new contractDeliverablesTypeContractDeliverable(),
+                }
+            };
+
+            NewService().FlattenContractDeliverables(contractDeliverable).Should().HaveCount(4);
+        }
+
+        [Fact]
+        public void FlattenContractDeliverables_TwoLevels()
+        {
+            var contractDeliverable = new contractDeliverablesTypeContractDeliverable()
+            {
+                contractDeliverables = new[]
+                {
+                    new contractDeliverablesTypeContractDeliverable(),
+                    new contractDeliverablesTypeContractDeliverable(),
+                    new contractDeliverablesTypeContractDeliverable()
+                    {
+                        contractDeliverables = new[]
+                        {
+                            new contractDeliverablesTypeContractDeliverable(),
+                            new contractDeliverablesTypeContractDeliverable(),
+                            new contractDeliverablesTypeContractDeliverable(),
+                        }
+                    }
+                }
+            };
+
+            NewService().FlattenContractDeliverables(contractDeliverable).Should().HaveCount(7);
         }
 
         private ContractMappingService NewService()

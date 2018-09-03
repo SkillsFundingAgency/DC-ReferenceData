@@ -54,6 +54,18 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             };
         }
 
+        public ContractDeliverable MapContractDeliverable(contractDeliverablesTypeContractDeliverable contractDeliverable)
+        {
+            return new ContractDeliverable()
+            {
+                DeliverableCode = contractDeliverable.deliverable.deliverableCode,
+                Description = contractDeliverable.deliverableDescription,
+                PlannedValue = contractDeliverable.plannedValueSpecified ? contractDeliverable.plannedValue : default(decimal?),
+                PlannedVolume = contractDeliverable.plannedVolumeSpecified ? contractDeliverable.plannedVolume : default(int?),
+                UnitCost = contractDeliverable.unitCostSpecified ? contractDeliverable.unitCost : default(decimal?)
+            };
+        }
+
         public ICollection<contractType> FlattenContracts(contractType contract)
         {
             return Flatten(contract, c => c.contracts);
@@ -62,6 +74,11 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         public ICollection<contractAllocationsContractAllocation> FlattenContractAllocations(contractAllocationsContractAllocation contractAllocation)
         {
             return Flatten(contractAllocation, a => a.contractAllocations);
+        }
+
+        public ICollection<contractDeliverablesTypeContractDeliverable> FlattenContractDeliverables(contractDeliverablesTypeContractDeliverable contractDeliverable)
+        {
+            return Flatten(contractDeliverable, d => d.contractDeliverables);
         }
 
         private ICollection<T> Flatten<T>(T obj, Func<T, IEnumerable<T>> selector)
@@ -74,7 +91,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             {
                 objectCollection.Add(con);
 
-                var selectedEnumerable = selector(obj);
+                var selectedEnumerable = selector.Invoke(con);
 
                 if (selectedEnumerable != null)
                 {
