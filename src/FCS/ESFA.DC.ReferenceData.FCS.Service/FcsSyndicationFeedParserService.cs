@@ -3,7 +3,8 @@ using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
 using System.Xml.Linq;
-using ESFA.DC.ReferenceData.FCS.Model;
+using ESFA.DC.ReferenceData.FCS.Model.DC;
+using ESFA.DC.ReferenceData.FCS.Model.FCS;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
 using ESFA.DC.Serialization.Interfaces;
 

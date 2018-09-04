@@ -41,19 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AtomItemSummary.cs" />
-    <Compile Include="Contract.cs" />
-    <Compile Include="ContractAllocation.cs" />
-    <Compile Include="ContractDeliverable.cs" />
-    <Compile Include="Contractor.cs" />
-    <Compile Include="contract_corporate_schema_v11_00.cs" />
+    <Compile Include="DC\AtomItemSummary.cs" />
+    <Compile Include="DC\Contract.cs" />
+    <Compile Include="DC\ContractAllocation.cs" />
+    <Compile Include="DC\ContractDeliverable.cs" />
+    <Compile Include="DC\Contractor.cs" />
+    <Compile Include="FCS\contract_corporate_schema_v11_00.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="contract_corporate_schema_v11.00.xsd">
+    <None Include="FCS\contract_corporate_schema_v11.00.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="GenerateModel.bat" />
+    <None Include="FCS\GenerateModel.bat" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

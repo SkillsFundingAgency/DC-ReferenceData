@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ESFA.DC.ReferenceData.FCS.Model
+namespace ESFA.DC.ReferenceData.FCS.Model.DC
 {
     public class ContractAllocation
     {

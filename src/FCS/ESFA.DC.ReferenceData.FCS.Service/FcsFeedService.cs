@@ -4,6 +4,7 @@ using System.ServiceModel.Syndication;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ReferenceData.FCS.Model;
+using ESFA.DC.ReferenceData.FCS.Model.FCS;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
 
 namespace ESFA.DC.ReferenceData.FCS.Service

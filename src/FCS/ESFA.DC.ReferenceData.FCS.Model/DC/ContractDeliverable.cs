@@ -1,4 +1,4 @@
-﻿namespace ESFA.DC.ReferenceData.FCS.Model
+﻿namespace ESFA.DC.ReferenceData.FCS.Model.DC
 {
     public class ContractDeliverable
     {
