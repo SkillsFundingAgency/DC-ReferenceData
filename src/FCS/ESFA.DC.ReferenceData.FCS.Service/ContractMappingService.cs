@@ -68,47 +68,19 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             };
         }
 
-        public ICollection<contractType> FlattenContracts(contractType contract)
+        public IEnumerable<contractType> FlattenContracts(contractType contract)
         {
-            return Flatten(contract, c => c.contracts);
+            return contract.SelectRecursive(c => c.contracts);
         }
 
-        public ICollection<contractAllocationsContractAllocation> FlattenContractAllocations(contractAllocationsContractAllocation contractAllocation)
+        public IEnumerable<contractAllocationsContractAllocation> FlattenContractAllocations(contractAllocationsContractAllocation contractAllocation)
         {
-            return Flatten(contractAllocation, a => a.contractAllocations);
+            return contractAllocation.SelectRecursive(ca => ca.contractAllocations);
         }
 
-        public ICollection<contractDeliverablesTypeContractDeliverable> FlattenContractDeliverables(contractDeliverablesTypeContractDeliverable contractDeliverable)
+        public IEnumerable<contractDeliverablesTypeContractDeliverable> FlattenContractDeliverables(contractDeliverablesTypeContractDeliverable contractDeliverable)
         {
-            return Flatten(contractDeliverable, d => d.contractDeliverables);
-        }
-
-        private ICollection<T> Flatten<T>(T obj, Func<T, IEnumerable<T>> selector)
-        {
-            var collection = new List<T>();
-
-            Func<T, ICollection<T>, ICollection<T>> recursiveFunc = null;
-
-            recursiveFunc = (con, objectCollection) =>
-            {
-                objectCollection.Add(con);
-
-                var selectedEnumerable = selector.Invoke(con);
-
-                if (selectedEnumerable != null)
-                {
-                    foreach (var o in selectedEnumerable)
-                    {
-                        recursiveFunc(o, objectCollection);
-                    }
-                }
-
-                return objectCollection;
-            };
-
-            recursiveFunc.Invoke(obj, collection);
-
-            return collection;
+            return contractDeliverable.SelectRecursive(d => d.contractDeliverables);
         }
     }
 }
