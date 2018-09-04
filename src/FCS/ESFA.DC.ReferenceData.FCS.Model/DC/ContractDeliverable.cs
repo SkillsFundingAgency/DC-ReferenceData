@@ -4,7 +4,7 @@
     {
         public string Description { get; set; }
 
-        public int DeliverableCode { get; set; }
+        public int? DeliverableCode { get; set; }
 
         public decimal? UnitCost { get; set; }
 

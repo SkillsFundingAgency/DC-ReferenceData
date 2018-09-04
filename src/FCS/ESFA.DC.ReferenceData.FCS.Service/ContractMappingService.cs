@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ESFA.DC.ReferenceData.FCS.Model;
+using System.Linq;
 using ESFA.DC.ReferenceData.FCS.Model.DC;
 using ESFA.DC.ReferenceData.FCS.Model.FCS;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
@@ -11,12 +11,15 @@ namespace ESFA.DC.ReferenceData.FCS.Service
     {
         public Contractor Map(contract contract)
         {
+            if (contract.contractor == null)
+            {
+                throw new ArgumentNullException("Contractor Missing for Contract");
+            }
+
             var contractor = MapContractor(contract.contractor);
 
-            var contracts = FlattenContracts(contract);
+            contractor.Contracts = FlattenContracts(contract).Select(MapContract).ToList();
             
-            
-
             return contractor;
         }
 
@@ -26,33 +29,49 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             {
                 OrganisationIdentifier = contractor.organisationIdentifier,
                 Ukprn = contractor.ukprn,
-                LegalName = contractor.legalName
+                LegalName = contractor.legalName,
             };
         }
 
-        public Contract MapContract(contract contract)
+        public Contract MapContract(contractType contract)
         {
+            IEnumerable<ContractAllocation> contractAllocations = new List<ContractAllocation>();
+
+            if (contract.contractAllocations != null)
+            {
+                contractAllocations = contract.contractAllocations.SelectMany(FlattenContractAllocations).Select(MapContractAllocation);
+            }
+
             return new Contract()
             {
                 ContractNumber = contract.contractNumber,
                 ContractVersionNumber = contract.contractVersionNumber,
                 StartDate = contract.startDateSpecified ? contract.startDate : null,
                 EndDate = contract.endDateSpecified ? contract.endDate : null,
+                ContractAllocations = contractAllocations.ToList()
             };
         }
 
         public ContractAllocation MapContractAllocation(contractAllocationsContractAllocation contractAllocation)
         {
+            IEnumerable<ContractDeliverable> contractDeliverables = new List<ContractDeliverable>();
+
+            if (contractAllocation.contractDeliverables != null)
+            {
+                contractDeliverables = contractAllocation.contractDeliverables.SelectMany(FlattenContractDeliverables).Select(MapContractDeliverable);
+            }
+
             return new ContractAllocation()
             {
                 ContractAllocationNumber = contractAllocation.contractAllocationNumber,
-                FundingStreamCode = contractAllocation.fundingStream.fundingStreamCode,
+                FundingStreamCode = contractAllocation.fundingStream?.fundingStreamCode,
                 FundingStreamPeriodCode = contractAllocation.fundingStreamPeriodCode,
-                Period = contractAllocation.period.period1,
-                PeriodTypeCode = contractAllocation.period.periodType.periodTypeCode.ToString(),
+                Period = contractAllocation.period?.period1,
+                PeriodTypeCode = contractAllocation.period?.periodType?.periodTypeCode.ToString(),
                 UoPCode = contractAllocation.uopCode,
                 StartDate = contractAllocation.startDateSpecified ? contractAllocation.startDate : default(DateTime?),
                 EndDate = contractAllocation.endDateSpecified ? contractAllocation.endDate : null,
+                ContractDeliverables = contractDeliverables.ToList()
             };
         }
 
@@ -60,7 +79,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         {
             return new ContractDeliverable()
             {
-                DeliverableCode = contractDeliverable.deliverable.deliverableCode,
+                DeliverableCode = contractDeliverable.deliverable?.deliverableCode,
                 Description = contractDeliverable.deliverableDescription,
                 PlannedValue = contractDeliverable.plannedValueSpecified ? contractDeliverable.plannedValue : default(decimal?),
                 PlannedVolume = contractDeliverable.plannedVolumeSpecified ? contractDeliverable.plannedVolume : default(int?),

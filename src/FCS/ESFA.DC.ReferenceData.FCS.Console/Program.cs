@@ -28,11 +28,8 @@ namespace ESFA.DC.ReferenceData.FCS.Console
             //var startPage = fcsFeedService.FindFirstPageFromEntryPointAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result;
 
             //var contracts = fcsFeedService.LoadContractsFromFeedToEndAsync(startPage, CancellationToken.None).Result.ToList();
-
-
-
-            var contracts = fcsFeedService.LoadContractsFromFeedToEndAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result.ToList();
             
+            var contracts = fcsFeedService.LoadContractsFromFeedToEndAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result.ToList();
         }
 
         private static IFcsClientConfig BuildConfig()

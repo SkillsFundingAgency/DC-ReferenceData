@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ESFA.DC.ReferenceData.FCS.Model.FCS;
 using FluentAssertions;
 using Xunit;
@@ -67,7 +68,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
         }
 
         [Fact]
-        public void MapContract()
+        public void MapContract_NullAllocations()
         {
             var contractNumber = "contractNumber";
             var contractVersionNumber = 1;
@@ -90,6 +91,37 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contract.ContractVersionNumber.Should().Be(contractVersionNumber);
             contract.StartDate.Should().Be(startDate);
             contract.EndDate.Should().Be(endDate);
+        }
+
+        [Fact]
+        public void MapContract_Allocations()
+        {
+            var contractNumber = "contractNumber";
+            var contractVersionNumber = 1;
+            var startDate = new DateTime(2017, 1, 1);
+            var endDate = new DateTime(2018, 1, 1);
+
+            var fcsContract = new contract()
+            {
+                contractNumber = contractNumber,
+                contractVersionNumber = contractVersionNumber,
+                startDateSpecified = true,
+                startDate = startDate,
+                endDateSpecified = true,
+                endDate = endDate,
+                contractAllocations = new[]
+                {
+                    new contractAllocationsContractAllocation()
+                }
+            };
+
+            var contract = NewService().MapContract(fcsContract);
+
+            contract.ContractNumber.Should().Be(contractNumber);
+            contract.ContractVersionNumber.Should().Be(contractVersionNumber);
+            contract.StartDate.Should().Be(startDate);
+            contract.EndDate.Should().Be(endDate);
+            contract.ContractAllocations.Should().HaveCount(1);
         }
 
 
@@ -155,7 +187,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
         }
 
         [Fact]
-        public void MapContractAllocation()
+        public void MapContractAllocation_NullDeliverables()
         {
             var contractAllocationNumber = "contractAllocationNumber";
             var fundingStreamCode = "fundingStreamCode";
@@ -193,6 +225,53 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractAllocation.UoPCode.Should().Be(uopCode);
             contractAllocation.StartDate.Should().Be(startDate);
             contractAllocation.EndDate.Should().Be(endDate);
+        }
+
+        [Fact]
+        public void MapContractAllocation_Deliverables()
+        {
+            var contractAllocationNumber = "contractAllocationNumber";
+            var fundingStreamCode = "fundingStreamCode";
+            var fundingStreamPeriodCode = "fundingStreamPeriodCode";
+            var period = "period";
+            var periodTypeCode = periodTypeCodeType.LEVY;
+            var uopCode = "uopCode";
+            var startDate = new DateTime(2017, 1, 1);
+            var endDate = new DateTime(2018, 1, 1);
+
+            var fcsContractAllocation = new contractAllocationsContractAllocation()
+            {
+                contractAllocationNumber = contractAllocationNumber,
+                fundingStream = new fundingStream() { fundingStreamCode = fundingStreamCode },
+                fundingStreamPeriodCode = fundingStreamPeriodCode,
+                period = new period()
+                {
+                    period1 = period,
+                    periodType = new periodTypeType() { periodTypeCode = periodTypeCode }
+                },
+                uopCode = uopCode,
+                startDateSpecified = true,
+                startDate = startDate,
+                endDateSpecified = true,
+                endDate = endDate,
+                contractDeliverables = new []
+                {
+                    new contractDeliverablesTypeContractDeliverable(), 
+                }
+               
+            };
+
+            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation);
+
+            contractAllocation.ContractAllocationNumber.Should().Be(contractAllocationNumber);
+            contractAllocation.FundingStreamCode.Should().Be(fundingStreamCode);
+            contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
+            contractAllocation.Period.Should().Be(period);
+            contractAllocation.PeriodTypeCode.Should().Be("LEVY");
+            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.StartDate.Should().Be(startDate);
+            contractAllocation.EndDate.Should().Be(endDate);
+            contractAllocation.ContractDeliverables.Should().HaveCount(1);
         }
 
         [Fact]
@@ -285,6 +364,108 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractDeliverable.UnitCost.Should().BeNull();
             contractDeliverable.PlannedVolume.Should().BeNull();
             contractDeliverable.PlannedValue.Should().BeNull();
+        }
+
+        [Fact]
+        public void MapTree()
+        {
+            var contractNumberMaster = "Master";
+            var contractNumberA = "ContractA";
+            var subContractNumberA = "SubContractA";
+            var contractNumberB = "ContractB";
+
+            var contractAllocationNumberA1 = "ContractAllocationA1";
+            var subContractAllocationNumberA1 = "SubContractAllocationA1";
+            var contractAllocationNumberA2 = "ContractAllocationA2";
+
+            var deliverableDescriptionA1 = "DeliverableA1";
+            var subDeliverableDescriptionA1 = "SubDeliverableA1";
+            var deliverableDescriptionA2 = "DeliverableA2";
+
+            var contract = new contract()
+            {
+                contractor = new contractor(),
+                contractNumber = contractNumberMaster,
+                contracts = new []
+                {
+                    new contract()
+                    {
+                        contractNumber = contractNumberA,
+                        contracts = new[]
+                        {
+                            new contract()
+                            {
+                                contractNumber = subContractNumberA
+                            }
+                        },
+                        contractAllocations = new []
+                        {
+                            new contractAllocationsContractAllocation()
+                            {
+                                contractAllocationNumber = contractAllocationNumberA1,
+                                contractDeliverables = new []
+                                {
+                                    new contractDeliverablesTypeContractDeliverable()
+                                    {
+                                        deliverableDescription = deliverableDescriptionA1,
+                                        contractDeliverables = new []
+                                        {
+                                            new contractDeliverablesTypeContractDeliverable()
+                                            {
+                                                deliverableDescription = subDeliverableDescriptionA1
+                                            }
+                                        }
+                                    },
+                                    new contractDeliverablesTypeContractDeliverable()
+                                    {
+                                        deliverableDescription = deliverableDescriptionA2
+                                    }
+                                },
+                                contractAllocations = new []
+                                {
+                                    new contractAllocationsContractAllocation()
+                                    {
+                                        contractAllocationNumber = subContractAllocationNumberA1
+                                    } 
+                                }
+                            },
+                            new contractAllocationsContractAllocation()
+                            {
+                                contractAllocationNumber = contractAllocationNumberA2
+                            }
+                        }
+                    },
+                    new contract()
+                    {
+                        contractNumber = contractNumberB,
+                    }
+                }
+            };
+
+            var contractor = NewService().Map(contract);
+            
+            contractor.Contracts.Should().HaveCount(4);
+            contractor.Contracts.Select(c => c.ContractNumber).Should().Contain(contractNumberMaster, contractNumberA, contractNumberB, subContractNumberA);
+
+            var contractAllocations = contractor.Contracts.First(c => c.ContractNumber == contractNumberA).ContractAllocations;
+
+            contractAllocations.Should().HaveCount(3);
+            contractAllocations.Select(a => a.ContractAllocationNumber).Should().Contain(contractAllocationNumberA1, contractAllocationNumberA2, subContractAllocationNumberA1);
+
+            var contractDeliverables = contractAllocations.First(a => a.ContractAllocationNumber == contractAllocationNumberA1).ContractDeliverables;
+
+            contractDeliverables.Should().HaveCount(3);
+            contractDeliverables.Select(d => d.Description).Should().Contain(deliverableDescriptionA1, deliverableDescriptionA2, subDeliverableDescriptionA1);
+        }
+
+        [Fact]
+        public void Map_NullContractor()
+        {
+            var contract = new contract();
+
+            Action action = () => NewService().Map(contract);
+
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]

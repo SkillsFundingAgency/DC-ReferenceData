@@ -47,7 +47,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         public async Task<IEnumerable<contract>> LoadContractsFromFeedToEndAsync(string uri, CancellationToken cancellationToken)
         {
             string nextPage = uri;
-            IDictionary<string, contract> contracts = new Dictionary<string, contract>();
+            IDictionary<string, contract> contractCache = new Dictionary<string, contract>();
 
             do
             {
@@ -55,14 +55,25 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
                 foreach (var contract in feed.Items.Select(_fcsSyndicationFeedParserService.RetrieveContractFromSyndicationItem))
                 {
-                    // naive assumption that latest contract always appears later in feed.
-                    contracts[contract.contractNumber] = contract;
+                    if (contractCache.ContainsKey(contract.contractNumber))
+                    {
+                        if (contractCache[contract.contractNumber].contractVersionNumber < contract.contractVersionNumber)
+                        {
+                            contractCache[contract.contractNumber] = contract;
+                        }
+                    }
+                    else
+                    {
+                        contractCache[contract.contractNumber] = contract;
+                    }
                 }
 
                 nextPage = _fcsSyndicationFeedParserService.NextArchiveLink(feed);
             } while (nextPage != null);
 
-            return contracts.Values;
+            return contractCache.Values;
         }
+
+
     }
 }
