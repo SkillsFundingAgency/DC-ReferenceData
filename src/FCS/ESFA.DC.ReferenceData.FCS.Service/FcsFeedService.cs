@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Threading;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Model.FCS;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
+using Polly;
+using Polly.Retry;
 
 namespace ESFA.DC.ReferenceData.FCS.Service
 {
@@ -13,6 +16,11 @@ namespace ESFA.DC.ReferenceData.FCS.Service
     {
         private readonly ISyndicationFeedService _syndicationFeedService;
         private readonly IFcsSyndicationFeedParserService _fcsSyndicationFeedParserService;
+
+        private readonly RetryPolicy _retryPolicy = 
+            Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(3, a => TimeSpan.FromSeconds(3));
 
         public FcsFeedService(ISyndicationFeedService syndicationFeedService,
             IFcsSyndicationFeedParserService fcsSyndicationFeedParserService)
@@ -43,7 +51,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
             do
             {
-                var feed = await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(nextPage, cancellationToken);
+                var feed = await _retryPolicy.ExecuteAsync(async () => await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(nextPage, cancellationToken));
 
                 foreach (var contract in feed.Items.Select(_fcsSyndicationFeedParserService.RetrieveContractFromSyndicationItem))
                 {
