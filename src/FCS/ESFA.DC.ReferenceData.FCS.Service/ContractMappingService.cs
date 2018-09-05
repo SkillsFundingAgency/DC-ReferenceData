@@ -18,7 +18,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
             var contractor = MapContractor(contract.contractor);
 
-            contractor.Contracts = FlattenContracts(contract).Select(MapContract).ToList();
+            contractor.Contracts = FlattenContracts(contract).Where(c => c.hierarchyType == hierarchyType.CONTRACT).Select(MapContract).ToList();
             
             return contractor;
         }

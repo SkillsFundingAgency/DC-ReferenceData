@@ -386,16 +386,19 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             {
                 contractor = new contractor(),
                 contractNumber = contractNumberMaster,
+                hierarchyType = hierarchyType.MASTERCONTRACT,
                 contracts = new []
                 {
                     new contract()
                     {
                         contractNumber = contractNumberA,
+                        hierarchyType = hierarchyType.CONTRACT,
                         contracts = new[]
                         {
                             new contract()
                             {
-                                contractNumber = subContractNumberA
+                                contractNumber = subContractNumberA,
+                                hierarchyType = hierarchyType.CONTRACT,
                             }
                         },
                         contractAllocations = new []
@@ -438,14 +441,15 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                     new contract()
                     {
                         contractNumber = contractNumberB,
+                        hierarchyType = hierarchyType.CONTRACT,
                     }
                 }
             };
 
             var contractor = NewService().Map(contract);
             
-            contractor.Contracts.Should().HaveCount(4);
-            contractor.Contracts.Select(c => c.ContractNumber).Should().Contain(contractNumberMaster, contractNumberA, contractNumberB, subContractNumberA);
+            contractor.Contracts.Should().HaveCount(3);
+            contractor.Contracts.Select(c => c.ContractNumber).Should().Contain(contractNumberA, contractNumberB, subContractNumberA);
 
             var contractAllocations = contractor.Contracts.First(c => c.ContractNumber == contractNumberA).ContractAllocations;
 

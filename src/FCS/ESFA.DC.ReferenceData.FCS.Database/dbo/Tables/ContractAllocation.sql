@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[ContractAllocation]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
     [ContractAllocationNumber] NVARCHAR(20) NULL, 
     [FundingStreamCode] NVARCHAR(10) NULL,
     [Period] NVARCHAR(4) NULL, 

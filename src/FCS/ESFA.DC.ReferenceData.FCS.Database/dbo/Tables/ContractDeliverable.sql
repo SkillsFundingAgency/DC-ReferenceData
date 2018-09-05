@@ -1,9 +1,10 @@
 ﻿CREATE TABLE [dbo].[ContractDeliverable]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
     [Description] NVARCHAR(255) NULL, 
     [DeliverableCode] INT NULL, 
-    [UnitCode] DECIMAL(13, 2) NULL, 
+    [UnitCode] DECIMAL(13, 2) NULL,
+    [UnitCost] DECIMAL(13, 2) NULL,
     [PlannedVolume] INT NULL, 
     [PlannedValue] DECIMAL(13, 2) NULL, 
     [ContractAllocationId] INT NULL, 
