@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\AbstractEntity.cs" />
-    <Compile Include="AtomItemSummary.cs" />
     <Compile Include="Contract.cs" />
     <Compile Include="ContractAllocation.cs" />
     <Compile Include="ContractDeliverable.cs" />

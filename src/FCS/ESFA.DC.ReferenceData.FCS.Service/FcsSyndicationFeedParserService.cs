@@ -38,12 +38,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         {
             return RetrieveLinkForRelationshipType(syndicationFeed, NextArchive);
         }
-
-        public AtomItemSummary RetrieveAtomItemSummaryFromSyndicationItem(SyndicationItem syndicationItem)
-        {
-            return _jsonSerializationService.Deserialize<AtomItemSummary>(syndicationItem.Summary.Text);
-        }
-
+        
         public contract RetrieveContractFromSyndicationItem(SyndicationItem syndicationItem)
         {
             using (var stringWriter = new StringWriter())

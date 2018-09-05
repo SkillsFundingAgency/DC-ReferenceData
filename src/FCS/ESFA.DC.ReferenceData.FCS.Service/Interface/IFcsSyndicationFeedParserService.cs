@@ -1,6 +1,4 @@
-﻿
-using System.ServiceModel.Syndication;
-using ESFA.DC.ReferenceData.FCS.Model;
+﻿using System.ServiceModel.Syndication;
 using ESFA.DC.ReferenceData.FCS.Model.FCS;
 
 namespace ESFA.DC.ReferenceData.FCS.Service.Interface
@@ -14,7 +12,5 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Interface
         string NextArchiveLink(SyndicationFeed syndicationFeed);
 
         contract RetrieveContractFromSyndicationItem(SyndicationItem syndicationItem);
-
-        AtomItemSummary RetrieveAtomItemSummaryFromSyndicationItem(SyndicationItem syndicationItem);
     }
 }

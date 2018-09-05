@@ -127,27 +127,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
 
             NewService().NextArchiveLink(syndicationFeed).Should().BeNull();
         }
-
-        [Fact]
-        public void AtomItemSummaryFromSyndicationItem()
-        {
-            string summaryText = @"{UKPRN: 10001951, contractNumber: ""MAIN-3005"", version: 1}";
-
-            //Receiving this from the Feed, not correct Json
-            //string summaryText = @"{UKPRN: 10001951, contractNumber: MAIN-3005, version: 1}";
-
-            var syndicationItem = new SyndicationItem
-            {
-                Summary = new TextSyndicationContent(summaryText)
-            };
-
-            var atomItemSummary = NewService(jsonSerializationService: new JsonSerializationService()).RetrieveAtomItemSummaryFromSyndicationItem(syndicationItem);
-
-            atomItemSummary.UKPRN.Should().Be(10001951);
-            atomItemSummary.contractNumber.Should().Be("MAIN-3005");
-            atomItemSummary.version.Should().Be(1);
-        }
-
+        
         private FcsSyndicationFeedParserService NewService(IXmlSerializationService xmlSerializationService = null, IJsonSerializationService jsonSerializationService = null)
         {
             return new FcsSyndicationFeedParserService(xmlSerializationService, jsonSerializationService);
