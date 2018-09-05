@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DC\Abstract\AbstractEntity.cs" />
     <Compile Include="DC\AtomItemSummary.cs" />
     <Compile Include="DC\Contract.cs" />
     <Compile Include="DC\ContractAllocation.cs" />

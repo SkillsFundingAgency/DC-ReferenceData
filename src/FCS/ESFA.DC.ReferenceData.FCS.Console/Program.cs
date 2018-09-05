@@ -25,11 +25,15 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService);
 
-            //var startPage = fcsFeedService.FindFirstPageFromEntryPointAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result;
+            var startPage = fcsFeedService.FindFirstPageFromEntryPointAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result;
 
-            //var contracts = fcsFeedService.LoadContractsFromFeedToEndAsync(startPage, CancellationToken.None).Result.ToList();
-            
-            var contracts = fcsFeedService.LoadContractsFromFeedToEndAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result.ToList();
+            var fcsContracts = fcsFeedService.LoadContractsFromFeedToEndAsync(startPage, CancellationToken.None).Result.ToList();
+
+            //var fcsContracts = fcsFeedService.LoadContractsFromFeedToEndAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result.ToList();
+
+            var contractMappingService = new ContractMappingService();
+
+            var dcContracts = fcsContracts.Select(contractMappingService.Map).ToList();
         }
 
         private static IFcsClientConfig BuildConfig()

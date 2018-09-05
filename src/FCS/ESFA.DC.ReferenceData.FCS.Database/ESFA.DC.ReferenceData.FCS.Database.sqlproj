@@ -62,5 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Contractor.sql" />
+    <Build Include="dbo\Tables\Contract.sql" />
+    <Build Include="dbo\Tables\ContractAllocation.sql" />
+    <Build Include="dbo\Tables\ContractDeliverable.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="ESFA.DC.ReferenceData.FCS.Database.refactorlog" />
   </ItemGroup>
 </Project>
