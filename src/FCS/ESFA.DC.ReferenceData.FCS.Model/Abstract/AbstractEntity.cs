@@ -1,4 +1,4 @@
-﻿namespace ESFA.DC.ReferenceData.FCS.Model.DC.Abstract
+﻿namespace ESFA.DC.ReferenceData.FCS.Model.Abstract
 {
     public abstract class AbstractEntity
     {

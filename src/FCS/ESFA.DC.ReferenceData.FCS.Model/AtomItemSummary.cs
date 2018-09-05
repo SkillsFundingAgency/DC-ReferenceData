@@ -1,4 +1,4 @@
-﻿namespace ESFA.DC.ReferenceData.FCS.Model.DC
+﻿namespace ESFA.DC.ReferenceData.FCS.Model
 {
     public class AtomItemSummary
     {

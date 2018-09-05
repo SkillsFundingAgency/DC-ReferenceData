@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using ESFA.DC.ReferenceData.FCS.Model.DC.Abstract;
+using ESFA.DC.ReferenceData.FCS.Model.Abstract;
 
-namespace ESFA.DC.ReferenceData.FCS.Model.DC
+namespace ESFA.DC.ReferenceData.FCS.Model
 {
     public class Contractor : AbstractEntity
     {

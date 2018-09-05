@@ -87,6 +87,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.FCS.Model.FCS\ESFA.DC.ReferenceData.FCS.Model.FCS.csproj">
+      <Project>{6BF5D2A1-AA60-4E12-AF41-DA18911D74AD}</Project>
+      <Name>ESFA.DC.ReferenceData.FCS.Model.FCS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ReferenceData.FCS.Model\ESFA.DC.ReferenceData.FCS.Model.csproj">
       <Project>{E7474D7B-857A-4EEF-8BAE-449DC2AA3F5A}</Project>
       <Name>ESFA.DC.ReferenceData.FCS.Model</Name>

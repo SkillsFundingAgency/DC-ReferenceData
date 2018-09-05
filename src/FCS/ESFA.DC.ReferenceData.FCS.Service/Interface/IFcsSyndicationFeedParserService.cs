@@ -1,7 +1,6 @@
-﻿using System.Diagnostics.Contracts;
+﻿
 using System.ServiceModel.Syndication;
 using ESFA.DC.ReferenceData.FCS.Model;
-using ESFA.DC.ReferenceData.FCS.Model.DC;
 using ESFA.DC.ReferenceData.FCS.Model.FCS;
 
 namespace ESFA.DC.ReferenceData.FCS.Service.Interface

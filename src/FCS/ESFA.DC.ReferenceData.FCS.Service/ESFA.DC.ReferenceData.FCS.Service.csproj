@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.FCS.Model.FCS\ESFA.DC.ReferenceData.FCS.Model.FCS.csproj" />
     <ProjectReference Include="..\ESFA.DC.ReferenceData.FCS.Model\ESFA.DC.ReferenceData.FCS.Model.csproj" />
   </ItemGroup>
 
