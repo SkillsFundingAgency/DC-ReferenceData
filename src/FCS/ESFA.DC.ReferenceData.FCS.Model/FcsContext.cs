@@ -21,6 +21,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
             modelBuilder.Configurations.Add(new ContractConfig());
             modelBuilder.Configurations.Add(new ContractAllocationConfig());
             modelBuilder.Configurations.Add(new ContractDeliverableConfig());
+            modelBuilder.Configurations.Add(new MasterContractConfig());
         }
 
         public virtual DbSet<Contractor> Contractors { get; set; }
@@ -30,5 +31,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
         public virtual DbSet<ContractAllocation> ContractAllocations { get; set; }
 
         public virtual DbSet<ContractDeliverable> ContractDeliverables { get; set; }
+
+        public virtual DbSet<MasterContract> MasterContracts { get; set; }
     }
 }

@@ -12,5 +12,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
         public string LegalName { get; set; }
 
         public List<Contract> Contracts { get; set; }
+        
+        public MasterContract MasterContract { get; set; }
     }
 }

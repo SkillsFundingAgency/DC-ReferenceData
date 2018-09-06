@@ -11,6 +11,8 @@ namespace ESFA.DC.ReferenceData.FCS.Model.Config
             this.HasKey(c => c.Id);
 
             this.HasMany(c => c.Contracts).WithRequired(c => c.Contractor).HasForeignKey(c => c.ContractorId);
+
+            this.HasRequired(c => c.MasterContract).WithRequiredDependent(mc => mc.Contractor);
         }
     }
 }

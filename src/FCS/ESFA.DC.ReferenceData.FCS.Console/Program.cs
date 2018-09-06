@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using ESFA.DC.ReferenceData.FCS.Model;
@@ -17,6 +19,12 @@ namespace ESFA.DC.ReferenceData.FCS.Console
     {
         static void Main(string[] args)
         {
+            var stopwatch = new Stopwatch();
+
+            var logFile = "log.txt";
+
+            stopwatch.Start();
+            
             var fcsClientConfig = BuildConfig();   
 
             var accessTokenProvider = new AccessTokenProvider(fcsClientConfig);
@@ -29,17 +37,23 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService);
 
-          //  var startPage = fcsFeedService.FindFirstPageFromEntryPointAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result;
+            var startPage = fcsFeedService.FindFirstPageFromEntryPointAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result;
 
-        //    var fcsContracts = fcsFeedService.LoadContractsFromFeedToEndAsync(startPage, CancellationToken.None).Result.ToList();
+            File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - startPage : " + startPage);
+
+            var fcsContracts = fcsFeedService.LoadContractsFromFeedToEndAsync(startPage, CancellationToken.None).Result.ToList();
+
+            File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - got FCS Contracts" + fcsContracts.Count);
 
             //var fcsContracts = fcsFeedService.LoadContractsFromFeedToEndAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result.ToList();
 
-           // var contractMappingService = new ContractMappingService();
+            var contractMappingService = new ContractMappingService();
 
-            //var dcContracts = fcsContracts.Select(contractMappingService.Map).ToList();
+            var dcContracts = fcsContracts.Select(contractMappingService.Map).ToList();
 
-            var dcContractors = BuildContractors(300);
+            File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - map to DC Contracts - " + fcsContracts.Count);
+
+            //   var dcContracts = BuildMasterContracts(300);
 
             using (var fcsContext = new FcsContext("Server=(local);Database=ESFA.DC.ReferenceData.FCS.Database;Trusted_Connection=True;"))
             {
@@ -49,9 +63,9 @@ namespace ESFA.DC.ReferenceData.FCS.Console
                 {
                     try
                     {
-                        foreach (var contract in dcContractors)
+                        foreach (var contract in dcContracts)
                         {
-                            fcsContext.Contractors.Add(contract);
+                            fcsContext.MasterContracts.Add(contract);
                         }
 
                         fcsContext.SaveChanges();
@@ -65,6 +79,8 @@ namespace ESFA.DC.ReferenceData.FCS.Console
                     }
                 }
             }
+
+            File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - Persisted DC Contracts - " + fcsContracts.Count);
         }
 
         private static IFcsClientConfig BuildConfig()
@@ -81,9 +97,20 @@ namespace ESFA.DC.ReferenceData.FCS.Console
             };
         }
 
-        private static List<Contractor> BuildContractors(int count)
+        private static List<MasterContract> BuildMasterContracts(int count)
         {
-            return Enumerable.Range(0, count).Select(BuildContractor).ToList();
+            return Enumerable.Range(0, count).Select(BuildMasterContract).ToList();
+        }
+
+        private static MasterContract BuildMasterContract(int iteration)
+        {
+            return new MasterContract()
+            {
+                ContractNumber = "ContractNumber : " + iteration,
+                StartDate = new DateTime(2017, 1, 1),
+                EndDate = new DateTime(2018, 1, 1),
+                Contractor = BuildContractor(iteration),
+            };
         }
 
         private static Contractor BuildContractor(int iteration)

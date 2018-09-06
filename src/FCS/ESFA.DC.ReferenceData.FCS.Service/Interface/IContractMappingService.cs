@@ -6,6 +6,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Interface
     public interface IContractMappingService
     {
 
-        Contractor Map(contract contract);
+        MasterContract Map(contract contract);
     }
 }
