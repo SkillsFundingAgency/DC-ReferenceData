@@ -5,8 +5,8 @@ using System.ServiceModel.Syndication;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ReferenceData.FCS.Model;
-using ESFA.DC.ReferenceData.FCS.Model.FCS;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
+using ESFA.DC.ReferenceData.FCS.Service.Model;
 using Polly;
 using Polly.Retry;
 
@@ -16,6 +16,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
     {
         private readonly ISyndicationFeedService _syndicationFeedService;
         private readonly IFcsSyndicationFeedParserService _fcsSyndicationFeedParserService;
+        private readonly IContractMappingService _contractMappingService;
 
         private readonly RetryPolicy _retryPolicy = 
             Policy
@@ -23,57 +24,61 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             .WaitAndRetryAsync(3, a => TimeSpan.FromSeconds(3));
 
         public FcsFeedService(ISyndicationFeedService syndicationFeedService,
-            IFcsSyndicationFeedParserService fcsSyndicationFeedParserService)
+            IFcsSyndicationFeedParserService fcsSyndicationFeedParserService,
+            IContractMappingService contractMappingService)
         {
             _syndicationFeedService = syndicationFeedService;
             _fcsSyndicationFeedParserService = fcsSyndicationFeedParserService;
+            _contractMappingService = contractMappingService;
         }
 
         public async Task<string> FindFirstPageFromEntryPointAsync(string uri, CancellationToken cancellationToken)
         {
-            var previousArchive = uri;
+            var previousArchiveUri = uri;
             SyndicationFeed currentSyndicationFeed;
 
             do
             {
-                currentSyndicationFeed = await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(previousArchive, cancellationToken);
+                currentSyndicationFeed = await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(previousArchiveUri, cancellationToken);
 
-                previousArchive = _fcsSyndicationFeedParserService.PreviousArchiveLink(currentSyndicationFeed);
-            } while (previousArchive != null);
+                previousArchiveUri = _fcsSyndicationFeedParserService.PreviousArchiveLink(currentSyndicationFeed);
+            } while (previousArchiveUri != null);
 
             return _fcsSyndicationFeedParserService.CurrentArchiveLink(currentSyndicationFeed);
         }
 
-        public async Task<IEnumerable<contract>> LoadContractsFromFeedToEndAsync(string uri, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MasterContract>> GetNewMasterContractsFromFeedAsync(string uri, IEnumerable<MasterContractKey> existingMasterContractKeys, CancellationToken cancellationToken)
         {
-            string nextPage = uri;
-            IDictionary<string, contract> contractCache = new Dictionary<string, contract>();
+            string previousPageUri = uri;
+            var existingMasterContractKeysHashSet = new HashSet<MasterContractKey>(existingMasterContractKeys.Distinct());
+
+            var masterContractsCache = new List<MasterContract>();
+            
+            IEnumerable<MasterContractKey> currentPageMasterContractKeys;
 
             do
             {
-                var feed = await _retryPolicy.ExecuteAsync(async () => await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(nextPage, cancellationToken));
+                var feed = await _retryPolicy.ExecuteAsync(async () => await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(previousPageUri, cancellationToken));
 
-                foreach (var contract in feed.Items.Select(_fcsSyndicationFeedParserService.RetrieveContractFromSyndicationItem))
-                {
-                    if (contractCache.ContainsKey(contract.contractNumber))
-                    {
-                        if (contractCache[contract.contractNumber].contractVersionNumber < contract.contractVersionNumber)
-                        {
-                            contractCache[contract.contractNumber] = contract;
-                        }
-                    }
-                    else
-                    {
-                        contractCache[contract.contractNumber] = contract;
-                    }
-                }
+                var masterContracts = feed
+                    .Items
+                    .Select(_fcsSyndicationFeedParserService.RetrieveContractFromSyndicationItem)
+                    .Select(_contractMappingService.Map).ToList();
 
-                nextPage = _fcsSyndicationFeedParserService.NextArchiveLink(feed);
-            } while (nextPage != null);
+                currentPageMasterContractKeys = masterContracts.Select(mc => new MasterContractKey(mc.ContractNumber, mc.ContractVersionNumber));
 
-            return contractCache.Values;
+                masterContractsCache.AddRange(masterContracts);
+
+                previousPageUri = _fcsSyndicationFeedParserService.PreviousArchiveLink(feed);
+            } while (ContinueToNextPage(previousPageUri, existingMasterContractKeysHashSet, currentPageMasterContractKeys));
+
+            return masterContractsCache;
         }
 
-
+        public bool ContinueToNextPage(string nextPageUri, IEnumerable<MasterContractKey> existingMasterContractKeys, IEnumerable<MasterContractKey> currentPageMasterContractKeys)
+        {
+            return nextPageUri != null 
+                   && !currentPageMasterContractKeys.All(c => existingMasterContractKeys.Any(e  => e.ContractNumber == c.ContractNumber && e.ContractVersionNumber >= c.ContractVersionNumber ));
+        }
     }
 }

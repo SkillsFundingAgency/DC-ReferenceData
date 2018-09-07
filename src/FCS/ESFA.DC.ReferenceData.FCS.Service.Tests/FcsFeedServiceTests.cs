@@ -33,9 +33,9 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             NewService(syndicationFeedServiceMock.Object, fcsSyndicationFeedParserServiceMock.Object).FindFirstPageFromEntryPointAsync(uriOne, CancellationToken.None).Result.Should().Be(uriTwo);
         }
 
-        private FcsFeedService NewService(ISyndicationFeedService syndicationFeedService = null, IFcsSyndicationFeedParserService fcsSyndicationFeedParserService = null)
+        private FcsFeedService NewService(ISyndicationFeedService syndicationFeedService = null, IFcsSyndicationFeedParserService fcsSyndicationFeedParserService = null, IContractMappingService contractMappingService = null)
         {
-            return new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService);
+            return new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService, contractMappingService);
         }
     }
 }

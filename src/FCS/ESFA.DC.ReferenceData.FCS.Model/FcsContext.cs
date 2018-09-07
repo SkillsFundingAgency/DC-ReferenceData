@@ -1,9 +1,10 @@
 ﻿using System.Data.Entity;
 using ESFA.DC.ReferenceData.FCS.Model.Config;
+using ESFA.DC.ReferenceData.FCS.Model.Interface;
 
 namespace ESFA.DC.ReferenceData.FCS.Model
 {
-    public partial class FcsContext : DbContext
+    public partial class FcsContext : DbContext, IFcsContext
     {
         public FcsContext()
             : base("name=FCS")

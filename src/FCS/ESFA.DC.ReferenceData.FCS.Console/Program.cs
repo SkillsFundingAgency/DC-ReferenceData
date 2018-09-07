@@ -10,6 +10,7 @@ using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Service;
 using ESFA.DC.ReferenceData.FCS.Service.Config;
 using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
+using ESFA.DC.ReferenceData.FCS.Service.Model;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Serialization.Xml;
 
@@ -35,22 +36,23 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var fcsSyndicationFeedParserService = new FcsSyndicationFeedParserService(new XmlSerializationService(), new JsonSerializationService());
 
-            var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService);
+            var contractMappingService = new ContractMappingService();
 
-            var startPage = fcsFeedService.FindFirstPageFromEntryPointAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result;
+            var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService, contractMappingService);
 
-            File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - startPage : " + startPage);
+            var existingMasterContracts = new List<MasterContractKey>();
 
-            var fcsContracts = fcsFeedService.LoadContractsFromFeedToEndAsync(startPage, CancellationToken.None).Result.ToList();
+            using (var fcsContext = new FcsContext("Server=(local);Database=ESFA.DC.ReferenceData.FCS.Database;Trusted_Connection=True;"))
+            {
+                existingMasterContracts = new FcsContractsPersistenceService(fcsContext).GetExistingMasterContractKeys(CancellationToken.None).Result.ToList();
+            }
+
+            var fcsContracts = fcsFeedService.GetNewMasterContractsFromFeedAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", existingMasterContracts, CancellationToken.None).Result.ToList();
 
             File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - got FCS Contracts" + fcsContracts.Count);
 
             //var fcsContracts = fcsFeedService.LoadContractsFromFeedToEndAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result.ToList();
-
-            var contractMappingService = new ContractMappingService();
-
-            var dcContracts = fcsContracts.Select(contractMappingService.Map).ToList();
-
+            
             File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - map to DC Contracts - " + fcsContracts.Count);
 
             //   var dcContracts = BuildMasterContracts(300);
@@ -63,7 +65,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
                 {
                     try
                     {
-                        foreach (var contract in dcContracts)
+                        foreach (var contract in fcsContracts)
                         {
                             fcsContext.MasterContracts.Add(contract);
                         }

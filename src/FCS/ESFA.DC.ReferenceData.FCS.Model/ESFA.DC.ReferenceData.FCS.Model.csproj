@@ -54,6 +54,7 @@
     <Compile Include="Config\ContractConfig.cs" />
     <Compile Include="Config\ContractDeliverableConfig.cs" />
     <Compile Include="Config\ContractorConfig.cs" />
+    <Compile Include="Interface\IFcsContext.cs" />
     <Compile Include="MasterContract.cs" />
     <Compile Include="Contract.cs" />
     <Compile Include="ContractAllocation.cs" />
@@ -66,8 +67,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interface\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
