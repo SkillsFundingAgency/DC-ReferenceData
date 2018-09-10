@@ -59,7 +59,9 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
                     memoryStream.Seek(0, SeekOrigin.Begin);
 
-                    return _xmlserializationService.Deserialize<contract>(memoryStream);
+                    var deserializedContract = _xmlserializationService.Deserialize<contract>(memoryStream);
+
+                    return deserializedContract;
                 }
             }
         }

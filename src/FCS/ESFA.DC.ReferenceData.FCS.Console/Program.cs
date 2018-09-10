@@ -40,7 +40,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService, contractMappingService);
 
-            var existingMasterContracts = new List<MasterContractKey>();
+            var existingMasterContracts = new List<ContractKey>();
 
             using (var fcsContext = new FcsContext("Server=(local);Database=ESFA.DC.ReferenceData.FCS.Database;Trusted_Connection=True;"))
             {
@@ -61,25 +61,9 @@ namespace ESFA.DC.ReferenceData.FCS.Console
             {
                 fcsContext.Configuration.AutoDetectChangesEnabled = false;
 
-                using (var transaction = fcsContext.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        foreach (var contract in fcsContracts)
-                        {
-                            fcsContext.MasterContracts.Add(contract);
-                        }
+                var fcsContractsPersistenceService = new FcsContractsPersistenceService(fcsContext);
 
-                        fcsContext.SaveChanges();
-
-                        transaction.Commit();
-                    }
-                    catch (Exception)
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
+                fcsContractsPersistenceService.PersistContracts(fcsContracts, existingMasterContracts, CancellationToken.None).Wait();
             }
 
             File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - Persisted DC Contracts - " + fcsContracts.Count);

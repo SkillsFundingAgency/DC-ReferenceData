@@ -47,14 +47,14 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             return _fcsSyndicationFeedParserService.CurrentArchiveLink(currentSyndicationFeed);
         }
 
-        public async Task<IEnumerable<MasterContract>> GetNewMasterContractsFromFeedAsync(string uri, IEnumerable<MasterContractKey> existingMasterContractKeys, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MasterContract>> GetNewMasterContractsFromFeedAsync(string uri, IEnumerable<ContractKey> existingMasterContractKeys, CancellationToken cancellationToken)
         {
             string previousPageUri = uri;
-            var existingMasterContractKeysHashSet = new HashSet<MasterContractKey>(existingMasterContractKeys.Distinct());
+            var existingMasterContractKeysHashSet = new HashSet<ContractKey>(existingMasterContractKeys.Distinct());
 
             var masterContractsCache = new List<MasterContract>();
             
-            IEnumerable<MasterContractKey> currentPageMasterContractKeys;
+            IEnumerable<ContractKey> currentPageMasterContractKeys;
 
             do
             {
@@ -65,7 +65,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                     .Select(_fcsSyndicationFeedParserService.RetrieveContractFromSyndicationItem)
                     .Select(_contractMappingService.Map).ToList();
 
-                currentPageMasterContractKeys = masterContracts.Select(mc => new MasterContractKey(mc.ContractNumber, mc.ContractVersionNumber));
+                currentPageMasterContractKeys = masterContracts.Select(mc => new ContractKey(mc.ContractNumber, mc.ContractVersionNumber));
 
                 masterContractsCache.AddRange(masterContracts);
 
@@ -75,7 +75,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             return masterContractsCache;
         }
 
-        public bool ContinueToNextPage(string nextPageUri, IEnumerable<MasterContractKey> existingMasterContractKeys, IEnumerable<MasterContractKey> currentPageMasterContractKeys)
+        public bool ContinueToNextPage(string nextPageUri, IEnumerable<ContractKey> existingMasterContractKeys, IEnumerable<ContractKey> currentPageMasterContractKeys)
         {
             return nextPageUri != null 
                    && !currentPageMasterContractKeys.All(c => existingMasterContractKeys.Any(e  => e.ContractNumber == c.ContractNumber && e.ContractVersionNumber >= c.ContractVersionNumber ));

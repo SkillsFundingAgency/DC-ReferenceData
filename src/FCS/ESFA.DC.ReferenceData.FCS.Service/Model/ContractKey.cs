@@ -1,8 +1,8 @@
 ﻿namespace ESFA.DC.ReferenceData.FCS.Service.Model
 {
-    public struct MasterContractKey
+    public struct ContractKey
     {
-        public MasterContractKey(string contractNumber, int contractVersionNumber)
+        public ContractKey(string contractNumber, int contractVersionNumber)
         {
             ContractNumber = contractNumber;
             ContractVersionNumber = contractVersionNumber;

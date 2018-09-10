@@ -8,8 +8,8 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Interface
 {
     public interface IFcsContractsPersistenceService
     {
-        Task<IEnumerable<MasterContractKey>> GetExistingMasterContractKeys(CancellationToken cancellationToken);
+        Task<IEnumerable<ContractKey>> GetExistingMasterContractKeys(CancellationToken cancellationToken);
 
-        Task PersistContracts(IEnumerable<MasterContract> masterContracts, IEnumerable<MasterContractKey> existingMasterContractKeys, CancellationToken cancellationToken);
+        Task PersistContracts(IEnumerable<MasterContract> masterContracts, IEnumerable<ContractKey> existingMasterContractKeys, CancellationToken cancellationToken);
     }
 }
