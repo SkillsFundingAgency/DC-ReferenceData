@@ -50,12 +50,10 @@
   <ItemGroup>
     <Compile Include="Abstract\AbstractEntity.cs" />
     <Compile Include="Config\ContractAllocationConfig.cs" />
-    <Compile Include="Config\MasterContractConfig.cs" />
     <Compile Include="Config\ContractConfig.cs" />
     <Compile Include="Config\ContractDeliverableConfig.cs" />
     <Compile Include="Config\ContractorConfig.cs" />
     <Compile Include="Interface\IFcsContext.cs" />
-    <Compile Include="MasterContract.cs" />
     <Compile Include="Contract.cs" />
     <Compile Include="ContractAllocation.cs" />
     <Compile Include="ContractDeliverable.cs" />

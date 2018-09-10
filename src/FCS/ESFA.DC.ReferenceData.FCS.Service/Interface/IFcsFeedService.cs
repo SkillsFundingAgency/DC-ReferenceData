@@ -9,6 +9,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Interface
 {
     public interface IFcsFeedService
     {
-        Task<IEnumerable<MasterContract>> GetNewMasterContractsFromFeedAsync(string uri, IEnumerable<ContractKey> existingMasterContractKeys, CancellationToken cancellationToken);
+        Task<IEnumerable<Contractor>> GetNewContractorsFromFeedAsync(string uri, IEnumerable<ContractKey> existingMasterContractKeys, CancellationToken cancellationToken);
     }
 }

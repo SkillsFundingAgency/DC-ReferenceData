@@ -20,51 +20,54 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             _fcsContext = fcsContext;
         }
 
-        public async Task<IEnumerable<ContractKey>> GetExistingMasterContractKeys(CancellationToken cancellationToken)
+        public async Task<IEnumerable<ContractKey>> GetExistingContractKeys(CancellationToken cancellationToken)
         {
-            var masterContracts = await _fcsContext.MasterContracts.Select(mc => new { mc.ContractNumber, mc.ContractVersionNumber }).ToListAsync(cancellationToken);
+            var contracts = await _fcsContext.Contracts.Select(mc => new { mc.ContractNumber, mc.ContractVersionNumber }).ToListAsync(cancellationToken);
                 
-            return masterContracts.Select(mc => new ContractKey(mc.ContractNumber, mc.ContractVersionNumber));
+            return contracts.Select(mc => new ContractKey(mc.ContractNumber, mc.ContractVersionNumber));
         }
 
-        public async Task PersistContracts(IEnumerable<MasterContract> masterContracts, IEnumerable<ContractKey> existingMasterContractKeys, CancellationToken cancellationToken)
+        public async Task PersistContracts(IEnumerable<Contractor> contractors, IEnumerable<ContractKey> existingContractKeys, CancellationToken cancellationToken)
         {
-            var existingMasterContractKeysList = existingMasterContractKeys.ToList();
+            var existingContractKeysList = existingContractKeys.ToList();
 
-            var masterContractKeys = masterContracts.Select(c => new ContractKey(c.ContractNumber, c.ContractVersionNumber)).ToList();
+            var contractKeys = contractors.SelectMany(c => c.Contracts).Select(c => new ContractKey(c.ContractNumber, c.ContractVersionNumber)).ToList();
 
             // get Maximum Version Number for Contracts
-            var maxVersionContracts = GetMaxVersionMasterContractKeys(masterContractKeys).ToList();
+            var maxVersionContracts = GetMaxVersionContractKeys(contractKeys).ToList();
 
             // remove existing Contracts
-            var newMasterContracts = GetNewMasterContractKeys(maxVersionContracts, existingMasterContractKeysList).ToList();
+            var newMasterContracts = GetNewContractKeys(maxVersionContracts, existingContractKeysList).ToList();
             
             // identify older versions to remove
-            var defunctExistingMasterContractKeys = GetDefunctExistingMasterContractKeys(newMasterContracts, existingMasterContractKeysList).ToList();
+            var defunctExistingMasterContractKeys = GetDefunctExistingContractKeys(newMasterContracts, existingContractKeysList).ToList();
 
             using (var transaction = _fcsContext.Database.BeginTransaction())
             {
                 try
                 {
                     // remove older versions
-                    var defunctContracts = _fcsContext
-                        .MasterContracts
+                    var defunctContractors = _fcsContext
+                        .Contracts
                         .AsEnumerable()
                         .Where(mc =>
                             defunctExistingMasterContractKeys.Any(e =>
                                 e.ContractNumber == mc.ContractNumber &&
-                                e.ContractVersionNumber == mc.ContractVersionNumber)).ToList();
+                                e.ContractVersionNumber == mc.ContractVersionNumber))
+                        .Select(c => c.Contractor).ToList();
 
-                    _fcsContext.MasterContracts.RemoveRange(defunctContracts);
+                    _fcsContext.Contractors.RemoveRange(defunctContractors);
 
                     // add newer versions
-                    var newContracts = masterContracts
-                        .Where(mc =>
-                            newMasterContracts.Any(n =>
-                                n.ContractNumber == mc.ContractNumber &&
-                                n.ContractVersionNumber == mc.ContractVersionNumber)).ToList();
+                    var newContractors = contractors
+                        .Where(ctr =>
+                            ctr.Contracts.Any(
+                                c => newMasterContracts.Any(n =>
+                                    n.ContractNumber == c.ContractNumber &&
+                                n.ContractVersionNumber == c.ContractVersionNumber)))
+                        .ToList();
 
-                    _fcsContext.MasterContracts.AddRange(newContracts);
+                    _fcsContext.Contractors.AddRange(newContractors);
 
                     await _fcsContext.SaveChangesAsync();
 
@@ -79,22 +82,22 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             }
         }
 
-        public IEnumerable<ContractKey> GetMaxVersionMasterContractKeys(IEnumerable<ContractKey> masterContractKeys)
+        public IEnumerable<ContractKey> GetMaxVersionContractKeys(IEnumerable<ContractKey> contractKeys)
         {
-            return masterContractKeys
+            return contractKeys
                 .GroupBy(k => k.ContractNumber)
                 .Select(k => k.OrderByDescending(c => c.ContractVersionNumber).FirstOrDefault());
         }
 
-        public IEnumerable<ContractKey> GetNewMasterContractKeys(IEnumerable<ContractKey> masterContractKeys,IEnumerable<ContractKey> existingMasterContractKeys)
+        public IEnumerable<ContractKey> GetNewContractKeys(IEnumerable<ContractKey> contractKeys, IEnumerable<ContractKey> existingContractKeys)
         {
-            return masterContractKeys
-                .Where(k => !existingMasterContractKeys.Any(e => e.ContractNumber == k.ContractNumber && e.ContractVersionNumber >= k.ContractVersionNumber));
+            return contractKeys
+                .Where(k => !existingContractKeys.Any(e => e.ContractNumber == k.ContractNumber && e.ContractVersionNumber >= k.ContractVersionNumber));
         }
 
-        public IEnumerable<ContractKey> GetDefunctExistingMasterContractKeys(IEnumerable<ContractKey> masterContractKeys, IEnumerable<ContractKey> existingMasterContractKeys)
+        public IEnumerable<ContractKey> GetDefunctExistingContractKeys(IEnumerable<ContractKey> contractKeys, IEnumerable<ContractKey> existingContractKeys)
         {
-            return existingMasterContractKeys.Where(e => masterContractKeys.Any(k => k.ContractNumber == e.ContractNumber && k.ContractVersionNumber > e.ContractVersionNumber));
+            return existingContractKeys.Where(e => contractKeys.Any(k => k.ContractNumber == e.ContractNumber && k.ContractVersionNumber > e.ContractVersionNumber));
         }
     }
 }

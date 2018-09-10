@@ -29,7 +29,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 new ContractKey("3", 1),
             };
 
-            var maxVersionContractkeys = NewService().GetMaxVersionMasterContractKeys(masterContractKeys).ToList();
+            var maxVersionContractkeys = NewService().GetMaxVersionContractKeys(masterContractKeys).ToList();
 
             maxVersionContractkeys.Should().HaveCount(3);
             maxVersionContractkeys.Should().Contain(expectedContractKeys);
@@ -54,7 +54,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 new ContractKey("4", 2),
             };
 
-            var newMasterContractKeys = NewService().GetNewMasterContractKeys(masterContractKeys, existingMasterContractKeys).ToList();
+            var newMasterContractKeys = NewService().GetNewContractKeys(masterContractKeys, existingMasterContractKeys).ToList();
 
             newMasterContractKeys.Should().HaveCount(1);
             newMasterContractKeys.Should().Contain(new ContractKey("3", 2));
@@ -83,7 +83,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 new ContractKey("3", 1),
             };
 
-            var defunctMasterContractKeys = NewService().GetDefunctExistingMasterContractKeys(masterContractKeys, existingMasterContractKeys).ToList();
+            var defunctMasterContractKeys = NewService().GetDefunctExistingContractKeys(masterContractKeys, existingMasterContractKeys).ToList();
 
             defunctMasterContractKeys.Should().HaveCount(2);
             defunctMasterContractKeys.Should().Contain(expectedDefunctMasterContractKeys);

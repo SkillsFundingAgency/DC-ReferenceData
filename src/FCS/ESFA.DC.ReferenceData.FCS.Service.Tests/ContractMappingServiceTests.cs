@@ -66,32 +66,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
 
             flattenedContracts.Should().HaveCount(5);
         }
-        
-        [Fact]
-        public void MapMasterContract()
-        {
-            var contractNumber = "contractNumber";
-            var contractVersionNumber = 1;
-            var startDate = new DateTime(2017, 1, 1);
-            var endDate = new DateTime(2018, 1, 1);
-
-            var fcsContract = new contract()
-            {
-                contractNumber = contractNumber,
-                contractVersionNumber = contractVersionNumber,
-                startDateSpecified = true,
-                startDate = startDate,
-                endDateSpecified = true,
-                endDate = endDate,
-            };
-
-            var contract = NewService().MapMasterContract(fcsContract);
-
-            contract.ContractNumber.Should().Be(contractNumber);
-            contract.ContractVersionNumber.Should().Be(contractVersionNumber);
-            contract.StartDate.Should().Be(startDate);
-            contract.EndDate.Should().Be(endDate);
-        }
 
         [Fact]
         public void MapContract_NullAllocations()
@@ -471,12 +445,8 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                     }
                 }
             };
-
-            var masterContract = NewService().Map(contract);
-
-            masterContract.ContractNumber.Should().Be(contractNumberMaster);
-
-            var contractor = masterContract.Contractor;
+            
+            var contractor = NewService().Map(contract);
 
             contractor.Contracts.Should().HaveCount(3);
             contractor.Contracts.Select(c => c.ContractNumber).Should().Contain(contractNumberA, contractNumberB, subContractNumberA);

@@ -47,38 +47,38 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             return _fcsSyndicationFeedParserService.CurrentArchiveLink(currentSyndicationFeed);
         }
 
-        public async Task<IEnumerable<MasterContract>> GetNewMasterContractsFromFeedAsync(string uri, IEnumerable<ContractKey> existingMasterContractKeys, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Contractor>> GetNewContractorsFromFeedAsync(string uri, IEnumerable<ContractKey> existingContractKeys, CancellationToken cancellationToken)
         {
             string previousPageUri = uri;
-            var existingMasterContractKeysHashSet = new HashSet<ContractKey>(existingMasterContractKeys.Distinct());
+            var existingMasterContractKeysHashSet = new HashSet<ContractKey>(existingContractKeys.Distinct());
 
-            var masterContractsCache = new List<MasterContract>();
+            var contractorCache = new List<Contractor>();
             
-            IEnumerable<ContractKey> currentPageMasterContractKeys;
+            IEnumerable<ContractKey> currentPageContractKeys;
 
             do
             {
                 var feed = await _retryPolicy.ExecuteAsync(async () => await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(previousPageUri, cancellationToken));
 
-                var masterContracts = feed
+                var contractors = feed
                     .Items
                     .Select(_fcsSyndicationFeedParserService.RetrieveContractFromSyndicationItem)
                     .Select(_contractMappingService.Map).ToList();
 
-                currentPageMasterContractKeys = masterContracts.Select(mc => new ContractKey(mc.ContractNumber, mc.ContractVersionNumber));
+                currentPageContractKeys = contractors.SelectMany(c => c.Contracts).Select(mc => new ContractKey(mc.ContractNumber, mc.ContractVersionNumber));
 
-                masterContractsCache.AddRange(masterContracts);
+                contractorCache.AddRange(contractors);
 
                 previousPageUri = _fcsSyndicationFeedParserService.PreviousArchiveLink(feed);
-            } while (ContinueToNextPage(previousPageUri, existingMasterContractKeysHashSet, currentPageMasterContractKeys));
+            } while (ContinueToNextPage(previousPageUri, existingMasterContractKeysHashSet, currentPageContractKeys));
 
-            return masterContractsCache;
+            return contractorCache;
         }
 
-        public bool ContinueToNextPage(string nextPageUri, IEnumerable<ContractKey> existingMasterContractKeys, IEnumerable<ContractKey> currentPageMasterContractKeys)
+        public bool ContinueToNextPage(string nextPageUri, IEnumerable<ContractKey> existingContractKeys, IEnumerable<ContractKey> currentPageContractKeys)
         {
             return nextPageUri != null 
-                   && !currentPageMasterContractKeys.All(c => existingMasterContractKeys.Any(e  => e.ContractNumber == c.ContractNumber && e.ContractVersionNumber >= c.ContractVersionNumber ));
+                   && !currentPageContractKeys.All(c => existingContractKeys.Any(e  => e.ContractNumber == c.ContractNumber && e.ContractVersionNumber >= c.ContractVersionNumber ));
         }
     }
 }

@@ -44,10 +44,10 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             using (var fcsContext = new FcsContext("Server=(local);Database=ESFA.DC.ReferenceData.FCS.Database;Trusted_Connection=True;"))
             {
-                existingMasterContracts = new FcsContractsPersistenceService(fcsContext).GetExistingMasterContractKeys(CancellationToken.None).Result.ToList();
+                existingMasterContracts = new FcsContractsPersistenceService(fcsContext).GetExistingContractKeys(CancellationToken.None).Result.ToList();
             }
 
-            var fcsContracts = fcsFeedService.GetNewMasterContractsFromFeedAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", existingMasterContracts, CancellationToken.None).Result.ToList();
+            var fcsContracts = fcsFeedService.GetNewContractorsFromFeedAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", existingMasterContracts, CancellationToken.None).Result.ToList();
 
             File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - got FCS Contracts" + fcsContracts.Count);
 
@@ -83,20 +83,9 @@ namespace ESFA.DC.ReferenceData.FCS.Console
             };
         }
 
-        private static List<MasterContract> BuildMasterContracts(int count)
+        private static List<Contractor> BuildMasterContracts(int count)
         {
-            return Enumerable.Range(0, count).Select(BuildMasterContract).ToList();
-        }
-
-        private static MasterContract BuildMasterContract(int iteration)
-        {
-            return new MasterContract()
-            {
-                ContractNumber = "ContractNumber : " + iteration,
-                StartDate = new DateTime(2017, 1, 1),
-                EndDate = new DateTime(2018, 1, 1),
-                Contractor = BuildContractor(iteration),
-            };
+            return Enumerable.Range(0, count).Select(BuildContractor).ToList();
         }
 
         private static Contractor BuildContractor(int iteration)

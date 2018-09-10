@@ -9,35 +9,20 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 {
     public class ContractMappingService : IContractMappingService
     {
-        public MasterContract Map(contract contract)
+        public Contractor Map(contract contract)
         {
             if (contract.contractor == null)
             {
                 throw new ArgumentNullException("Contractor Missing for Contract");
             }
             
-            var masterContract = MapMasterContract(contract);
-
             var contractor = MapContractor(contract.contractor);
-
-            masterContract.Contractor = contractor;
-
-            contractor.Contracts = FlattenContracts(contract).Where(c => c.hierarchyType == hierarchyType.CONTRACT).Select(MapContract).ToList();
             
-            return masterContract;
-        }
+            contractor.Contracts = FlattenContracts(contract).Where(c => c.hierarchyType == hierarchyType.CONTRACT).Select(MapContract).ToList();
 
-        public MasterContract MapMasterContract(contractType contract)
-        {
-            return new MasterContract()
-            {
-                ContractNumber = contract.contractNumber,
-                ContractVersionNumber = contract.contractVersionNumber,
-                StartDate = contract.startDateSpecified ? contract.startDate : null,
-                EndDate = contract.endDateSpecified ? contract.endDate : null,
-            };
+            return contractor;
         }
-
+        
         public Contractor MapContractor(contractor contractor)
         {
             return new Contractor()
