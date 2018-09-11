@@ -15,5 +15,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Config.Interface
         string ClientId { get; }
 
         string AppKey { get; }
+
+        string ConnectionString { get; }
     }
 }

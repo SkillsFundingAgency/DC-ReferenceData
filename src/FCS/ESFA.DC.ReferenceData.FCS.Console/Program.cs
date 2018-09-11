@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,8 +9,6 @@ using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Service;
 using ESFA.DC.ReferenceData.FCS.Service.Config;
 using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
-using ESFA.DC.ReferenceData.FCS.Service.Model;
-using ESFA.DC.Serialization.Json;
 using ESFA.DC.Serialization.Xml;
 
 namespace ESFA.DC.ReferenceData.FCS.Console
@@ -42,7 +39,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
             
             var existingSyndicationItemIds = new List<Guid>();
 
-            using (var fcsContext = new FcsContext("Server=(local);Database=ESFA.DC.ReferenceData.FCS.Database;Trusted_Connection=True;"))
+            using (var fcsContext = new FcsContext(fcsClientConfig.ConnectionString))
             {
                 existingSyndicationItemIds = new FcsContractsPersistenceService(fcsContext).GetExistingSyndicationItemIds(CancellationToken.None).Result.ToList();
             }
@@ -57,7 +54,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             //   var dcContracts = BuildMasterContracts(300);
 
-            using (var fcsContext = new FcsContext("Server=(local);Database=ESFA.DC.ReferenceData.FCS.Database;Trusted_Connection=True;"))
+            using (var fcsContext = new FcsContext(fcsClientConfig.ConnectionString))
             {
                 fcsContext.Configuration.AutoDetectChangesEnabled = false;
 
@@ -80,6 +77,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
                 ClientId = appSettings["ClientId"],
                 FeedUri = appSettings["FeedUri"],
                 ResourceId = appSettings["ResourceId"],
+                ConnectionString = appSettings["ConnectionString"]
             };
         }
 

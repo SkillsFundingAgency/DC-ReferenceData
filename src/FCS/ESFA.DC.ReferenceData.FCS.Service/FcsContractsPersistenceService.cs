@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Model.Interface;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
-using ESFA.DC.ReferenceData.FCS.Service.Model;
 
 namespace ESFA.DC.ReferenceData.FCS.Service
 {
@@ -18,13 +17,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         public FcsContractsPersistenceService(IFcsContext fcsContext)
         {
             _fcsContext = fcsContext;
-        }
-
-        public async Task<IEnumerable<ContractKey>> GetExistingContractKeys(CancellationToken cancellationToken)
-        {
-            var contracts = await _fcsContext.Contracts.Select(mc => new { mc.ContractNumber, mc.ContractVersionNumber }).ToListAsync(cancellationToken);
-                
-            return contracts.Select(mc => new ContractKey(mc.ContractNumber, mc.ContractVersionNumber));
         }
 
         public async Task<IEnumerable<Guid>> GetExistingSyndicationItemIds(CancellationToken cancellationToken)
