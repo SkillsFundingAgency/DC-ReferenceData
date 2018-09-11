@@ -446,7 +446,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 }
             };
             
-            var contractor = NewService().Map(contract);
+            var contractor = NewService().Map(Guid.Empty, contract);
 
             contractor.Contracts.Should().HaveCount(3);
             contractor.Contracts.Select(c => c.ContractNumber).Should().Contain(contractNumberA, contractNumberB, subContractNumberA);
@@ -467,7 +467,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
         {
             var contract = new contract();
 
-            Action action = () => NewService().Map(contract);
+            Action action = () => NewService().Map(Guid.Empty, contract);
 
             action.Should().Throw<ArgumentNullException>();
         }

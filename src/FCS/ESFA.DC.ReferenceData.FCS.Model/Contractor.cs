@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ESFA.DC.ReferenceData.FCS.Model.Abstract;
 
 namespace ESFA.DC.ReferenceData.FCS.Model
@@ -12,5 +13,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
         public string LegalName { get; set; }
 
         public List<Contract> Contracts { get; set; }
+
+        public Guid SyndicationItemId { get; set; }
     }
 }

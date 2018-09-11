@@ -34,21 +34,21 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var syndicationFeedService = new SyndicationFeedService(httpClient);
 
-            var fcsSyndicationFeedParserService = new FcsSyndicationFeedParserService(new XmlSerializationService(), new JsonSerializationService());
+            var fcsSyndicationFeedParserService = new FcsSyndicationFeedParserService(new XmlSerializationService());
 
             var contractMappingService = new ContractMappingService();
 
             var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService, contractMappingService);
-
-            var existingMasterContracts = new List<ContractKey>();
+            
+            var existingSyndicationItemIds = new List<Guid>();
 
             using (var fcsContext = new FcsContext("Server=(local);Database=ESFA.DC.ReferenceData.FCS.Database;Trusted_Connection=True;"))
             {
-                existingMasterContracts = new FcsContractsPersistenceService(fcsContext).GetExistingContractKeys(CancellationToken.None).Result.ToList();
+                existingSyndicationItemIds = new FcsContractsPersistenceService(fcsContext).GetExistingSyndicationItemIds(CancellationToken.None).Result.ToList();
             }
 
-            var fcsContracts = fcsFeedService.GetNewContractorsFromFeedAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", existingMasterContracts, CancellationToken.None).Result.ToList();
-
+            var fcsContracts = fcsFeedService.GetNewContractorsFromFeedAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", existingSyndicationItemIds, CancellationToken.None).Result.ToList();
+            
             File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - got FCS Contracts" + fcsContracts.Count);
 
             //var fcsContracts = fcsFeedService.LoadContractsFromFeedToEndAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result.ToList();
@@ -63,7 +63,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
                 var fcsContractsPersistenceService = new FcsContractsPersistenceService(fcsContext);
 
-                fcsContractsPersistenceService.PersistContracts(fcsContracts, existingMasterContracts, CancellationToken.None).Wait();
+                fcsContractsPersistenceService.PersistContracts(fcsContracts, CancellationToken.None).Wait();
             }
 
             File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - Persisted DC Contracts - " + fcsContracts.Count);

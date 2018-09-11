@@ -95,7 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContractMappingServiceTests.cs" />
-    <Compile Include="FcsContractsPersistenceServiceTests.cs" />
     <Compile Include="FcsFeedServiceTests.cs" />
     <Compile Include="FcsSyndicationFeedParserServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

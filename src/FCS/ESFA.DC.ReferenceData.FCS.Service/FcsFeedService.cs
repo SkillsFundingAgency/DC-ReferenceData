@@ -31,30 +31,15 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             _fcsSyndicationFeedParserService = fcsSyndicationFeedParserService;
             _contractMappingService = contractMappingService;
         }
-
-        public async Task<string> FindFirstPageFromEntryPointAsync(string uri, CancellationToken cancellationToken)
-        {
-            var previousArchiveUri = uri;
-            SyndicationFeed currentSyndicationFeed;
-
-            do
-            {
-                currentSyndicationFeed = await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(previousArchiveUri, cancellationToken);
-
-                previousArchiveUri = _fcsSyndicationFeedParserService.PreviousArchiveLink(currentSyndicationFeed);
-            } while (previousArchiveUri != null);
-
-            return _fcsSyndicationFeedParserService.CurrentArchiveLink(currentSyndicationFeed);
-        }
-
-        public async Task<IEnumerable<Contractor>> GetNewContractorsFromFeedAsync(string uri, IEnumerable<ContractKey> existingContractKeys, CancellationToken cancellationToken)
+        
+        public async Task<IEnumerable<Contractor>> GetNewContractorsFromFeedAsync(string uri, IEnumerable<Guid> existingSyndicationItemIds, CancellationToken cancellationToken)
         {
             string previousPageUri = uri;
-            var existingMasterContractKeysHashSet = new HashSet<ContractKey>(existingContractKeys.Distinct());
+            var existingSyndicationItemIdsHashSet = new HashSet<Guid>(existingSyndicationItemIds.Distinct());
 
-            var contractorCache = new List<Contractor>();
+            var contractorCache = new Dictionary<string, Contractor>();
             
-            IEnumerable<ContractKey> currentPageContractKeys;
+            IEnumerable<Guid> newCurrentPageSyndicationItemIds;
 
             do
             {
@@ -62,23 +47,33 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
                 var contractors = feed
                     .Items
+                    .Reverse()
                     .Select(_fcsSyndicationFeedParserService.RetrieveContractFromSyndicationItem)
-                    .Select(_contractMappingService.Map).ToList();
+                    .Where(m => !existingSyndicationItemIdsHashSet.Contains(m.syndicationItemId))
+                    .Select(m => _contractMappingService.Map(m.syndicationItemId, m.contract))
+                    .ToList();
 
-                currentPageContractKeys = contractors.SelectMany(c => c.Contracts).Select(mc => new ContractKey(mc.ContractNumber, mc.ContractVersionNumber));
+                newCurrentPageSyndicationItemIds = contractors.Select(c => c.SyndicationItemId);
 
-                contractorCache.AddRange(contractors);
+                foreach (var contractor in contractors)
+                {
+                    var contractNumber = contractor.Contracts[0].ContractNumber;
 
+                    if (!contractorCache.ContainsKey(contractNumber))
+                    {
+                        contractorCache.Add(contractNumber, contractor);
+                    }
+                }
+                
                 previousPageUri = _fcsSyndicationFeedParserService.PreviousArchiveLink(feed);
-            } while (ContinueToNextPage(previousPageUri, existingMasterContractKeysHashSet, currentPageContractKeys));
+            } while (ContinueToNextPage(previousPageUri, newCurrentPageSyndicationItemIds));
 
-            return contractorCache;
+            return contractorCache.Values;
         }
 
-        public bool ContinueToNextPage(string nextPageUri, IEnumerable<ContractKey> existingContractKeys, IEnumerable<ContractKey> currentPageContractKeys)
+        public bool ContinueToNextPage(string nextPageUri, IEnumerable<Guid> newCurrentPageSyndicationItemIds)
         {
-            return nextPageUri != null 
-                   && !currentPageContractKeys.All(c => existingContractKeys.Any(e  => e.ContractNumber == c.ContractNumber && e.ContractVersionNumber >= c.ContractVersionNumber ));
+            return nextPageUri != null && newCurrentPageSyndicationItemIds.Any();
         }
     }
 }

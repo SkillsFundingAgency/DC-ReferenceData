@@ -128,9 +128,9 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             NewService().NextArchiveLink(syndicationFeed).Should().BeNull();
         }
         
-        private FcsSyndicationFeedParserService NewService(IXmlSerializationService xmlSerializationService = null, IJsonSerializationService jsonSerializationService = null)
+        private FcsSyndicationFeedParserService NewService(IXmlSerializationService xmlSerializationService = null)
         {
-            return new FcsSyndicationFeedParserService(xmlSerializationService, jsonSerializationService);
+            return new FcsSyndicationFeedParserService(xmlSerializationService);
         }
     }
 }

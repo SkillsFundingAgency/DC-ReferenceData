@@ -1,4 +1,6 @@
-﻿using System.ServiceModel.Syndication;
+﻿using System;
+using System.Collections.Generic;
+using System.ServiceModel.Syndication;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
@@ -11,26 +13,21 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
     public class FcsFeedServiceTests
     {
         [Fact]
-        public void FindFirstPageFromEntryPoint()
+        public void ContinueToNextPage_True()
         {
-            var syndicationFeedOne = new SyndicationFeed();
-            var syndicationFeedTwo = new SyndicationFeed();
+            NewService().ContinueToNextPage("not null", new List<Guid>() {Guid.Empty}).Should().BeTrue();
+        }
 
-            var uriOne = "uriOne";
-            var uriTwo = "uriTwo";
+        [Fact]
+        public void ContinueToNextPage_False_NullNextPage()
+        {
+            NewService().ContinueToNextPage(null, new List<Guid>() { Guid.Empty }).Should().BeFalse();
+        }
 
-            var syndicationFeedServiceMock = new Mock<ISyndicationFeedService>();
-            var fcsSyndicationFeedParserServiceMock = new Mock<IFcsSyndicationFeedParserService>();
-
-            syndicationFeedServiceMock.Setup(s => s.LoadSyndicationFeedFromUriAsync(uriOne, CancellationToken.None)).Returns(Task.FromResult(syndicationFeedOne));
-            fcsSyndicationFeedParserServiceMock.Setup(s => s.PreviousArchiveLink(syndicationFeedOne)).Returns(uriTwo);
-
-            syndicationFeedServiceMock.Setup(s => s.LoadSyndicationFeedFromUriAsync(uriTwo, CancellationToken.None)).Returns(Task.FromResult(syndicationFeedTwo));
-            fcsSyndicationFeedParserServiceMock.Setup(s => s.PreviousArchiveLink(syndicationFeedTwo)).Returns(null as string);
-
-            fcsSyndicationFeedParserServiceMock.Setup(s => s.CurrentArchiveLink(syndicationFeedTwo)).Returns(uriTwo);
-
-            NewService(syndicationFeedServiceMock.Object, fcsSyndicationFeedParserServiceMock.Object).FindFirstPageFromEntryPointAsync(uriOne, CancellationToken.None).Result.Should().Be(uriTwo);
+        [Fact]
+        public void ContinueToNextPage_False_EmptyNewSyndicationItemIds()
+        {
+            NewService().ContinueToNextPage("not null", new List<Guid>()).Should().BeFalse();
         }
 
         private FcsFeedService NewService(ISyndicationFeedService syndicationFeedService = null, IFcsSyndicationFeedParserService fcsSyndicationFeedParserService = null, IContractMappingService contractMappingService = null)

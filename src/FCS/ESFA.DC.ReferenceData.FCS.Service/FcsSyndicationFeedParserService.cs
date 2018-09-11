@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
@@ -16,12 +17,10 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         private const string CurrentArchive = "current";
         private const string NextArchive = "next-archive";
         private readonly IXmlSerializationService _xmlserializationService;
-        private readonly IJsonSerializationService _jsonSerializationService;
 
-        public FcsSyndicationFeedParserService(IXmlSerializationService xmlSerializationService, IJsonSerializationService jsonSerializationService)
+        public FcsSyndicationFeedParserService(IXmlSerializationService xmlSerializationService)
         {
             _xmlserializationService = xmlSerializationService;
-            _jsonSerializationService = jsonSerializationService;
         }
         
         public string CurrentArchiveLink(SyndicationFeed syndicationFeed)
@@ -39,7 +38,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             return RetrieveLinkForRelationshipType(syndicationFeed, NextArchive);
         }
         
-        public contract RetrieveContractFromSyndicationItem(SyndicationItem syndicationItem)
+        public (Guid syndicationItemId, contract contract) RetrieveContractFromSyndicationItem(SyndicationItem syndicationItem)
         {
             using (var stringWriter = new StringWriter())
             {
@@ -61,7 +60,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
                     var deserializedContract = _xmlserializationService.Deserialize<contract>(memoryStream);
 
-                    return deserializedContract;
+                    return (Guid.Parse(syndicationItem.Id.Remove(0, 5)), deserializedContract);
                 }
             }
         }

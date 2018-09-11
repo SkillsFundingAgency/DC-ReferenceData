@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ReferenceData.FCS.Model;
@@ -10,6 +11,8 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Interface
     {
         Task<IEnumerable<ContractKey>> GetExistingContractKeys(CancellationToken cancellationToken);
 
-        Task PersistContracts(IEnumerable<Contractor> contractors, IEnumerable<ContractKey> existingContractKeys, CancellationToken cancellationToken);
+        Task<IEnumerable<Guid>> GetExistingSyndicationItemIds(CancellationToken cancellationToken);
+
+        Task PersistContracts(IEnumerable<Contractor> contractors, CancellationToken cancellationToken);
     }
 }

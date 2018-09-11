@@ -9,7 +9,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 {
     public class ContractMappingService : IContractMappingService
     {
-        public Contractor Map(contract contract)
+        public Contractor Map(Guid syndicationItemId, contract contract)
         {
             if (contract.contractor == null)
             {
@@ -17,6 +17,8 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             }
             
             var contractor = MapContractor(contract.contractor);
+
+            contractor.SyndicationItemId = syndicationItemId;
             
             contractor.Contracts = FlattenContracts(contract).Where(c => c.hierarchyType == hierarchyType.CONTRACT).Select(MapContract).ToList();
 
