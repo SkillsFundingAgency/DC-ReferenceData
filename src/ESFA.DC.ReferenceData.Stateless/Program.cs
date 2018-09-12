@@ -1,14 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Integration.ServiceFabric;
+using ESFA.DC.Auditing;
+using ESFA.DC.Auditing.Dto;
+using ESFA.DC.Auditing.Interface;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.JobContext;
 using ESFA.DC.JobContextManager;
 using ESFA.DC.JobContextManager.Interface;
-using Microsoft.ServiceFabric.Services.Runtime;
+using ESFA.DC.JobStatus.Dto;
+using ESFA.DC.JobStatus.Interface;
+using ESFA.DC.Logging;
+using ESFA.DC.Logging.Config;
+using ESFA.DC.Logging.Config.Interfaces;
+using ESFA.DC.Logging.Enums;
+using ESFA.DC.Logging.Interfaces;
+using ESFA.DC.Mapping.Interface;
+using ESFA.DC.Queueing;
+using ESFA.DC.Queueing.Interface;
+using ESFA.DC.ReferenceData.Stateless.Config;
+using ESFA.DC.ReferenceData.Stateless.Config.Interfaces;
+using ESFA.DC.ReferenceData.Stateless.Interfaces;
+using ESFA.DC.Serialization.Interfaces;
+using ESFA.DC.Serialization.Json;
 
 namespace ESFA.DC.ReferenceData.Stateless
 {
@@ -51,7 +69,95 @@ namespace ESFA.DC.ReferenceData.Stateless
         {
             var containerBuilder = new ContainerBuilder();
 
+            containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
+
             containerBuilder.RegisterType<JobContextManagerForQueue<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
+
+            containerBuilder.Register<Func<JobContextMessage, CancellationToken, Task<bool>>>(c => c.Resolve<IMessageHandler<JobContextMessage>>().Handle);
+
+            containerBuilder.Register(c =>
+            {
+                var queueSubscriptionConfig = new ServiceBusQueueConfig(null, null, 1);
+
+                return new QueueSubscriptionService<JobContextDto>(
+                    queueSubscriptionConfig,
+                    c.Resolve<IJsonSerializationService>(),
+                    c.Resolve<ILogger>(),
+                    c.Resolve<IDateTimeProvider>());
+            }).As<IQueueSubscriptionService<JobContextDto>>();
+
+            containerBuilder.RegisterType<TopicPublishServiceStub<JobContextDto>>().As<ITopicPublishService<JobContextDto>>();
+
+            containerBuilder.RegisterType<Auditor>().As<IAuditor>();
+
+            containerBuilder.Register(c =>
+            {
+                var auditPublishConfig = new ServiceBusQueueConfig(null, null, 1);
+
+                return new QueuePublishService<AuditingDto>(
+                    auditPublishConfig,
+                    c.Resolve<IJsonSerializationService>());
+            }).As<IQueuePublishService<AuditingDto>>();
+
+            containerBuilder.RegisterType<JobContextMessageMapper>().As<IMapper<JobContextMessage, JobContextMessage>>();
+
+            containerBuilder.Register(c =>
+            {
+                var jobStatusPublishConfig = new ServiceBusQueueConfig(null, null, 1);
+
+                return new QueuePublishService<JobStatusDto>(
+                    jobStatusPublishConfig,
+                    c.Resolve<IJsonSerializationService>());
+            }).As<IQueuePublishService<JobStatusDto>>();
+
+            containerBuilder.RegisterType<JobStatus.JobStatus>().As<IJobStatus>();
+
+            containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
+
+            containerBuilder
+                .RegisterLogger()
+                .RegisterSerializers();
+
+            return containerBuilder;
+        }
+
+        private static ContainerBuilder RegisterSerializers(this ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>();
+
+            return containerBuilder;
+        }
+
+        private static ContainerBuilder RegisterLogger(this ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterInstance(new LoggerOptions()
+            {
+                LoggerConnectionString = @"Server=(local);Database=Logging;Trusted_Connection=True;"
+            }).As<ILoggerOptions>().SingleInstance();
+
+            containerBuilder.Register(c =>
+            {
+                var loggerOptions = c.Resolve<ILoggerOptions>();
+                return new ApplicationLoggerSettings
+                {
+                    ApplicationLoggerOutputSettingsCollection = new List<IApplicationLoggerOutputSettings>()
+                    {
+                        new MsSqlServerApplicationLoggerOutputSettings()
+                        {
+                            MinimumLogLevel = LogLevel.Verbose,
+                            ConnectionString = loggerOptions.LoggerConnectionString
+                        },
+                        new ConsoleApplicationLoggerOutputSettings()
+                        {
+                            MinimumLogLevel = LogLevel.Verbose
+                        }
+                    }
+                };
+            }).As<IApplicationLoggerSettings>().SingleInstance();
+
+            containerBuilder.RegisterType<Logging.ExecutionContext>().As<IExecutionContext>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SerilogLoggerFactory>().As<ISerilogLoggerFactory>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SeriLogger>().As<ILogger>().InstancePerLifetimeScope();
 
             return containerBuilder;
         }
