@@ -133,7 +133,7 @@ namespace ESFA.DC.ReferenceData.Stateless
         {
             containerBuilder.Register(c =>
             {
-                var queueSubscriptionConfig = new ServiceBusQueueConfig(null, null, 1);
+                var queueSubscriptionConfig = new ServiceBusQueueConfig(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.JobsQueueName, 1);
 
                 return new QueueSubscriptionService<JobContextDto>(
                     queueSubscriptionConfig,
@@ -146,7 +146,7 @@ namespace ESFA.DC.ReferenceData.Stateless
             
             containerBuilder.Register(c =>
             {
-                var auditPublishConfig = new ServiceBusQueueConfig(null, null, 1);
+                var auditPublishConfig = new ServiceBusQueueConfig(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.AuditQueueName, 1);
 
                 return new QueuePublishService<AuditingDto>(
                     auditPublishConfig,
@@ -155,7 +155,7 @@ namespace ESFA.DC.ReferenceData.Stateless
 
             containerBuilder.Register(c =>
             {
-                var jobStatusPublishConfig = new ServiceBusQueueConfig(null, null, 1);
+                var jobStatusPublishConfig = new ServiceBusQueueConfig(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.JobStatusQueueName, 1);
 
                 return new QueuePublishService<JobStatusDto>(
                     jobStatusPublishConfig,
