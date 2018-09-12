@@ -73,7 +73,7 @@ namespace ESFA.DC.ReferenceData.Stateless
 
             containerBuilder.RegisterType<JobContextManagerForQueue<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
 
-            containerBuilder.Register<Func<JobContextMessage, CancellationToken, Task<bool>>>(c => c.Resolve<IMessageHandler<JobContextMessage>>().Handle);
+            containerBuilder.Register<Func<JobContextMessage, CancellationToken, Task<bool>>>(c => c.Resolve<IMessageHandler<JobContextMessage>>().HandleAsync);
 
             containerBuilder.Register(c =>
             {

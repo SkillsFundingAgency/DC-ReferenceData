@@ -7,7 +7,7 @@ namespace ESFA.DC.ReferenceData.Stateless
 {
     public class JobContextMessageHandler : IMessageHandler<JobContextMessage>
     {
-        public Task<bool> Handle(JobContextMessage message, CancellationToken cancellationToken)
+        public Task<bool> HandleAsync(JobContextMessage message, CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }
