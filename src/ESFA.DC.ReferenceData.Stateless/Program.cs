@@ -27,6 +27,7 @@ using ESFA.DC.ReferenceData.Stateless.Config.Interfaces;
 using ESFA.DC.ReferenceData.Stateless.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
+using ESFA.DC.ServiceFabric.Helpers;
 
 namespace ESFA.DC.ReferenceData.Stateless
 {
@@ -67,54 +68,20 @@ namespace ESFA.DC.ReferenceData.Stateless
 
         private static ContainerBuilder BuildContainer()
         {
+            var referenceDataConfiguration = GetReferenceDataConfiguration();
+
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
-
             containerBuilder.RegisterType<JobContextManagerForQueue<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
-
             containerBuilder.Register<Func<JobContextMessage, CancellationToken, Task<bool>>>(c => c.Resolve<IMessageHandler<JobContextMessage>>().HandleAsync);
-
-            containerBuilder.Register(c =>
-            {
-                var queueSubscriptionConfig = new ServiceBusQueueConfig(null, null, 1);
-
-                return new QueueSubscriptionService<JobContextDto>(
-                    queueSubscriptionConfig,
-                    c.Resolve<IJsonSerializationService>(),
-                    c.Resolve<ILogger>(),
-                    c.Resolve<IDateTimeProvider>());
-            }).As<IQueueSubscriptionService<JobContextDto>>();
-
-            containerBuilder.RegisterType<TopicPublishServiceStub<JobContextDto>>().As<ITopicPublishService<JobContextDto>>();
-
             containerBuilder.RegisterType<Auditor>().As<IAuditor>();
-
-            containerBuilder.Register(c =>
-            {
-                var auditPublishConfig = new ServiceBusQueueConfig(null, null, 1);
-
-                return new QueuePublishService<AuditingDto>(
-                    auditPublishConfig,
-                    c.Resolve<IJsonSerializationService>());
-            }).As<IQueuePublishService<AuditingDto>>();
-
             containerBuilder.RegisterType<JobContextMessageMapper>().As<IMapper<JobContextMessage, JobContextMessage>>();
-
-            containerBuilder.Register(c =>
-            {
-                var jobStatusPublishConfig = new ServiceBusQueueConfig(null, null, 1);
-
-                return new QueuePublishService<JobStatusDto>(
-                    jobStatusPublishConfig,
-                    c.Resolve<IJsonSerializationService>());
-            }).As<IQueuePublishService<JobStatusDto>>();
-
             containerBuilder.RegisterType<JobStatus.JobStatus>().As<IJobStatus>();
-
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
 
             containerBuilder
+                .RegisterQueuesAndTopics(referenceDataConfiguration)
                 .RegisterLogger()
                 .RegisterSerializers();
 
@@ -160,6 +127,49 @@ namespace ESFA.DC.ReferenceData.Stateless
             containerBuilder.RegisterType<SeriLogger>().As<ILogger>().InstancePerLifetimeScope();
 
             return containerBuilder;
+        }
+
+        private static ContainerBuilder RegisterQueuesAndTopics(this ContainerBuilder containerBuilder, ReferenceDataConfiguration referenceDataConfiguration)
+        {
+            containerBuilder.Register(c =>
+            {
+                var queueSubscriptionConfig = new ServiceBusQueueConfig(null, null, 1);
+
+                return new QueueSubscriptionService<JobContextDto>(
+                    queueSubscriptionConfig,
+                    c.Resolve<IJsonSerializationService>(),
+                    c.Resolve<ILogger>(),
+                    c.Resolve<IDateTimeProvider>());
+            }).As<IQueueSubscriptionService<JobContextDto>>();
+
+            containerBuilder.RegisterType<TopicPublishServiceStub<JobContextDto>>().As<ITopicPublishService<JobContextDto>>();
+            
+            containerBuilder.Register(c =>
+            {
+                var auditPublishConfig = new ServiceBusQueueConfig(null, null, 1);
+
+                return new QueuePublishService<AuditingDto>(
+                    auditPublishConfig,
+                    c.Resolve<IJsonSerializationService>());
+            }).As<IQueuePublishService<AuditingDto>>();
+
+            containerBuilder.Register(c =>
+            {
+                var jobStatusPublishConfig = new ServiceBusQueueConfig(null, null, 1);
+
+                return new QueuePublishService<JobStatusDto>(
+                    jobStatusPublishConfig,
+                    c.Resolve<IJsonSerializationService>());
+            }).As<IQueuePublishService<JobStatusDto>>();
+
+            return containerBuilder;
+        }
+
+        private static ReferenceDataConfiguration GetReferenceDataConfiguration()
+        {
+            var configHelper = new ConfigurationHelper();
+
+            return configHelper.GetSectionValues<ReferenceDataConfiguration>("ReferenceDataConfiguration");
         }
     }
 }

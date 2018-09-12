@@ -2,5 +2,10 @@
 <Application xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="fabric:/ESFA.DC.ReferenceData" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
     <Parameter Name="ESFA.DC.ReferenceData.Stateless_InstanceCount" Value="1" />
+    <Parameter Name="ServiceBusConnectionString" Value="Test" />
+    <Parameter Name="JobsQueueName" Value="Test" />
+    <Parameter Name="JobStatusQueueName" Value="Test" />
+    <Parameter Name="AuditQueueName" Value="Test" />
+    <Parameter Name="LoggerConnectionString" Value="Test" />
   </Parameters>
 </Application>

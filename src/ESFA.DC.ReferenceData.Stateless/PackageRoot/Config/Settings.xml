@@ -6,4 +6,15 @@
     <Parameter Name="MyParameter" Value="Value1" />
   </Section>
   -->
+  <Section Name="ReferenceDataConfiguration">
+    <Parameter Name="ServiceBusConnectionString" Value="" />
+    <Parameter Name="JobsQueueName" Value="" />
+    <Parameter Name="JobStatusQueueName" Value="" />
+    <Parameter Name="AuditQueueName" Value="" />
+    <Parameter Name="LoggerConnectionString" Value="" />
+  </Section>
+
+  <Section Name="FcsConfiguration">
+    <Parameter Name="FcsConnectionString" Value=""/>
+  </Section>
 </Settings>
