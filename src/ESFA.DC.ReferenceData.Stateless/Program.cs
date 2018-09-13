@@ -70,27 +70,29 @@ namespace ESFA.DC.ReferenceData.Stateless
         {
             var referenceDataConfiguration = GetReferenceDataConfiguration();
 
-            var containerBuilder = new ContainerBuilder();
-
-            containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
-            containerBuilder.RegisterType<JobContextManagerForQueue<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
-            containerBuilder.Register<Func<JobContextMessage, CancellationToken, Task<bool>>>(c => c.Resolve<IMessageHandler<JobContextMessage>>().HandleAsync);
-            containerBuilder.RegisterType<Auditor>().As<IAuditor>();
-            containerBuilder.RegisterType<JobContextMessageMapper>().As<IMapper<JobContextMessage, JobContextMessage>>();
-            containerBuilder.RegisterType<JobStatus.JobStatus>().As<IJobStatus>();
-            containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
-
-            containerBuilder
+            return new ContainerBuilder()
+                .RegisterJobContextManagementServices()
                 .RegisterQueuesAndTopics(referenceDataConfiguration)
                 .RegisterLogger()
                 .RegisterSerializers();
-
-            return containerBuilder;
         }
 
         private static ContainerBuilder RegisterSerializers(this ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>();
+
+            return containerBuilder;
+        }
+
+        private static ContainerBuilder RegisterJobContextManagementServices(this ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
+            containerBuilder.RegisterType<JobContextManagerForTopics<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
+            containerBuilder.Register<Func<JobContextMessage, CancellationToken, Task<bool>>>(c => c.Resolve<IMessageHandler<JobContextMessage>>().HandleAsync);
+            containerBuilder.RegisterType<Auditor>().As<IAuditor>();
+            containerBuilder.RegisterType<JobContextMessageMapper>().As<IMapper<JobContextMessage, JobContextMessage>>();
+            containerBuilder.RegisterType<JobStatus.JobStatus>().As<IJobStatus>();
+            containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
 
             return containerBuilder;
         }
@@ -133,14 +135,14 @@ namespace ESFA.DC.ReferenceData.Stateless
         {
             containerBuilder.Register(c =>
             {
-                var queueSubscriptionConfig = new ServiceBusQueueConfig(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.JobsQueueName, 1);
-
-                return new QueueSubscriptionService<JobContextDto>(
-                    queueSubscriptionConfig,
+                var topicSubscriptionConfig = new ServiceBusTopicConfig(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.TopicName, referenceDataConfiguration.SubscriptionName, 1);
+               
+                return new TopicSubscriptionSevice<JobContextDto>(
+                    topicSubscriptionConfig,
                     c.Resolve<IJsonSerializationService>(),
                     c.Resolve<ILogger>(),
                     c.Resolve<IDateTimeProvider>());
-            }).As<IQueueSubscriptionService<JobContextDto>>();
+            }).As<ITopicSubscriptionService<JobContextDto>>();
 
             containerBuilder.RegisterType<TopicPublishServiceStub<JobContextDto>>().As<ITopicPublishService<JobContextDto>>();
             

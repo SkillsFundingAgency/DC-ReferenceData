@@ -3,7 +3,8 @@
   <Parameters>
     <Parameter Name="ESFA.DC.ReferenceData.Stateless_InstanceCount" DefaultValue="-1" />
     <Parameter Name="ServiceBusConnectionString" DefaultValue="" />
-    <Parameter Name="JobsQueueName" DefaultValue="jobQueue" />
+    <Parameter Name="TopicName" DefaultValue="topicName" />
+    <Parameter Name="SubscriptionName" DefaultValue="subscriptionName" />
     <Parameter Name="JobStatusQueueName" DefaultValue="jobStatusQueue" />
     <Parameter Name="AuditQueueName" DefaultValue="AuditQueue" />
     <Parameter Name="LoggerConnectionString" DefaultValue="loggerConnectionString" />
@@ -18,7 +19,8 @@
         <Settings>
           <Section Name="ReferenceDataConfiguration">
             <Parameter Name="ServiceBusConnectionString" Value="[ServiceBusConnectionString]" />
-            <Parameter Name="JobsQueueName" Value="[JobsQueueName]" />
+            <Parameter Name="TopicName" Value="[TopicName]" />
+            <Parameter Name="SubscriptionName" Value="[SubscriptionName]" />
             <Parameter Name="JobStatusQueueName" Value="[JobStatusQueueName]" />
             <Parameter Name="AuditQueueName" Value="[AuditQueueName]" />
             <Parameter Name="LoggerConnectionString" Value="[LoggerConnectionString]" />
