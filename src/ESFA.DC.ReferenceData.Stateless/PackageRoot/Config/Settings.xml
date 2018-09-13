@@ -15,7 +15,12 @@
     <Parameter Name="LoggerConnectionString" Value="" />
   </Section>
 
-  <Section Name="FcsConfiguration">
+  <Section Name="FcsServiceConfiguration">
     <Parameter Name="FcsConnectionString" Value=""/>
+    <Parameter Name="FeedUri" Value=""/>
+    <Parameter Name="Authority" Value=""/>
+    <Parameter Name="ResourceId" Value=""/>
+    <Parameter Name="ClientId" Value=""/>
+    <Parameter Name="AppKey" Value=""/>
   </Section>
 </Settings>

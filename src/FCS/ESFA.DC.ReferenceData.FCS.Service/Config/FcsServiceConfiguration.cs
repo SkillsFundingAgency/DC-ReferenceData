@@ -2,7 +2,7 @@
 
 namespace ESFA.DC.ReferenceData.FCS.Service.Config
 {
-    public class FcsClientConfig : IFcsClientConfig
+    public class FcsServiceConfiguration : IFcsServiceConfiguration
     {
         public string FeedUri { get; set; }
 
@@ -14,6 +14,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Config
 
         public string AppKey { get; set; }
 
-        public string ConnectionString { get; set; }
+        public string FcsConnectionString { get; set; }
     }
 }

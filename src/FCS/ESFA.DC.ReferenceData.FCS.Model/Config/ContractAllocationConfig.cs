@@ -10,7 +10,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model.Config
 
             this.HasKey(ca => ca.Id);
 
-            this.HasMany(ca => ca.ContractDeliverables).WithRequired(cd => cd.ContractAllocation).HasForeignKey(cd => cd.ContractAllocationId);
+            this.HasMany(ca => ca.ContractDeliverables).WithRequired(cd => cd.ContractAllocation).HasForeignKey(cd => cd.ContractAllocationId).WillCascadeOnDelete();
 
             this.HasRequired(ca => ca.Contract).WithMany(c => c.ContractAllocations).HasForeignKey(c => c.ContractId).WillCascadeOnDelete();
         }

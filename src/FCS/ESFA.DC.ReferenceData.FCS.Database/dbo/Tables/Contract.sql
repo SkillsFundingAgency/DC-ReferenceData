@@ -6,5 +6,5 @@
     [StartDate] DATETIME NULL, 
     [EndDate] DATETIME NULL, 
     [ContractorId] INT NOT NULL, 
-    CONSTRAINT [FK_Contract_ToContractor] FOREIGN KEY ([ContractorId]) REFERENCES [Contractor]([Id])
+    CONSTRAINT [FK_Contract_ToContractor] FOREIGN KEY ([ContractorId]) REFERENCES [Contractor]([Id]) ON DELETE CASCADE
 )

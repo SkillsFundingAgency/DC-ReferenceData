@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ESFA.DC.ReferenceData.FCS.Service.Config.Interface
 {
-    public interface IFcsClientConfig
+    public interface IFcsServiceConfiguration
     {
         string FeedUri { get; }
 
@@ -16,6 +16,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Config.Interface
 
         string AppKey { get; }
 
-        string ConnectionString { get; }
+        string FcsConnectionString { get; }
     }
 }

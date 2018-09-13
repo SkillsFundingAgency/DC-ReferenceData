@@ -11,9 +11,9 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 {
     public class AccessTokenProvider : IAccessTokenProvider
     {
-        private readonly IFcsClientConfig _fcsClientConfig;
+        private readonly IFcsServiceConfiguration _fcsClientConfig;
 
-        public AccessTokenProvider(IFcsClientConfig fcsClientConfig)
+        public AccessTokenProvider(IFcsServiceConfiguration fcsClientConfig)
         {
             _fcsClientConfig = fcsClientConfig;
         }

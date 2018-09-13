@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
@@ -22,11 +23,18 @@ using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Mapping.Interface;
 using ESFA.DC.Queueing;
 using ESFA.DC.Queueing.Interface;
+using ESFA.DC.ReferenceData.FCS.Model;
+using ESFA.DC.ReferenceData.FCS.Model.Interface;
+using ESFA.DC.ReferenceData.FCS.Service;
+using ESFA.DC.ReferenceData.FCS.Service.Config;
+using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
+using ESFA.DC.ReferenceData.FCS.Service.Interface;
 using ESFA.DC.ReferenceData.Stateless.Config;
 using ESFA.DC.ReferenceData.Stateless.Config.Interfaces;
 using ESFA.DC.ReferenceData.Stateless.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
+using ESFA.DC.Serialization.Xml;
 using ESFA.DC.ServiceFabric.Helpers;
 
 namespace ESFA.DC.ReferenceData.Stateless
@@ -69,17 +77,20 @@ namespace ESFA.DC.ReferenceData.Stateless
         private static ContainerBuilder BuildContainer()
         {
             var referenceDataConfiguration = GetReferenceDataConfiguration();
+            var fcsClientConfiguration = GetFcsClientConfig();
 
             return new ContainerBuilder()
                 .RegisterJobContextManagementServices()
                 .RegisterQueuesAndTopics(referenceDataConfiguration)
                 .RegisterLogger()
-                .RegisterSerializers();
+                .RegisterSerializers()
+                .RegisterFcsServices(fcsClientConfiguration);
         }
 
         private static ContainerBuilder RegisterSerializers(this ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>();
+            containerBuilder.RegisterType<XmlSerializationService>().As<IXmlSerializationService>();
 
             return containerBuilder;
         }
@@ -167,11 +178,42 @@ namespace ESFA.DC.ReferenceData.Stateless
             return containerBuilder;
         }
 
+        private static ContainerBuilder RegisterFcsServices(this ContainerBuilder containerBuilder, IFcsServiceConfiguration fcsServiceConfiguration)
+        {
+            containerBuilder.RegisterInstance(fcsServiceConfiguration).As<IFcsServiceConfiguration>();
+            containerBuilder.RegisterType<AccessTokenProvider>().As<IAccessTokenProvider>();
+            containerBuilder.RegisterType<FcsHttpClientFactory>().As<IHttpClientFactory>();
+            containerBuilder.Register(c => c.Resolve<IHttpClientFactory>().Create()).As<HttpClient>().InstancePerDependency();
+            containerBuilder.RegisterType<SyndicationFeedService>().As<ISyndicationFeedService>();
+            containerBuilder.RegisterType<FcsSyndicationFeedParserService>().As<IFcsSyndicationFeedParserService>();
+            containerBuilder.RegisterType<ContractMappingService>().As<IContractMappingService>();
+            containerBuilder.RegisterType<FcsFeedService>().As<IFcsFeedService>();
+            containerBuilder.Register(c =>
+            {
+                var fcsContext = new FcsContext(fcsServiceConfiguration.FcsConnectionString);
+
+                fcsContext.Configuration.AutoDetectChangesEnabled = false;
+
+                return fcsContext;
+            }).As<IFcsContext>().InstancePerDependency();
+            containerBuilder.RegisterType<FcsContractsPersistenceService>().As<IFcsContractsPersistenceService>();
+
+            return containerBuilder;
+        }
+
+
         private static ReferenceDataConfiguration GetReferenceDataConfiguration()
         {
             var configHelper = new ConfigurationHelper();
 
             return configHelper.GetSectionValues<ReferenceDataConfiguration>("ReferenceDataConfiguration");
+        }
+
+        private static IFcsServiceConfiguration GetFcsClientConfig()
+        {
+            var configHelper = new ConfigurationHelper();
+
+            return configHelper.GetSectionValues<FcsServiceConfiguration>("FcsServiceConfiguration");
         }
     }
 }

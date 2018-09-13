@@ -1,15 +1,40 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.JobContext;
+using ESFA.DC.ReferenceData.FCS.Model;
+using ESFA.DC.ReferenceData.FCS.Service;
+using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
+using ESFA.DC.ReferenceData.FCS.Service.Interface;
 using ESFA.DC.ReferenceData.Stateless.Interfaces;
+using ESFA.DC.Serialization.Xml;
 
 namespace ESFA.DC.ReferenceData.Stateless
 {
     public class JobContextMessageHandler : IMessageHandler<JobContextMessage>
     {
-        public Task<bool> HandleAsync(JobContextMessage message, CancellationToken cancellationToken)
+        private readonly IFcsServiceConfiguration _fcsServiceConfiguration;
+        private readonly IFcsFeedService _fcsFeedService;
+        private readonly IFcsContractsPersistenceService _fcsContractsPersistenceService;
+
+        public JobContextMessageHandler(IFcsServiceConfiguration fcsServiceConfiguration, IFcsFeedService fcsFeedService, IFcsContractsPersistenceService fcsContractsPersistenceService)
         {
-            return Task.FromResult(true);
+            _fcsServiceConfiguration = fcsServiceConfiguration;
+            _fcsFeedService = fcsFeedService;
+            _fcsContractsPersistenceService = fcsContractsPersistenceService;
+        }
+
+        public async Task<bool> HandleAsync(JobContextMessage message, CancellationToken cancellationToken)
+        {
+            var existingSyndicationItemIds = await _fcsContractsPersistenceService.GetExistingSyndicationItemIds(cancellationToken);
+
+            var fcsContracts = await _fcsFeedService.GetNewContractorsFromFeedAsync(_fcsServiceConfiguration.FeedUri + "/api/contracts/notifications/approval-onwards", existingSyndicationItemIds, cancellationToken);
+
+            await _fcsContractsPersistenceService.PersistContracts(fcsContracts, CancellationToken.None);
+
+            return true;
         }
     }
 }

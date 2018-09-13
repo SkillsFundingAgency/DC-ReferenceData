@@ -39,7 +39,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
             
             var existingSyndicationItemIds = new List<Guid>();
 
-            using (var fcsContext = new FcsContext(fcsClientConfig.ConnectionString))
+            using (var fcsContext = new FcsContext(fcsClientConfig.FcsConnectionString))
             {
                 existingSyndicationItemIds = new FcsContractsPersistenceService(fcsContext).GetExistingSyndicationItemIds(CancellationToken.None).Result.ToList();
             }
@@ -54,7 +54,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             //   var dcContracts = BuildMasterContracts(300);
 
-            using (var fcsContext = new FcsContext(fcsClientConfig.ConnectionString))
+            using (var fcsContext = new FcsContext(fcsClientConfig.FcsConnectionString))
             {
                 fcsContext.Configuration.AutoDetectChangesEnabled = false;
 
@@ -66,18 +66,18 @@ namespace ESFA.DC.ReferenceData.FCS.Console
             File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - Persisted DC Contracts - " + fcsContracts.Count);
         }
 
-        private static IFcsClientConfig BuildConfig()
+        private static IFcsServiceConfiguration BuildConfig()
         {
             var appSettings = ConfigurationManager.AppSettings;
 
-            return new FcsClientConfig()
+            return new FcsServiceConfiguration()
             {
                 Authority = appSettings["Authority"],
                 AppKey = appSettings["AppKey"],
                 ClientId = appSettings["ClientId"],
                 FeedUri = appSettings["FeedUri"],
                 ResourceId = appSettings["ResourceId"],
-                ConnectionString = appSettings["ConnectionString"]
+                FcsConnectionString = appSettings["ConnectionString"]
             };
         }
 

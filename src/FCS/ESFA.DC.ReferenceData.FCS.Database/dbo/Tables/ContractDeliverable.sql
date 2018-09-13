@@ -8,5 +8,5 @@
     [PlannedVolume] INT NULL, 
     [PlannedValue] DECIMAL(13, 2) NULL, 
     [ContractAllocationId] INT NULL, 
-    CONSTRAINT [FK_ContractDeliverable_ToContractAllocation] FOREIGN KEY ([ContractAllocationId]) REFERENCES [ContractAllocation]([Id])
+    CONSTRAINT [FK_ContractDeliverable_ToContractAllocation] FOREIGN KEY ([ContractAllocationId]) REFERENCES [ContractAllocation]([Id]) ON DELETE CASCADE
 )

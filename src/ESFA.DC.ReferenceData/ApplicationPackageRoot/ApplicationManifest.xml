@@ -8,6 +8,12 @@
     <Parameter Name="JobStatusQueueName" DefaultValue="jobStatusQueue" />
     <Parameter Name="AuditQueueName" DefaultValue="AuditQueue" />
     <Parameter Name="LoggerConnectionString" DefaultValue="loggerConnectionString" />
+    <Parameter Name="FcsConnectionString" DefaultValue="" />
+    <Parameter Name="FeedUri" DefaultValue="" />
+    <Parameter Name="Authority" DefaultValue="" />
+    <Parameter Name="ResourceId" DefaultValue="" />
+    <Parameter Name="ClientId" DefaultValue="" />
+    <Parameter Name="AppKey" DefaultValue="" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -24,6 +30,14 @@
             <Parameter Name="JobStatusQueueName" Value="[JobStatusQueueName]" />
             <Parameter Name="AuditQueueName" Value="[AuditQueueName]" />
             <Parameter Name="LoggerConnectionString" Value="[LoggerConnectionString]" />
+          </Section>
+          <Section Name="FcsServiceConfiguration">
+            <Parameter Name="FcsConnectionString" Value="[FcsConnectionString]" />
+            <Parameter Name="FeedUri" Value="[FeedUri]" />
+            <Parameter Name="Authority" Value="[Authority]" />
+            <Parameter Name="ResourceId" Value="[ResourceId]" />
+            <Parameter Name="ClientId" Value="[ClientId]" />
+            <Parameter Name="AppKey" Value="[AppKey]" />
           </Section>
         </Settings>
       </ConfigOverride>

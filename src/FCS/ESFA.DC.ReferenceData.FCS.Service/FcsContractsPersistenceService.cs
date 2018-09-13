@@ -31,13 +31,10 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                 try
                 {
                     var contractNumbers = contractors.SelectMany(c => c.Contracts).Select(c => c.ContractNumber).ToList();
-
-                    // remove older versions
+                    
                     var defunctContractors = _fcsContext
-                        .Contracts
-                        .AsEnumerable()
-                        .Where(c => contractNumbers.Contains(c.ContractNumber))
-                        .Select(c => c.Contractor).ToList();
+                        .Contractors
+                        .Where(o => o.Contracts.Any(c => contractNumbers.Contains(c.ContractNumber)));
 
                     _fcsContext.Contractors.RemoveRange(defunctContractors);
 

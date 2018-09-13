@@ -10,5 +10,5 @@
     [EndDate] DATETIME NULL, 
     [UoPCode] NVARCHAR(20) NULL, 
     [ContractId] INT NULL, 
-    CONSTRAINT [FK_ContractAllocation_ToContract] FOREIGN KEY ([ContractId]) REFERENCES [Contract]([Id])
+    CONSTRAINT [FK_ContractAllocation_ToContract] FOREIGN KEY ([ContractId]) REFERENCES [Contract]([Id]) ON DELETE CASCADE
 )
