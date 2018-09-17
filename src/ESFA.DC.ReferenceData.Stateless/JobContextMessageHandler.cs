@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.JobContext;
-using ESFA.DC.ReferenceData.FCS.Model;
-using ESFA.DC.ReferenceData.FCS.Service;
 using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
 using ESFA.DC.ReferenceData.Stateless.Interfaces;
-using ESFA.DC.Serialization.Xml;
 
 namespace ESFA.DC.ReferenceData.Stateless
 {

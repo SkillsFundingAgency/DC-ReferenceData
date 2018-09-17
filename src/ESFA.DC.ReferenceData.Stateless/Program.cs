@@ -82,7 +82,7 @@ namespace ESFA.DC.ReferenceData.Stateless
             return new ContainerBuilder()
                 .RegisterJobContextManagementServices()
                 .RegisterQueuesAndTopics(referenceDataConfiguration)
-                .RegisterLogger()
+                .RegisterLogger(referenceDataConfiguration)
                 .RegisterSerializers()
                 .RegisterFcsServices(fcsClientConfiguration);
         }
@@ -108,11 +108,11 @@ namespace ESFA.DC.ReferenceData.Stateless
             return containerBuilder;
         }
 
-        private static ContainerBuilder RegisterLogger(this ContainerBuilder containerBuilder)
+        private static ContainerBuilder RegisterLogger(this ContainerBuilder containerBuilder, ReferenceDataConfiguration referenceDataConfiguration)
         {
             containerBuilder.RegisterInstance(new LoggerOptions()
             {
-                LoggerConnectionString = @"Server=(local);Database=Logging;Trusted_Connection=True;"
+                LoggerConnectionString = referenceDataConfiguration.LoggerConnectionString
             }).As<ILoggerOptions>().SingleInstance();
 
             containerBuilder.Register(c =>
@@ -146,20 +146,19 @@ namespace ESFA.DC.ReferenceData.Stateless
         {
             containerBuilder.Register(c =>
             {
-                var topicSubscriptionConfig = new ServiceBusTopicConfig(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.TopicName, referenceDataConfiguration.SubscriptionName, 1);
+                var topicSubscriptionConfig = new TopicConfiguration(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.TopicName, referenceDataConfiguration.SubscriptionName, 1, maximumCallbackTimeSpan: TimeSpan.FromMinutes(20));
                
                 return new TopicSubscriptionSevice<JobContextDto>(
                     topicSubscriptionConfig,
                     c.Resolve<IJsonSerializationService>(),
-                    c.Resolve<ILogger>(),
-                    c.Resolve<IDateTimeProvider>());
+                    c.Resolve<ILogger>());
             }).As<ITopicSubscriptionService<JobContextDto>>();
 
             containerBuilder.RegisterType<TopicPublishServiceStub<JobContextDto>>().As<ITopicPublishService<JobContextDto>>();
             
             containerBuilder.Register(c =>
             {
-                var auditPublishConfig = new ServiceBusQueueConfig(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.AuditQueueName, 1);
+                var auditPublishConfig = new QueueConfiguration(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.AuditQueueName, 1);
 
                 return new QueuePublishService<AuditingDto>(
                     auditPublishConfig,
@@ -168,7 +167,7 @@ namespace ESFA.DC.ReferenceData.Stateless
 
             containerBuilder.Register(c =>
             {
-                var jobStatusPublishConfig = new ServiceBusQueueConfig(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.JobStatusQueueName, 1);
+                var jobStatusPublishConfig = new QueueConfiguration(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.JobStatusQueueName, 1);
 
                 return new QueuePublishService<JobStatusDto>(
                     jobStatusPublishConfig,
