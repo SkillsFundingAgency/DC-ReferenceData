@@ -1,34 +1,42 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.JobContext;
-using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
-using ESFA.DC.ReferenceData.FCS.Service.Interface;
+using ESFA.DC.ReferenceData.Interfaces;
 using ESFA.DC.ReferenceData.Stateless.Interfaces;
 
 namespace ESFA.DC.ReferenceData.Stateless
 {
     public class JobContextMessageHandler : IMessageHandler<JobContextMessage>
     {
-        private readonly IFcsServiceConfiguration _fcsServiceConfiguration;
-        private readonly IFcsFeedService _fcsFeedService;
-        private readonly IFcsContractsPersistenceService _fcsContractsPersistenceService;
+        private readonly IEnumerable<IReferenceDataTask> _referenceDataTasks;
 
-        public JobContextMessageHandler(IFcsServiceConfiguration fcsServiceConfiguration, IFcsFeedService fcsFeedService, IFcsContractsPersistenceService fcsContractsPersistenceService)
+        public JobContextMessageHandler(IEnumerable<IReferenceDataTask> referenceDataTasks)
         {
-            _fcsServiceConfiguration = fcsServiceConfiguration;
-            _fcsFeedService = fcsFeedService;
-            _fcsContractsPersistenceService = fcsContractsPersistenceService;
+            _referenceDataTasks = referenceDataTasks;
         }
 
-        public async Task<bool> HandleAsync(JobContextMessage message, CancellationToken cancellationToken)
+        public async Task<bool> HandleAsync(JobContextMessage jobContextMessage, CancellationToken cancellationToken)
         {
-            var existingSyndicationItemIds = await _fcsContractsPersistenceService.GetExistingSyndicationItemIds(cancellationToken);
+            var taskNames = GetTaskNamesForTopicFromMessage(jobContextMessage);
 
-            var fcsContracts = await _fcsFeedService.GetNewContractorsFromFeedAsync(_fcsServiceConfiguration.FeedUri + "/api/contracts/notifications/approval-onwards", existingSyndicationItemIds, cancellationToken);
+            var tasks = _referenceDataTasks.Where(t => taskNames.Contains(t.TaskName));
 
-            await _fcsContractsPersistenceService.PersistContracts(fcsContracts, CancellationToken.None);
+            foreach (var task in tasks)
+            {
+                await task.ExecuteAsync(cancellationToken);
+            }
 
             return true;
+        }
+
+        public IEnumerable<string> GetTaskNamesForTopicFromMessage(JobContextMessage jobContextMessage)
+        {
+            return jobContextMessage
+                .Topics[jobContextMessage.TopicPointer]
+                .Tasks
+                .SelectMany(t => t.Tasks);
         }
     }
 }

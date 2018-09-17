@@ -305,6 +305,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.Interfaces\ESFA.DC.ReferenceData.Interfaces.csproj">
+      <Project>{8551F171-B2E6-4CEB-BF89-DEF431CAA5E6}</Project>
+      <Name>ESFA.DC.ReferenceData.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FCS\ESFA.DC.ReferenceData.FCS.Model\ESFA.DC.ReferenceData.FCS.Model.csproj">
       <Project>{e7474d7b-857a-4eef-8bae-449dc2aa3f5a}</Project>
       <Name>ESFA.DC.ReferenceData.FCS.Model</Name>

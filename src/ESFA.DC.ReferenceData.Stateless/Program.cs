@@ -29,6 +29,7 @@ using ESFA.DC.ReferenceData.FCS.Service;
 using ESFA.DC.ReferenceData.FCS.Service.Config;
 using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
+using ESFA.DC.ReferenceData.Interfaces;
 using ESFA.DC.ReferenceData.Stateless.Config;
 using ESFA.DC.ReferenceData.Stateless.Config.Interfaces;
 using ESFA.DC.ReferenceData.Stateless.Interfaces;
@@ -196,6 +197,7 @@ namespace ESFA.DC.ReferenceData.Stateless
                 return fcsContext;
             }).As<IFcsContext>().InstancePerDependency();
             containerBuilder.RegisterType<FcsContractsPersistenceService>().As<IFcsContractsPersistenceService>();
+            containerBuilder.RegisterType<FcsReferenceDataTask>().As<IReferenceDataTask>();
 
             return containerBuilder;
         }
