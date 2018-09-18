@@ -31,7 +31,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                 try
                 {
                     var contractNumbers = contractors.SelectMany(c => c.Contracts).Select(c => c.ContractNumber).ToList();
-                    
+
                     var defunctContractors = _fcsContext
                         .Contractors
                         .Where(o => o.Contracts.Any(c => contractNumbers.Contains(c.ContractNumber)));
@@ -45,7 +45,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                     // commit
                     transaction.Commit();
                 }
-                catch (Exception exception)
+                catch (Exception)
                 {
                     transaction.Rollback();
                     throw;

@@ -13,17 +13,17 @@ using ESFA.DC.Serialization.Xml;
 
 namespace ESFA.DC.ReferenceData.FCS.Console
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var stopwatch = new Stopwatch();
 
             var logFile = "log.txt";
 
             stopwatch.Start();
-            
-            var fcsClientConfig = BuildConfig();   
+
+            var fcsClientConfig = BuildConfig();
 
             var accessTokenProvider = new AccessTokenProvider(fcsClientConfig);
 
@@ -36,7 +36,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
             var contractMappingService = new ContractMappingService();
 
             var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService, contractMappingService);
-            
+
             var existingSyndicationItemIds = new List<Guid>();
 
             using (var fcsContext = new FcsContext(fcsClientConfig.FcsConnectionString))
@@ -45,14 +45,10 @@ namespace ESFA.DC.ReferenceData.FCS.Console
             }
 
             var fcsContracts = fcsFeedService.GetNewContractorsFromFeedAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", existingSyndicationItemIds, CancellationToken.None).Result.ToList();
-            
+
             File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - got FCS Contracts" + fcsContracts.Count);
 
-            //var fcsContracts = fcsFeedService.LoadContractsFromFeedToEndAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", CancellationToken.None).Result.ToList();
-            
             File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - map to DC Contracts - " + fcsContracts.Count);
-
-            //   var dcContracts = BuildMasterContracts(300);
 
             using (var fcsContext = new FcsContext(fcsClientConfig.FcsConnectionString))
             {
@@ -100,7 +96,6 @@ namespace ESFA.DC.ReferenceData.FCS.Console
                 }
             };
         }
-
 
         private static Contract BuildContract(int iteration)
         {

@@ -16,14 +16,6 @@ namespace ESFA.DC.ReferenceData.FCS.Model
         {
         }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Configurations.Add(new ContractorConfig());
-            modelBuilder.Configurations.Add(new ContractConfig());
-            modelBuilder.Configurations.Add(new ContractAllocationConfig());
-            modelBuilder.Configurations.Add(new ContractDeliverableConfig());
-        }
-
         public virtual DbSet<Contractor> Contractors { get; set; }
 
         public virtual DbSet<Contract> Contracts { get; set; }
@@ -31,5 +23,13 @@ namespace ESFA.DC.ReferenceData.FCS.Model
         public virtual DbSet<ContractAllocation> ContractAllocations { get; set; }
 
         public virtual DbSet<ContractDeliverable> ContractDeliverables { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Configurations.Add(new ContractorConfig());
+            modelBuilder.Configurations.Add(new ContractConfig());
+            modelBuilder.Configurations.Add(new ContractAllocationConfig());
+            modelBuilder.Configurations.Add(new ContractDeliverableConfig());
+        }
     }
 }

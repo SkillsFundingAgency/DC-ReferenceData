@@ -3,7 +3,7 @@
     public class ReferenceDataConfiguration
     {
         public string ServiceBusConnectionString { get; set; }
-        
+
         public string TopicName { get; set; }
 
         public string SubscriptionName { get; set; }

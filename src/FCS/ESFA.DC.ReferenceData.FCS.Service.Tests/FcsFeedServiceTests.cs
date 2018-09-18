@@ -15,7 +15,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
         [Fact]
         public void ContinueToNextPage_True()
         {
-            NewService().ContinueToNextPage("not null", new List<Guid>() {Guid.Empty}).Should().BeTrue();
+            NewService().ContinueToNextPage("not null", new List<Guid>() { Guid.Empty }).Should().BeTrue();
         }
 
         [Fact]

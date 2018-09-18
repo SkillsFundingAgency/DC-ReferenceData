@@ -13,14 +13,14 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         private readonly IFcsFeedService _fcsFeedService;
         private readonly IFcsContractsPersistenceService _fcsContractsPersistenceService;
 
-        public string TaskName => TaskNameConstants.FcsReferenceDataTaskName;
-
         public FcsReferenceDataTask(IFcsServiceConfiguration fcsServiceConfiguration, IFcsFeedService fcsFeedService, IFcsContractsPersistenceService fcsContractsPersistenceService)
         {
             _fcsServiceConfiguration = fcsServiceConfiguration;
             _fcsFeedService = fcsFeedService;
             _fcsContractsPersistenceService = fcsContractsPersistenceService;
         }
+
+        public string TaskName => TaskNameConstants.FcsReferenceDataTaskName;
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {

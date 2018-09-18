@@ -13,8 +13,8 @@ namespace ESFA.DC.ReferenceData.FCS.Model.Interface
 
         DbSet<ContractDeliverable> ContractDeliverables { get; set; }
 
-        Task<int> SaveChangesAsync();
-
         Database Database { get; }
+
+        Task<int> SaveChangesAsync();
     }
 }

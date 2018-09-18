@@ -15,16 +15,16 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             {
                 throw new ArgumentNullException("Contractor Missing for Contract");
             }
-            
+
             var contractor = MapContractor(contract.contractor);
 
             contractor.SyndicationItemId = syndicationItemId;
-            
+
             contractor.Contracts = FlattenContracts(contract).Where(c => c.hierarchyType == hierarchyType.CONTRACT).Select(MapContract).ToList();
 
             return contractor;
         }
-        
+
         public Contractor MapContractor(contractor contractor)
         {
             return new Contractor()

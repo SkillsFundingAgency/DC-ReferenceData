@@ -27,7 +27,7 @@ namespace ESFA.DC.ReferenceData.Stateless
                 initialised = true;
                 await Task.Delay(Timeout.Infinite, cancellationToken);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Ignore, as an exception is only really thrown on cancellation of the token.
             }

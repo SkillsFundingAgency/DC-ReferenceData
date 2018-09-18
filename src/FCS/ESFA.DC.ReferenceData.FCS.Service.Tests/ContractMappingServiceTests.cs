@@ -34,13 +34,12 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
         {
             var contract = new contract()
             {
-                contracts = new[] {new contract(), new contract(), new contract(),}
+                contracts = new[] { new contract(), new contract(), new contract() }
             };
 
             var flattenedContracts = NewService().FlattenContracts(contract);
 
             flattenedContracts.Should().HaveCount(4);
-
         }
 
         [Fact]
@@ -56,7 +55,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                     {
                         contracts = new[]
                         {
-                            new contract(), 
+                            new contract(),
                         }
                     },
                 }
@@ -124,7 +123,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contract.ContractAllocations.Should().HaveCount(1);
         }
 
-
         [Fact]
         public void MapContract_NullDates()
         {
@@ -174,7 +172,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                     new contractAllocationsContractAllocation(),
                     new contractAllocationsContractAllocation()
                     {
-                        contractAllocations = new []
+                        contractAllocations = new[]
                         {
                             new contractAllocationsContractAllocation(),
                             new contractAllocationsContractAllocation(),
@@ -197,7 +195,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             var uopCode = "uopCode";
             var startDate = new DateTime(2017, 1, 1);
             var endDate = new DateTime(2018, 1, 1);
-                
+
             var fcsContractAllocation = new contractAllocationsContractAllocation()
             {
                 contractAllocationNumber = contractAllocationNumber,
@@ -254,11 +252,10 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 startDate = startDate,
                 endDateSpecified = true,
                 endDate = endDate,
-                contractDeliverables = new []
+                contractDeliverables = new[]
                 {
-                    new contractDeliverablesTypeContractDeliverable(), 
+                    new contractDeliverablesTypeContractDeliverable(),
                 }
-               
             };
 
             var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation);
@@ -323,7 +320,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             var fcsContractDeliverable = new contractDeliverablesTypeContractDeliverable()
             {
                 deliverableDescription = description,
-                deliverable = new deliverableType() {  deliverableCode = deliverableCode },
+                deliverable = new deliverableType() { deliverableCode = deliverableCode },
                 unitCostSpecified = true,
                 unitCost = unitCost,
                 plannedVolumeSpecified = true,
@@ -340,7 +337,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractDeliverable.PlannedVolume.Should().Be(plannedVolume);
             contractDeliverable.PlannedValue.Should().Be(plannedValue);
         }
-
 
         [Fact]
         public void MapContractDeliverable_Nulls()
@@ -387,7 +383,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 contractor = new contractor(),
                 contractNumber = contractNumberMaster,
                 hierarchyType = hierarchyType.MASTERCONTRACT,
-                contracts = new []
+                contracts = new[]
                 {
                     new contract()
                     {
@@ -401,17 +397,17 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                                 hierarchyType = hierarchyType.CONTRACT,
                             }
                         },
-                        contractAllocations = new []
+                        contractAllocations = new[]
                         {
                             new contractAllocationsContractAllocation()
                             {
                                 contractAllocationNumber = contractAllocationNumberA1,
-                                contractDeliverables = new []
+                                contractDeliverables = new[]
                                 {
                                     new contractDeliverablesTypeContractDeliverable()
                                     {
                                         deliverableDescription = deliverableDescriptionA1,
-                                        contractDeliverables = new []
+                                        contractDeliverables = new[]
                                         {
                                             new contractDeliverablesTypeContractDeliverable()
                                             {
@@ -424,12 +420,12 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                                         deliverableDescription = deliverableDescriptionA2
                                     }
                                 },
-                                contractAllocations = new []
+                                contractAllocations = new[]
                                 {
                                     new contractAllocationsContractAllocation()
                                     {
                                         contractAllocationNumber = subContractAllocationNumberA1
-                                    } 
+                                    }
                                 }
                             },
                             new contractAllocationsContractAllocation()
@@ -445,7 +441,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                     }
                 }
             };
-            
+
             var contractor = NewService().Map(Guid.Empty, contract);
 
             contractor.Contracts.Should().HaveCount(3);

@@ -16,12 +16,13 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         private readonly IFcsSyndicationFeedParserService _fcsSyndicationFeedParserService;
         private readonly IContractMappingService _contractMappingService;
 
-        private readonly RetryPolicy _retryPolicy = 
+        private readonly RetryPolicy _retryPolicy =
             Policy
             .Handle<Exception>()
             .WaitAndRetryAsync(3, a => TimeSpan.FromSeconds(3));
 
-        public FcsFeedService(ISyndicationFeedService syndicationFeedService,
+        public FcsFeedService(
+            ISyndicationFeedService syndicationFeedService,
             IFcsSyndicationFeedParserService fcsSyndicationFeedParserService,
             IContractMappingService contractMappingService)
         {
@@ -29,14 +30,14 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             _fcsSyndicationFeedParserService = fcsSyndicationFeedParserService;
             _contractMappingService = contractMappingService;
         }
-        
+
         public async Task<IEnumerable<Contractor>> GetNewContractorsFromFeedAsync(string uri, IEnumerable<Guid> existingSyndicationItemIds, CancellationToken cancellationToken)
         {
             string previousPageUri = uri;
             var existingSyndicationItemIdsHashSet = new HashSet<Guid>(existingSyndicationItemIds.Distinct());
 
             var contractorCache = new Dictionary<string, Contractor>();
-            
+
             IEnumerable<Guid> newCurrentPageSyndicationItemIds;
 
             do
@@ -62,9 +63,10 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                         contractorCache.Add(contractNumber, contractor);
                     }
                 }
-                
+
                 previousPageUri = _fcsSyndicationFeedParserService.PreviousArchiveLink(feed);
-            } while (ContinueToNextPage(previousPageUri, newCurrentPageSyndicationItemIds));
+            }
+            while (ContinueToNextPage(previousPageUri, newCurrentPageSyndicationItemIds));
 
             return contractorCache.Values;
         }

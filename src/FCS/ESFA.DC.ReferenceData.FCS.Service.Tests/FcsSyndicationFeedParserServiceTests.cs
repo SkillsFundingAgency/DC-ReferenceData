@@ -42,7 +42,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
         [Fact]
         public void PreviousArchiveLink_Null_NullUri()
         {
-
             var syndicationFeed = new SyndicationFeed()
             {
                 Links = { new SyndicationLink(null, "prev-archive", null, null, 0) }
@@ -80,7 +79,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
         [Fact]
         public void CurrentArchiveLink_Null_NullUri()
         {
-
             var syndicationFeed = new SyndicationFeed()
             {
                 Links = { new SyndicationLink(null, "current", null, null, 0) }
@@ -88,7 +86,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
 
             NewService().CurrentArchiveLink(syndicationFeed).Should().BeNull();
         }
-
 
         [Fact]
         public void NextArchiveLink_Found()
@@ -119,7 +116,6 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
         [Fact]
         public void NextArchiveLink_Null_NullUri()
         {
-
             var syndicationFeed = new SyndicationFeed()
             {
                 Links = { new SyndicationLink(null, "next-archive", null, null, 0) }
@@ -127,7 +123,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
 
             NewService().NextArchiveLink(syndicationFeed).Should().BeNull();
         }
-        
+
         private FcsSyndicationFeedParserService NewService(IXmlSerializationService xmlSerializationService = null)
         {
             return new FcsSyndicationFeedParserService(xmlSerializationService);

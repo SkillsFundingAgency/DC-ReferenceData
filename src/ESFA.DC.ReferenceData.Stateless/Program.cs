@@ -53,7 +53,6 @@ namespace ESFA.DC.ReferenceData.Stateless
                 // Registering a service maps a service type name to a .NET type.
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
-
                 var builder = BuildContainer();
 
                 builder.RegisterServiceFabricSupport();
@@ -148,7 +147,7 @@ namespace ESFA.DC.ReferenceData.Stateless
             containerBuilder.Register(c =>
             {
                 var topicSubscriptionConfig = new TopicConfiguration(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.TopicName, referenceDataConfiguration.SubscriptionName, 1, maximumCallbackTimeSpan: TimeSpan.FromMinutes(20));
-               
+
                 return new TopicSubscriptionSevice<JobContextDto>(
                     topicSubscriptionConfig,
                     c.Resolve<IJsonSerializationService>(),
@@ -156,7 +155,7 @@ namespace ESFA.DC.ReferenceData.Stateless
             }).As<ITopicSubscriptionService<JobContextDto>>();
 
             containerBuilder.RegisterType<TopicPublishServiceStub<JobContextDto>>().As<ITopicPublishService<JobContextDto>>();
-            
+
             containerBuilder.Register(c =>
             {
                 var auditPublishConfig = new QueueConfiguration(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.AuditQueueName, 1);
@@ -201,7 +200,6 @@ namespace ESFA.DC.ReferenceData.Stateless
 
             return containerBuilder;
         }
-
 
         private static ReferenceDataConfiguration GetReferenceDataConfiguration()
         {

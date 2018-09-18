@@ -22,7 +22,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         {
             _xmlserializationService = xmlSerializationService;
         }
-        
+
         public string CurrentArchiveLink(SyndicationFeed syndicationFeed)
         {
             return RetrieveLinkForRelationshipType(syndicationFeed, CurrentArchive);
@@ -37,8 +37,8 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         {
             return RetrieveLinkForRelationshipType(syndicationFeed, NextArchive);
         }
-        
-        public (Guid syndicationItemId, contract contract) RetrieveContractFromSyndicationItem(SyndicationItem syndicationItem)
+
+        public(Guid syndicationItemId, contract contract) RetrieveContractFromSyndicationItem(SyndicationItem syndicationItem)
         {
             using (var stringWriter = new StringWriter())
             {
@@ -46,13 +46,13 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                 {
                     syndicationItem.Content.WriteTo(xmlWriter, "temp", "temp");
                 }
-                
+
                 var contract = XDocument.Parse(stringWriter.ToString()).Descendants().Where(x => x.Name.LocalName == "contract").ToList();
 
                 using (var memoryStream = new MemoryStream())
                 {
                     using (var xmlWriter = XmlWriter.Create(memoryStream))
-                    { 
+                    {
                         contract.First().WriteTo(xmlWriter);
                     }
 

@@ -21,7 +21,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessTokenProvider.ProvideAsync().Result);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
-            
+
             return httpClient;
         }
     }
