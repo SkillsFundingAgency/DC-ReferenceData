@@ -113,7 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Config\PrivateSettings.config">
+    <None Include="PrivateSettings.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ESFA.DC.ReferenceData.FCS.Console.ruleset">
