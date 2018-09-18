@@ -21,6 +21,8 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var logFile = "log.txt";
 
+            var logger = new ConsoleLoggerStub();
+
             stopwatch.Start();
 
             var fcsClientConfig = BuildConfig();
@@ -35,13 +37,13 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var contractMappingService = new ContractMappingService();
 
-            var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService, contractMappingService);
+            var fcsFeedService = new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService, contractMappingService, logger);
 
             var existingSyndicationItemIds = new List<Guid>();
 
             using (var fcsContext = new FcsContext(fcsClientConfig.FcsConnectionString))
             {
-                existingSyndicationItemIds = new FcsContractsPersistenceService(fcsContext).GetExistingSyndicationItemIds(CancellationToken.None).Result.ToList();
+                existingSyndicationItemIds = new FcsContractsPersistenceService(fcsContext, logger).GetExistingSyndicationItemIds(CancellationToken.None).Result.ToList();
             }
 
             var fcsContracts = fcsFeedService.GetNewContractorsFromFeedAsync(fcsClientConfig.FeedUri + "/api/contracts/notifications/approval-onwards", existingSyndicationItemIds, CancellationToken.None).Result.ToList();
@@ -54,7 +56,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
             {
                 fcsContext.Configuration.AutoDetectChangesEnabled = false;
 
-                var fcsContractsPersistenceService = new FcsContractsPersistenceService(fcsContext);
+                var fcsContractsPersistenceService = new FcsContractsPersistenceService(fcsContext, logger);
 
                 fcsContractsPersistenceService.PersistContracts(fcsContracts, CancellationToken.None).Wait();
             }

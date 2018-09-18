@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
 using Polly;
@@ -15,6 +16,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         private readonly ISyndicationFeedService _syndicationFeedService;
         private readonly IFcsSyndicationFeedParserService _fcsSyndicationFeedParserService;
         private readonly IContractMappingService _contractMappingService;
+        private readonly ILogger _logger;
 
         private readonly RetryPolicy _retryPolicy =
             Policy
@@ -24,11 +26,13 @@ namespace ESFA.DC.ReferenceData.FCS.Service
         public FcsFeedService(
             ISyndicationFeedService syndicationFeedService,
             IFcsSyndicationFeedParserService fcsSyndicationFeedParserService,
-            IContractMappingService contractMappingService)
+            IContractMappingService contractMappingService,
+            ILogger logger)
         {
             _syndicationFeedService = syndicationFeedService;
             _fcsSyndicationFeedParserService = fcsSyndicationFeedParserService;
             _contractMappingService = contractMappingService;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Contractor>> GetNewContractorsFromFeedAsync(string uri, IEnumerable<Guid> existingSyndicationItemIds, CancellationToken cancellationToken)
@@ -42,6 +46,8 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
             do
             {
+                _logger.LogVerbose($"FCS Contracts Reference Data - Load Syndication Feed from : {previousPageUri}");
+
                 var feed = await _retryPolicy.ExecuteAsync(async () => await _syndicationFeedService.LoadSyndicationFeedFromUriAsync(previousPageUri, cancellationToken));
 
                 var contractors = feed
@@ -71,9 +77,9 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             return contractorCache.Values;
         }
 
-        public bool ContinueToNextPage(string nextPageUri, IEnumerable<Guid> newCurrentPageSyndicationItemIds)
+        public bool ContinueToNextPage(string previousPageUri, IEnumerable<Guid> newCurrentPageSyndicationItemIds)
         {
-            return nextPageUri != null && newCurrentPageSyndicationItemIds.Any();
+            return previousPageUri != null && newCurrentPageSyndicationItemIds.Any();
         }
     }
 }

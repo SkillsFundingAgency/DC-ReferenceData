@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ServiceModel.Syndication;
-using System.Threading;
-using System.Threading.Tasks;
+using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;
 using FluentAssertions;
-using Moq;
 using Xunit;
 
 namespace ESFA.DC.ReferenceData.FCS.Service.Tests
@@ -30,9 +27,9 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             NewService().ContinueToNextPage("not null", new List<Guid>()).Should().BeFalse();
         }
 
-        private FcsFeedService NewService(ISyndicationFeedService syndicationFeedService = null, IFcsSyndicationFeedParserService fcsSyndicationFeedParserService = null, IContractMappingService contractMappingService = null)
+        private FcsFeedService NewService(ISyndicationFeedService syndicationFeedService = null, IFcsSyndicationFeedParserService fcsSyndicationFeedParserService = null, IContractMappingService contractMappingService = null, ILogger logger = null)
         {
-            return new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService, contractMappingService);
+            return new FcsFeedService(syndicationFeedService, fcsSyndicationFeedParserService, contractMappingService, logger);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.JobContext;
 using ESFA.DC.JobContextManager.Interface;
+using ESFA.DC.Logging.Interfaces;
 using Microsoft.ServiceFabric.Services.Runtime;
 
 namespace ESFA.DC.ReferenceData.Stateless
@@ -11,11 +12,13 @@ namespace ESFA.DC.ReferenceData.Stateless
     public class Stateless : StatelessService
     {
         private readonly IJobContextManager<JobContextMessage> _jobContextManager;
+        private readonly ILogger _logger;
 
-        public Stateless(StatelessServiceContext context, IJobContextManager<JobContextMessage> jobContextManager)
+        public Stateless(StatelessServiceContext context, IJobContextManager<JobContextMessage> jobContextManager, ILogger logger)
             : base(context)
         {
             _jobContextManager = jobContextManager;
+            _logger = logger;
         }
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -23,18 +26,22 @@ namespace ESFA.DC.ReferenceData.Stateless
             bool initialised = false;
             try
             {
+                _logger.LogInfo("Reference Data Stateless Service Start");
+
                 await _jobContextManager.OpenAsync(cancellationToken);
                 initialised = true;
                 await Task.Delay(Timeout.Infinite, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 // Ignore, as an exception is only really thrown on cancellation of the token.
+                _logger.LogError("Reference Data Stateless Service Exception", exception);
             }
             finally
             {
                 if (initialised)
                 {
+                    _logger.LogInfo("Reference Data Stateless Service End");
                     await _jobContextManager.CloseAsync(CancellationToken.None);
                 }
             }
