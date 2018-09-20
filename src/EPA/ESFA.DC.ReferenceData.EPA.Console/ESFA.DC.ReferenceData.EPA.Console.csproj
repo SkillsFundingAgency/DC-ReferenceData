@@ -33,10 +33,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=106.4.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\..\packages\RestSharp.106.4.0\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -58,6 +65,10 @@
     <ProjectReference Include="..\ESFA.DC.ReferenceData.EPA.Model.EPA\ESFA.DC.ReferenceData.EPA.Model.EPA.csproj">
       <Project>{4D187201-4BDC-4F60-BAA0-79394D4B4D1A}</Project>
       <Name>ESFA.DC.ReferenceData.EPA.Model.EPA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.EPA.Model\ESFA.DC.ReferenceData.EPA.Model.csproj">
+      <Project>{AD7A71FC-F40F-4D30-BEB5-BB3892859775}</Project>
+      <Name>ESFA.DC.ReferenceData.EPA.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

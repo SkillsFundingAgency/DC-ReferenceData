@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.ReferenceData.EPA.Model
+﻿using System.Collections.Generic;
+
+namespace ESFA.DC.ReferenceData.EPA.Model
 {
     public class Organisation
     {
@@ -7,5 +9,7 @@
         public string Name { get; set; }
 
         public string Ukprn { get; set; }
+
+        public List<Standard> Standards { get; set; }
     }
 }

@@ -5,5 +5,5 @@
     [EffectiveFrom] DATETIME NOT NULL, 
     [EffectiveTo] DATETIME NULL, 
     PRIMARY KEY ([OrganisationId], [StandardCode], [EffectiveFrom]), 
-    CONSTRAINT [FK_Period_ToStandard] FOREIGN KEY ([OrganisationId], [StandardCode]) REFERENCES [Standard]([OrganisationId], [StandardCode])
+    CONSTRAINT [FK_Period_ToStandard] FOREIGN KEY ([OrganisationId], [StandardCode]) REFERENCES [Standard]([OrganisationId], [StandardCode]) ON DELETE CASCADE
 )
