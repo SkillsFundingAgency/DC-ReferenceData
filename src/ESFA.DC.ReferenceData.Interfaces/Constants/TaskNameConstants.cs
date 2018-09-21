@@ -3,5 +3,7 @@
     public static class TaskNameConstants
     {
         public const string FcsReferenceDataTaskName = "Fcs";
+
+        public const string EpaReferenceDataTaskName = "Epa";
     }
 }

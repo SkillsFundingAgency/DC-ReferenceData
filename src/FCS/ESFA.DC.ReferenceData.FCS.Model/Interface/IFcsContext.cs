@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ESFA.DC.ReferenceData.FCS.Model.Interface
@@ -15,6 +16,6 @@ namespace ESFA.DC.ReferenceData.FCS.Model.Interface
 
         Database Database { get; }
 
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

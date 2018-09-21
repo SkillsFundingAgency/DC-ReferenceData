@@ -1,4 +1,6 @@
 ﻿using System.Data.Entity;
+using System.Data.SqlClient;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ESFA.DC.ReferenceData.EPA.Model.Interface
@@ -10,7 +12,9 @@ namespace ESFA.DC.ReferenceData.EPA.Model.Interface
         DbSet<Standard> Standards { get; set; }
 
         DbSet<Period> Periods { get; set; }
+
+        DbContextTransaction BeginTransaction();
         
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

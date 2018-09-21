@@ -62,6 +62,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ESFA.DC.ReferenceData.Interfaces\ESFA.DC.ReferenceData.Interfaces.csproj">
+      <Project>{8551F171-B2E6-4CEB-BF89-DEF431CAA5E6}</Project>
+      <Name>ESFA.DC.ReferenceData.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ReferenceData.EPA.Model.EPA\ESFA.DC.ReferenceData.EPA.Model.EPA.csproj">
       <Project>{4D187201-4BDC-4F60-BAA0-79394D4B4D1A}</Project>
       <Name>ESFA.DC.ReferenceData.EPA.Model.EPA</Name>
@@ -69,6 +73,10 @@
     <ProjectReference Include="..\ESFA.DC.ReferenceData.EPA.Model\ESFA.DC.ReferenceData.EPA.Model.csproj">
       <Project>{AD7A71FC-F40F-4D30-BEB5-BB3892859775}</Project>
       <Name>ESFA.DC.ReferenceData.EPA.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.EPA.Service\ESFA.DC.ReferenceData.EPA.Service.csproj">
+      <Project>{6ACB78A9-0903-45AF-A251-5A299CCE9905}</Project>
+      <Name>ESFA.DC.ReferenceData.EPA.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

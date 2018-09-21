@@ -24,6 +24,11 @@ namespace ESFA.DC.ReferenceData.EPA.Model
 
         public virtual DbSet<Period> Periods { get; set; }
 
+        public DbContextTransaction BeginTransaction()
+        {
+            return Database.BeginTransaction();
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new OrganisationConfig());
