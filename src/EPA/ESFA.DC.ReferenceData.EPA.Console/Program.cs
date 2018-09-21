@@ -34,18 +34,18 @@ namespace ESFA.DC.ReferenceData.EPA.Console
         {
             _epaServiceConfiguration = new EpaServiceConfiguration()
             {
-                EndpointUri = "https://findapprenticeshiptraining-api.sfa.bis.gov.uk/",
-                ConnectionString = "Server=(local);Database=ESFA.DC.ReferenceData.EPA.Database;Trusted_Connection=True;"
+                EpaEndpointUri = "https://findapprenticeshiptraining-api.sfa.bis.gov.uk/",
+                EpaConnectionString = "Server=(local);Database=ESFA.DC.ReferenceData.EPA.Database;Trusted_Connection=True;"
             };
 
-            _client = new RestClient(_epaServiceConfiguration.EndpointUri);
+            _client = new RestClient(_epaServiceConfiguration.EpaEndpointUri);
 
             _servicePointConfigurationService = new ServicePointConfigurationService(_epaServiceConfiguration);
-            _restClient = new RestClient(_epaServiceConfiguration.EndpointUri);
+            _restClient = new RestClient(_epaServiceConfiguration.EpaEndpointUri);
             _epaRestClient = new EpaRestClient(_restClient);
             _epaFeedService = new EpaFeedService(_epaRestClient);
             _organisationMapper = new OrganisationMapper();
-            _epaContext = new EpaContext(_epaServiceConfiguration.ConnectionString);
+            _epaContext = new EpaContext(_epaServiceConfiguration.EpaConnectionString);
             _epaPersistenceService = new EpaPersistenceService(_epaContext);
 
             _referenceDataTask = new EpaReferenceDataTask(_servicePointConfigurationService, _epaFeedService, _organisationMapper, _epaPersistenceService);

@@ -13,7 +13,7 @@ namespace ESFA.DC.ReferenceData.EPA.Service.Tests
         {
             var epaServiceConfigurationMock = new Mock<IEpaServiceConfiguration>();
 
-            epaServiceConfigurationMock.SetupGet(c => c.EndpointUri).Returns("http://localhost");
+            epaServiceConfigurationMock.SetupGet(c => c.EpaEndpointUri).Returns("http://localhost");
 
             var servicePoint = NewService(epaServiceConfigurationMock.Object).ConfigureServicePoint();
 

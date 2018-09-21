@@ -16,7 +16,7 @@ namespace ESFA.DC.ReferenceData.EPA.Service
 
         public ServicePoint ConfigureServicePoint()
         {
-            var servicePoint = ServicePointManager.FindServicePoint(new Uri(_epaServiceConfiguration.EndpointUri));
+            var servicePoint = ServicePointManager.FindServicePoint(new Uri(_epaServiceConfiguration.EpaEndpointUri));
 
             servicePoint.ConnectionLimit = 250;
             servicePoint.UseNagleAlgorithm = false;

@@ -23,6 +23,12 @@ using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Mapping.Interface;
 using ESFA.DC.Queueing;
 using ESFA.DC.Queueing.Interface;
+using ESFA.DC.ReferenceData.EPA.Model;
+using ESFA.DC.ReferenceData.EPA.Model.Interface;
+using ESFA.DC.ReferenceData.EPA.Service;
+using ESFA.DC.ReferenceData.EPA.Service.Config;
+using ESFA.DC.ReferenceData.EPA.Service.Config.Interface;
+using ESFA.DC.ReferenceData.EPA.Service.Interface;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Model.Interface;
 using ESFA.DC.ReferenceData.FCS.Service;
@@ -37,6 +43,7 @@ using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Serialization.Xml;
 using ESFA.DC.ServiceFabric.Helpers;
+using RestSharp;
 
 namespace ESFA.DC.ReferenceData.Stateless
 {
@@ -77,14 +84,16 @@ namespace ESFA.DC.ReferenceData.Stateless
         private static ContainerBuilder BuildContainer()
         {
             var referenceDataConfiguration = GetReferenceDataConfiguration();
-            var fcsClientConfiguration = GetFcsClientConfig();
+            var fcsServiceConfiguration = GetFcsServiceConfiguration();
+            var epaServiceConfiguration = GetEpaServiceConfiguration();
 
             return new ContainerBuilder()
                 .RegisterJobContextManagementServices()
                 .RegisterQueuesAndTopics(referenceDataConfiguration)
                 .RegisterLogger(referenceDataConfiguration)
                 .RegisterSerializers()
-                .RegisterFcsServices(fcsClientConfiguration);
+                .RegisterFcsServices(fcsServiceConfiguration)
+                .RegisterEpaServices(epaServiceConfiguration);
         }
 
         private static ContainerBuilder RegisterSerializers(this ContainerBuilder containerBuilder)
@@ -201,6 +210,21 @@ namespace ESFA.DC.ReferenceData.Stateless
             return containerBuilder;
         }
 
+        private static ContainerBuilder RegisterEpaServices(this ContainerBuilder containerBuilder, IEpaServiceConfiguration epaServiceConfiguration)
+        {
+            containerBuilder.RegisterInstance(epaServiceConfiguration).As<IEpaServiceConfiguration>();
+            containerBuilder.Register(c => new RestClient(epaServiceConfiguration.EpaEndpointUri)).As<IRestClient>().SingleInstance();
+            containerBuilder.RegisterType<ServicePointConfigurationService>().As<IServicePointConfigurationService>();
+            containerBuilder.RegisterType<EpaRestClient>().As<IEpaRestClient>();
+            containerBuilder.RegisterType<EpaFeedService>().As<IEpaFeedService>();
+            containerBuilder.RegisterType<OrganisationMapper>().As<IOrganisationMapper>();
+            containerBuilder.Register(c => new EpaContext(epaServiceConfiguration.EpaConnectionString)).As<IEpaContext>().InstancePerDependency();
+            containerBuilder.RegisterType<EpaPersistenceService>().As<IEpaPersistenceService>();
+            containerBuilder.RegisterType<EpaReferenceDataTask>().As<IReferenceDataTask>();
+
+            return containerBuilder;
+        }
+
         private static ReferenceDataConfiguration GetReferenceDataConfiguration()
         {
             var configHelper = new ConfigurationHelper();
@@ -208,11 +232,18 @@ namespace ESFA.DC.ReferenceData.Stateless
             return configHelper.GetSectionValues<ReferenceDataConfiguration>("ReferenceDataConfiguration");
         }
 
-        private static IFcsServiceConfiguration GetFcsClientConfig()
+        private static IFcsServiceConfiguration GetFcsServiceConfiguration()
         {
             var configHelper = new ConfigurationHelper();
 
             return configHelper.GetSectionValues<FcsServiceConfiguration>("FcsServiceConfiguration");
+        }
+
+        private static IEpaServiceConfiguration GetEpaServiceConfiguration()
+        {
+            var configHelper = new ConfigurationHelper();
+
+            return configHelper.GetSectionValues<EpaServiceConfiguration>("EpaServiceConfiguration");
         }
     }
 }

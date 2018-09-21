@@ -6,8 +6,8 @@ namespace ESFA.DC.ReferenceData.EPA.Service.Config.Interface
 {
     public interface IEpaServiceConfiguration
     {
-        string EndpointUri { get; }
+        string EpaEndpointUri { get; }
 
-        string ConnectionString { get; }
+        string EpaConnectionString { get; }
     }
 }
