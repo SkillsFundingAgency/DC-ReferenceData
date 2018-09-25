@@ -1,0 +1,7 @@
+﻿CREATE USER [FCS_RW_User]
+    WITH PASSWORD = N'$(RWUserPassword)';
+GO
+	GRANT CONNECT TO [FCS_RW_User]
+GO
+
+

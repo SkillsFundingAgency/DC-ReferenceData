@@ -1,0 +1,7 @@
+﻿CREATE USER [FCS_RO_User]
+    WITH PASSWORD = N'$(ROUserPassword)';
+GO
+	GRANT CONNECT TO [FCS_RO_User]
+GO
+
+
