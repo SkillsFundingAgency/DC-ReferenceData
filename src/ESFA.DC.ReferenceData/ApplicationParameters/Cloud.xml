@@ -8,5 +8,14 @@
     <Parameter Name="JobStatusQueueName" Value="__JobStatusQueueName__" />
     <Parameter Name="AuditQueueName" Value="__AuditQueueName__" />
     <Parameter Name="LoggerConnectionString" Value="__LoggerConnectionString__" />
+
+
+    <Parameter Name="FcsConnectionString" Value="__FCSConnectionString__"/>
+    <Parameter Name="FeedUri" Value="__FCSFeedUri__"/>
+    <Parameter Name="Authority" Value="__FCSAuthority__"/>
+    <Parameter Name="ResourceId" Value="__FCSResourceId__"/>
+    <Parameter Name="ClientId" Value="__FCSClientId__"/>
+    <Parameter Name="AppKey" Value="__FCSAppKey__"/>
+    
   </Parameters>
 </Application>

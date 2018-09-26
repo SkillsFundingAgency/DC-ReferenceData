@@ -331,3 +331,4 @@ ASALocalRun/
 /src/ESFA.DC.ReferenceData/ApplicationParameters/Local.1Node.xml
 /src/ESFA.DC.ReferenceData/ApplicationParameters/Local.5Node.xml
 /src/FCS/ESFA.DC.ReferenceData.FCS.Console/Config/PrivateSettings.config
+/src/FCS/ESFA.DC.ReferenceData.FCS.Console/PrivateSettings.config

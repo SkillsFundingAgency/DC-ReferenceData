@@ -155,7 +155,7 @@ namespace ESFA.DC.ReferenceData.Stateless
         {
             containerBuilder.Register(c =>
             {
-                var topicSubscriptionConfig = new TopicConfiguration(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.TopicName, referenceDataConfiguration.SubscriptionName, 1, maximumCallbackTimeSpan: TimeSpan.FromMinutes(20));
+                var topicSubscriptionConfig = new TopicConfiguration(referenceDataConfiguration.ServiceBusConnectionString, referenceDataConfiguration.TopicName, referenceDataConfiguration.SubscriptionName, 1, maximumCallbackTimeSpan: TimeSpan.FromMinutes(40));
 
                 return new TopicSubscriptionSevice<JobContextDto>(
                     topicSubscriptionConfig,
