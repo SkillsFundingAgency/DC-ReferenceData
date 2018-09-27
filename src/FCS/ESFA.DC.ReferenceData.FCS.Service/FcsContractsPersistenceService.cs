@@ -48,7 +48,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
                     _fcsContext.Contractors.AddRange(contractors);
 
-                    await _fcsContext.SaveChangesAsync();
+                    await _fcsContext.SaveChangesAsync(cancellationToken);
 
                     transaction.Commit();
 

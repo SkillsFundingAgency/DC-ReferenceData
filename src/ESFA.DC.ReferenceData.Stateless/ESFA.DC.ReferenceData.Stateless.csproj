@@ -140,7 +140,7 @@
       <HintPath>..\packages\ESFA.DC.ServiceFabric.Helpers.0.1.3-beta0001\lib\netstandard2.0\ESFA.DC.ServiceFabric.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Amqp, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.Amqp.2.3.3\lib\net45\Microsoft.Azure.Amqp.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Azure.Amqp.2.3.5\lib\net45\Microsoft.Azure.Amqp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.ServiceBus, Version=3.1.0.0, Culture=neutral, PublicKeyToken=7e34167dcc6d6d8c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.ServiceBus.3.1.0\lib\netstandard2.0\Microsoft.Azure.ServiceBus.dll</HintPath>
@@ -211,6 +211,9 @@
     </Reference>
     <Reference Include="Polly, Version=6.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
       <HintPath>..\packages\Polly.6.1.0\lib\netstandard2.0\Polly.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.4.2.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.4.2\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.2.7.1\lib\net46\Serilog.dll</HintPath>
@@ -298,6 +301,7 @@
     <Reference Include="System.ServiceModel.Syndication, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ServiceModel.Syndication.4.5.0\lib\net461\System.ServiceModel.Syndication.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -328,6 +332,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EPA\ESFA.DC.ReferenceData.EPA.Model\ESFA.DC.ReferenceData.EPA.Model.csproj">
+      <Project>{AD7A71FC-F40F-4D30-BEB5-BB3892859775}</Project>
+      <Name>ESFA.DC.ReferenceData.EPA.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EPA\ESFA.DC.ReferenceData.EPA.Service\ESFA.DC.ReferenceData.EPA.Service.csproj">
+      <Project>{6ACB78A9-0903-45AF-A251-5A299CCE9905}</Project>
+      <Name>ESFA.DC.ReferenceData.EPA.Service</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ReferenceData.Interfaces\ESFA.DC.ReferenceData.Interfaces.csproj">
       <Project>{8551F171-B2E6-4CEB-BF89-DEF431CAA5E6}</Project>
       <Name>ESFA.DC.ReferenceData.Interfaces</Name>

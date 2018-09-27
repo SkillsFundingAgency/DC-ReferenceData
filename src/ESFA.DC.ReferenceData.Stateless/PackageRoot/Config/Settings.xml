@@ -23,4 +23,9 @@
     <Parameter Name="ClientId" Value=""/>
     <Parameter Name="AppKey" Value=""/>
   </Section>
+
+  <Section Name="EpaServiceConfiguration">
+    <Parameter Name="EpaConnectionString" Value=""/>
+    <Parameter Name="EpaEndpointUri" Value=""/>
+  </Section>
 </Settings>
