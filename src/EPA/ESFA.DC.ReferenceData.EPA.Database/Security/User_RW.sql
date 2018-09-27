@@ -1,0 +1,7 @@
+﻿CREATE USER [EPA_RW_User]
+    WITH PASSWORD = N'$(RWUserPassword)';
+GO
+	GRANT CONNECT TO [EPA_RW_User]
+GO
+
+
