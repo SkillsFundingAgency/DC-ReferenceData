@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.ReferenceData.EPA.Model.EPA;
 using ESFA.DC.ReferenceData.EPA.Service.Interface;
 using FluentAssertions;
@@ -43,9 +44,9 @@ namespace ESFA.DC.ReferenceData.EPA.Service.Tests
             epaPersistenceServiceMock.VerifyAll();
         }
 
-        private EpaReferenceDataTask NewTask(IServicePointConfigurationService servicePointConfigurationService = null, IEpaFeedService epaFeedService = null, IOrganisationMapper organisationMapper = null, IEpaPersistenceService epaPersistenceService = null)
+        private EpaReferenceDataTask NewTask(IServicePointConfigurationService servicePointConfigurationService = null, IEpaFeedService epaFeedService = null, IOrganisationMapper organisationMapper = null, IEpaPersistenceService epaPersistenceService = null, ILogger logger = null)
         {
-            return new EpaReferenceDataTask(servicePointConfigurationService, epaFeedService, organisationMapper, epaPersistenceService);
+            return new EpaReferenceDataTask(servicePointConfigurationService, epaFeedService, organisationMapper, epaPersistenceService, logger);
         }
     }
 }

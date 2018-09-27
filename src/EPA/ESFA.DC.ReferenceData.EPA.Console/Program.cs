@@ -32,6 +32,8 @@ namespace ESFA.DC.ReferenceData.EPA.Console
 
         static void Main(string[] args)
         {
+            var logger = new LoggerStub();
+            
             _epaServiceConfiguration = new EpaServiceConfiguration()
             {
                 EpaEndpointUri = "https://findapprenticeshiptraining-api.sfa.bis.gov.uk/",
@@ -43,12 +45,12 @@ namespace ESFA.DC.ReferenceData.EPA.Console
             _servicePointConfigurationService = new ServicePointConfigurationService(_epaServiceConfiguration);
             _restClient = new RestClient(_epaServiceConfiguration.EpaEndpointUri);
             _epaRestClient = new EpaRestClient(_restClient);
-            _epaFeedService = new EpaFeedService(_epaRestClient);
+            _epaFeedService = new EpaFeedService(_epaRestClient, logger);
             _organisationMapper = new OrganisationMapper();
             _epaContext = new EpaContext(_epaServiceConfiguration.EpaConnectionString);
-            _epaPersistenceService = new EpaPersistenceService(_epaContext);
+            _epaPersistenceService = new EpaPersistenceService(_epaContext, logger);
 
-            _referenceDataTask = new EpaReferenceDataTask(_servicePointConfigurationService, _epaFeedService, _organisationMapper, _epaPersistenceService);
+            _referenceDataTask = new EpaReferenceDataTask(_servicePointConfigurationService, _epaFeedService, _organisationMapper, _epaPersistenceService, logger);
 
             _referenceDataTask.ExecuteAsync(CancellationToken.None).Wait();
         }
