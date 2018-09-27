@@ -33,9 +33,14 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ESFA.DC.ReferenceData.EPA.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ReferenceData.EPA.Model", "EPA\ESFA.DC.ReferenceData.EPA.Model\ESFA.DC.ReferenceData.EPA.Model.csproj", "{AD7A71FC-F40F-4D30-BEB5-BB3892859775}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ReferenceData.EPA.Service", "EPA\ESFA.DC.ReferenceData.EPA.Service\ESFA.DC.ReferenceData.EPA.Service.csproj", "{6ACB78A9-0903-45AF-A251-5A299CCE9905}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESFA.DC.ReferenceData.EPA.Service", "EPA\ESFA.DC.ReferenceData.EPA.Service\ESFA.DC.ReferenceData.EPA.Service.csproj", "{6ACB78A9-0903-45AF-A251-5A299CCE9905}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ReferenceData.EPA.Service.Tests", "EPA\ESFA.DC.ReferenceData.EPA.Service.Tests\ESFA.DC.ReferenceData.EPA.Service.Tests.csproj", "{F2C7731E-8E08-418D-B8F9-061DC415ADFA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1B1211DC-E566-486F-B87F-7E007DE04FEC}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
