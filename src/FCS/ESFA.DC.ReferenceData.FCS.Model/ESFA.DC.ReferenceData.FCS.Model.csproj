@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ESFA.DC.ReferenceData.FCS.Model.nuspec" />
     <None Include="ESFA.DC.ReferenceData.FCS.Model.ruleset">
       <SubType>Designer</SubType>
     </None>

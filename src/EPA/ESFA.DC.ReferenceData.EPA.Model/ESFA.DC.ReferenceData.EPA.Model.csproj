@@ -79,6 +79,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ESFA.DC.ReferenceData.EPA.Model.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

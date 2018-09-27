@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ESFA.DC.ReferenceData.EPA.Model</id>
+    <version>0.1.0</version>
+    <authors>DC</authors>
+    <owners>ESFA</owners>
+    <licenseUrl>https://github.com/SkillsFundingAgency/DC-ReferenceData/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/SkillsFundingAgency/DC-ReferenceData</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>EPA Reference Data Model Project.</description>
+    <releaseNotes />
+    <copyright>Copyright 2018</copyright>
+    <tags>EPA Organisations DAS Apprenticeships Model Data Database</tags>
+  </metadata>
+</package>
