@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ESFA.DC.ReferenceData.FCS.Service.Config.Interface
+﻿namespace ESFA.DC.ReferenceData.FCS.Service.Config.Interface
 {
     public interface IFcsServiceConfiguration
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Authentication;
-using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
 using ESFA.DC.ReferenceData.FCS.Service.Interface;

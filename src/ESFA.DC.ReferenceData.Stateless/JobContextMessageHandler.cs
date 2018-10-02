@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.JobContext;
+using ESFA.DC.JobContextManager.Interface;
+using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.ReferenceData.Interfaces;
-using ESFA.DC.ReferenceData.Stateless.Interfaces;
 
 namespace ESFA.DC.ReferenceData.Stateless
 {

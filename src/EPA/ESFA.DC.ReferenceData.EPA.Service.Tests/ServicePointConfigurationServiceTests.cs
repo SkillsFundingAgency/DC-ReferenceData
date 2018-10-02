@@ -1,5 +1,4 @@
-﻿using ESFA.DC.ReferenceData.EPA.Service.Config;
-using ESFA.DC.ReferenceData.EPA.Service.Config.Interface;
+﻿using ESFA.DC.ReferenceData.EPA.Service.Config.Interface;
 using FluentAssertions;
 using Moq;
 using Xunit;
