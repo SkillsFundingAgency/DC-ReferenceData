@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Integration.ServiceFabric;
-using ESFA.DC.Auditing;
-using ESFA.DC.Auditing.Dto;
 using ESFA.DC.Auditing.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.JobContext;
+using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager;
 using ESFA.DC.JobContextManager.Interface;
-using ESFA.DC.JobStatus.Dto;
+using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.JobStatus.Interface;
 using ESFA.DC.Logging;
 using ESFA.DC.Logging.Config;
@@ -38,7 +35,6 @@ using ESFA.DC.ReferenceData.FCS.Service.Interface;
 using ESFA.DC.ReferenceData.Interfaces;
 using ESFA.DC.ReferenceData.Stateless.Config;
 using ESFA.DC.ReferenceData.Stateless.Config.Interfaces;
-using ESFA.DC.ReferenceData.Stateless.Interfaces;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Serialization.Xml;
@@ -107,11 +103,8 @@ namespace ESFA.DC.ReferenceData.Stateless
         private static ContainerBuilder RegisterJobContextManagementServices(this ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
-            containerBuilder.RegisterType<JobContextManagerForTopics<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
-            containerBuilder.Register<Func<JobContextMessage, CancellationToken, Task<bool>>>(c => c.Resolve<IMessageHandler<JobContextMessage>>().HandleAsync);
-            containerBuilder.RegisterType<Auditor>().As<IAuditor>();
-            containerBuilder.RegisterType<JobContextMessageMapper>().As<IMapper<JobContextMessage, JobContextMessage>>();
-            containerBuilder.RegisterType<JobStatus.JobStatus>().As<IJobStatus>();
+            containerBuilder.RegisterType<JobContextManager<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<DefaultJobContextMessageMapper<JobContextMessage>>().As<IMapper<JobContextMessage, JobContextMessage>>();
             containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
 
             return containerBuilder;

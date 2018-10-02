@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using ESFA.DC.ReferenceData.EPA.Model;
 using ESFA.DC.ReferenceData.EPA.Model.Interface;
 using ESFA.DC.ReferenceData.EPA.Service;
@@ -12,8 +7,6 @@ using ESFA.DC.ReferenceData.EPA.Service.Config.Interface;
 using ESFA.DC.ReferenceData.EPA.Service.Interface;
 using ESFA.DC.ReferenceData.Interfaces;
 using RestSharp;
-using Organisation = ESFA.DC.ReferenceData.EPA.Model.EPA.Organisation;
-using Standard = ESFA.DC.ReferenceData.EPA.Model.EPA.Standard;
 
 namespace ESFA.DC.ReferenceData.EPA.Console
 {
