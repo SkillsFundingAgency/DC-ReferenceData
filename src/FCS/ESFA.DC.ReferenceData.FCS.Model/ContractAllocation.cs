@@ -22,6 +22,10 @@ namespace ESFA.DC.ReferenceData.FCS.Model
 
         public string UoPCode { get; set; }
 
+        public string TenderSpecReference { get; set; }
+
+        public string LotReference { get; set; }
+
         public List<ContractDeliverable> ContractDeliverables { get; set; }
 
         public int ContractId { get; set; }
