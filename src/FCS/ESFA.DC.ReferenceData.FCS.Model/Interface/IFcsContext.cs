@@ -14,6 +14,16 @@ namespace ESFA.DC.ReferenceData.FCS.Model.Interface
 
         DbSet<ContractDeliverable> ContractDeliverables { get; set; }
 
+        DbSet<EsfEligibilityRule> EsfEligibilityRules { get; set; }
+
+        DbSet<EsfEligibilityRuleEmploymentStatus> EsfEligibilityRuleEmploymentStatuses { get; set; }
+
+        DbSet<EsfEligibilityRuleLocalAuthority> EsEligibilityRulefLocalAuthorities { get; set; }
+
+        DbSet<EsfEligibilityRuleLocalEnterprisePartnership> EsfEligibilityRuleLocalEnterprisePartnerships { get; set; }
+
+        DbSet<EsfEligibilityRuleSectorSubjectAreaLevel> EsfEligibilityRuleSectorSubjectAreaLevels { get; set; }
+
         Database Database { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

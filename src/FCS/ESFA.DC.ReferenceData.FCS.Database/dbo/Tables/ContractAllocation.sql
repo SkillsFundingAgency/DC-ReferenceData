@@ -9,6 +9,8 @@
     [StartDate] DATETIME NULL, 
     [EndDate] DATETIME NULL, 
     [UoPCode] NVARCHAR(20) NULL, 
+    [TenderSpecReference] NVARCHAR(100) NULL, 
+    [LotReference] NVARCHAR(100) NULL, 
     [ContractId] INT NULL, 
     CONSTRAINT [FK_ContractAllocation_ToContract] FOREIGN KEY ([ContractId]) REFERENCES [Contract]([Id]) ON DELETE CASCADE
 )

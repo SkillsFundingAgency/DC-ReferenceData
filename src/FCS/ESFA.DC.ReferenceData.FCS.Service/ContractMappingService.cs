@@ -73,6 +73,8 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                 UoPCode = contractAllocation.uopCode,
                 StartDate = contractAllocation.startDateSpecified ? contractAllocation.startDate : default(DateTime?),
                 EndDate = contractAllocation.endDateSpecified ? contractAllocation.endDate : null,
+                TenderSpecReference = contractAllocation.ProcurementAttrs?.TenderSpecReference,
+                LotReference = contractAllocation.ProcurementAttrs?.LotReference,
                 ContractDeliverables = contractDeliverables.ToList()
             };
         }
