@@ -29,7 +29,5 @@ namespace ESFA.DC.ReferenceData.FCS.Model
         public List<EsfEligibilityRuleLocalAuthority> EsfEligibilityRuleLocalAuthorities { get; set; }
 
         public List<EsfEligibilityRuleLocalEnterprisePartnership> EsfEligibilityRuleLocalEnterprisePartnerships { get; set; }
-
-        public List<EsfEligibilityRuleSectorSubjectAreaLevel> EsfEligibilityRuleSectorSubjectAreaLevels { get; set; }
     }
 }

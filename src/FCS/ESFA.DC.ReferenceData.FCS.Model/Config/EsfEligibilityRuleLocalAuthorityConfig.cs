@@ -10,7 +10,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model.Config
 
             this.HasKey(pk => new { pk.TenderSpecReference, pk.LotReference, pk.Code });
 
-            this.HasRequired(cd => cd.EsfEligibilityRule).WithMany(ca => ca.EsfEligibilityRuleLocalAuthorities).HasForeignKey(cd => cd.EsfEligibilityRule).WillCascadeOnDelete();
+            this.HasRequired(cd => cd.EsfEligibilityRule).WithMany(ca => ca.EsfEligibilityRuleLocalAuthorities).HasForeignKey(cd => new { cd.TenderSpecReference, cd.LotReference }).WillCascadeOnDelete();
         }
     }
 }
