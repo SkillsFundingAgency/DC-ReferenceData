@@ -7,13 +7,13 @@
   DTS:CreatorName="DevUser"
   DTS:DTSID="{349108EF-1C54-4BED-BFEF-E0691397182C}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="14.0.3002.92"
+  DTS:LastModifiedProductVersion="14.0.3002.106"
   DTS:LocaleID="1033"
   DTS:ObjectName="Load ESF Ref Data"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="148"
-  DTS:VersionGUID="{46D3716E-5367-4893-AD4B-7358673B54E4}">
+  DTS:VersionBuild="149"
+  DTS:VersionGUID="{DD8269FF-4F18-491C-AAC1-1C9989BC2EBE}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -25,7 +25,12 @@
       <DTS:PropertyExpression
         DTS:Name="ConnectionString">@[$Project::AppLogConnectionString_ConnectionString]</DTS:PropertyExpression>
       <DTS:ObjectData>
-        <DTS:ConnectionManager />
+        <DTS:ConnectionManager
+          DTS:ConnectionString="">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"></DTS:Password>
+        </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
     <DTS:ConnectionManager
@@ -37,7 +42,7 @@
         DTS:Name="ConnectionString">@[$Project::SourceConnectionManager_ConnectionString]</DTS:PropertyExpression>
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="" />
+          DTS:ConnectionString="Data Source=DSCI-PRD-SQL-98;Initial Catalog=ESF_Reference_Data;Provider=SQLNCLI11.1;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
     <DTS:ConnectionManager
@@ -49,7 +54,11 @@
         DTS:Name="ConnectionString">@[$Project::TargetConnectionManager_ConnectionString]</DTS:PropertyExpression>
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="" />
+          DTS:ConnectionString="">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"></DTS:Password>
+        </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -850,6 +859,14 @@ AND lot.LotReference = er.LotReference</property>
                               cachedName="CalcMethod"
                               externalMetadataColumnId="Package\SEQ - Stage Data\SEQ - Stage - EligibilityRule\DFT - EligibilityRule\Target Data.Inputs[OLE DB Destination Input].ExternalColumns[CalcMethod]"
                               lineageId="Package\SEQ - Stage Data\SEQ - Stage - EligibilityRule\DFT - EligibilityRule\Source Data.Outputs[OLE DB Source Output].Columns[CalcMethod]" />
+                            <inputColumn
+                              refId="Package\SEQ - Stage Data\SEQ - Stage - EligibilityRule\DFT - EligibilityRule\Target Data.Inputs[OLE DB Destination Input].Columns[TenderSpecificationReference]"
+                              cachedCodepage="1252"
+                              cachedDataType="str"
+                              cachedLength="100"
+                              cachedName="TenderSpecificationReference"
+                              externalMetadataColumnId="Package\SEQ - Stage Data\SEQ - Stage - EligibilityRule\DFT - EligibilityRule\Target Data.Inputs[OLE DB Destination Input].ExternalColumns[TenderSpecReference]"
+                              lineageId="Package\SEQ - Stage Data\SEQ - Stage - EligibilityRule\DFT - EligibilityRule\Source Data.Outputs[OLE DB Source Output].Columns[TenderSpecificationReference]" />
                           </inputColumns>
                           <externalMetadataColumns
                             isUsed="True">
@@ -949,7 +966,7 @@ AND lot.LotReference = er.LotReference</property>
               DTS:LocaleID="-1"
               DTS:ObjectName="SQL - Clear Table - EligibilityRule"
               DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-              DTS:ThreadHint="4">
+              DTS:ThreadHint="3">
               <DTS:Variables>
                 <DTS:Variable
                   DTS:CreationName=""
@@ -1378,7 +1395,7 @@ AND lot.LotReference = er.LotReference</property>
               DTS:LocaleID="-1"
               DTS:ObjectName="SQL - Clear Table - EligibilityRuleEmploymentStatus"
               DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-              DTS:ThreadHint="3">
+              DTS:ThreadHint="1">
               <DTS:Variables>
                 <DTS:Variable
                   DTS:CreationName=""
@@ -2256,7 +2273,7 @@ AND lot.LotReference = er.LotReference</property>
               DTS:LocaleID="-1"
               DTS:ObjectName="SQL - Clear Table - EligibilityRuleLocalEnterprisePartnership"
               DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-              DTS:ThreadHint="1">
+              DTS:ThreadHint="0">
               <DTS:Variables>
                 <DTS:Variable
                   DTS:CreationName=""
@@ -2771,7 +2788,7 @@ AND lot.LotReference = er.LotReference</property>
               DTS:LocaleID="-1"
               DTS:ObjectName="SQL - Clear Table - EligibilityRuleSectorSubjectAreaLevel"
               DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-              DTS:ThreadHint="0">
+              DTS:ThreadHint="4">
               <DTS:Variables>
                 <DTS:Variable
                   DTS:CreationName=""
@@ -3191,13 +3208,13 @@ AND lot.LotReference = er.LotReference</property>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="136,42"
-          Id="Package\SEQ - Stage Data\SEQ - Stage - EligibilityRule\DFT - EligibilityRule\Source Data"
-          TopLeft="355,63" />
-        <NodeLayout
           Size="135,42"
           Id="Package\SEQ - Stage Data\SEQ - Stage - EligibilityRule\DFT - EligibilityRule\Target Data"
           TopLeft="365,219" />
+        <NodeLayout
+          Size="136,42"
+          Id="Package\SEQ - Stage Data\SEQ - Stage - EligibilityRule\DFT - EligibilityRule\Source Data"
+          TopLeft="355,63" />
         <EdgeLayout
           Id="Package\SEQ - Stage Data\SEQ - Stage - EligibilityRule\DFT - EligibilityRule.Paths[OLE DB Source Output]"
           TopLeft="423,105">
