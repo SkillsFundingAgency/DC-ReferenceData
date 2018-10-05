@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "ESFA.DC.Data.ESF_Ref.SSIS", "ESFA.DC.Data.ESF_Ref.SSIS.dtproj", "{9150E7F3-1293-435F-989E-53CACEDA3A88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9150E7F3-1293-435F-989E-53CACEDA3A88}.Development|Default.ActiveCfg = Development
+		{9150E7F3-1293-435F-989E-53CACEDA3A88}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2EB52A3B-3504-422D-B72D-658864F6E3DB}
+	EndGlobalSection
+EndGlobal

@@ -70,6 +70,7 @@ BEGIN
 					,Source.[MinAge]
 					,Source.[MaxAge]
 					,Source.[MinLengthOfUnemployment]
+					,Source.[MaxLengthOfUnemployment]
 					,Source.[MinPriorAttainment]
 					,Source.[MaxPriorAttainment]
 					,Source.[CalcMethod]
