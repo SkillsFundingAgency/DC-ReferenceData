@@ -13,11 +13,6 @@ Post-Deployment Script Template
 SET NOCOUNT ON ;
 GO
 
-RAISERROR('		  Clean Up not used objects',10,1) WITH NOWAIT;
-GO
-DROP TABLE IF EXISTS [Staging].[AppsEarningsHistory]
-RAISERROR('		  Drop TABLE [Staging].[AppsEarningsHistory] if exists as Not Used any more',10,1) WITH NOWAIT;
-
 GO
 RAISERROR('		   Extended Property',10,1) WITH NOWAIT;
 GO
@@ -55,6 +50,7 @@ BEGIN
 	DROP VIEW [dbo].[DisplayDeploymentProperties_VW];
 END
 
+--DROP VIEW IF EXISTS [dbo].[DisplayDeploymentProperties_VW];
 GO
 EXEC ('CREATE VIEW [dbo].[DisplayDeploymentProperties_VW]
 AS
@@ -64,11 +60,17 @@ AS
 
 GO
 
-GO
 RAISERROR('		   Update User Account Passwords',10,1) WITH NOWAIT;
 GO
-ALTER USER [FCS_RW_User] WITH PASSWORD = N'$(ROUserPassword)';
-ALTER USER [FCS_RO_User] WITH PASSWORD = N'$(RWUserPassword)';
+ALTER USER [FCS_RO_User] WITH PASSWORD = N'$(ROUserPassword)';
+GO
+ALTER USER [FCS_RW_User] WITH PASSWORD = N'$(RWUserPassword)';
+GO
+
+RAISERROR('		  Clean Up not used objects',10,1) WITH NOWAIT;
+GO
+--DROP TABLE IF EXISTS [Staging].[AppsEarningsHistory]
+RAISERROR('		  Drop TABLE [Staging].[AppsEarningsHistory] if exists as Not Used any more',10,1) WITH NOWAIT;
 
 GO
 RAISERROR('Completed',10,1) WITH NOWAIT;
