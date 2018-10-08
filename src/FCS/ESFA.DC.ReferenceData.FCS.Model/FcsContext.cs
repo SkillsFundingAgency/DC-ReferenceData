@@ -24,6 +24,8 @@ namespace ESFA.DC.ReferenceData.FCS.Model
 
         public virtual DbSet<ContractDeliverable> ContractDeliverables { get; set; }
 
+        public virtual DbSet<ContractDeliverableCodeMapping> ContractDeliverableCodeMappings { get; set; }
+
         public virtual DbSet<EsfEligibilityRule> EsfEligibilityRules { get; set; }
 
         public virtual DbSet<EsfEligibilityRuleEmploymentStatus> EsfEligibilityRuleEmploymentStatuses { get; set; }
@@ -38,6 +40,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
             modelBuilder.Configurations.Add(new ContractConfig());
             modelBuilder.Configurations.Add(new ContractAllocationConfig());
             modelBuilder.Configurations.Add(new ContractDeliverableConfig());
+            modelBuilder.Configurations.Add(new ContractDeliverableCodeMappingConfig());
             modelBuilder.Configurations.Add(new EsfEligibilityRuleConfig());
             modelBuilder.Configurations.Add(new EsfEligibilityRuleEmploymentStatusConfig());
             modelBuilder.Configurations.Add(new EsfEligibilityRuleLocalAuthorityConfig());
