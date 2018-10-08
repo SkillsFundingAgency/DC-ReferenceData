@@ -238,6 +238,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             var endDate = new DateTime(2018, 1, 1);
             var tenderSpecReference = "Tender";
             var lotReference = "Lot";
+            var learningRatePremium = 1.2m;
 
             var fcsContractAllocation = new contractAllocationsContractAllocation()
             {
@@ -257,7 +258,8 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 ProcurementAttrs = new ProcurementAttrsCT
                 {
                     TenderSpecReference = tenderSpecReference,
-                    LotReference = lotReference
+                    LotReference = lotReference,
+                    LearningRatePremium = learningRatePremium
                 },
                 contractDeliverables = new[]
                 {
@@ -277,6 +279,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractAllocation.EndDate.Should().Be(endDate);
             contractAllocation.TenderSpecReference.Should().Be(tenderSpecReference);
             contractAllocation.LotReference.Should().Be(lotReference);
+            contractAllocation.LearningRatePremiumFactor.Should().Be(learningRatePremium);
             contractAllocation.ContractDeliverables.Should().HaveCount(1);
         }
 

@@ -14,6 +14,8 @@ namespace ESFA.DC.ReferenceData.FCS.Model
 
         public string PeriodTypeCode { get; set; }
 
+        public decimal? LearningRatePremiumFactor { get; set; }
+
         public string FundingStreamPeriodCode { get; set; }
 
         public DateTime? StartDate { get; set; }
