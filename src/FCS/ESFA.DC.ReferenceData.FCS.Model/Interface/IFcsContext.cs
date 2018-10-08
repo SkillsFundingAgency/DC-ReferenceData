@@ -14,6 +14,8 @@ namespace ESFA.DC.ReferenceData.FCS.Model.Interface
 
         DbSet<ContractDeliverable> ContractDeliverables { get; set; }
 
+        DbSet<ContractDeliverableCodeMapping> ContractDeliverableCodeMappings { get; set; }
+
         DbSet<EsfEligibilityRule> EsfEligibilityRules { get; set; }
 
         DbSet<EsfEligibilityRuleEmploymentStatus> EsfEligibilityRuleEmploymentStatuses { get; set; }

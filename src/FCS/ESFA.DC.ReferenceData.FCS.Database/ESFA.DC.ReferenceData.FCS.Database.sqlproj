@@ -115,6 +115,7 @@
     <Build Include="Staging\Stored Procedures\usp_Process_EsfEligibilityRuleLocalAuthority.sql" />
     <Build Include="Staging\Stored Procedures\usp_Process_EsfEligibilityRuleLocalEnterprisePartnership.sql" />
     <Build Include="Staging\Stored Procedures\usp_Process_EsfEligibilityRuleEmploymentStatus.sql" />
+    <Build Include="dbo\Tables\ContractDeliverableCodeMapping.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="ESFA.DC.ReferenceData.FCS.Database.refactorlog" />
