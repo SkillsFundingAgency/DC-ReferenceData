@@ -70,6 +70,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                 FundingStreamPeriodCode = contractAllocation.fundingStreamPeriodCode,
                 Period = contractAllocation.period?.period1,
                 PeriodTypeCode = contractAllocation.period?.periodType?.periodTypeCode.ToString(),
+                LearningRatePremiumFactor = contractAllocation.ProcurementAttrs?.LearningRatePremium,
                 UoPCode = contractAllocation.uopCode,
                 StartDate = contractAllocation.startDateSpecified ? contractAllocation.startDate : default(DateTime?),
                 EndDate = contractAllocation.endDateSpecified ? contractAllocation.endDate : null,

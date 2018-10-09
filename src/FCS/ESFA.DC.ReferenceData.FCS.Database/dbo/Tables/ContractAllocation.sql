@@ -6,6 +6,7 @@
     [Period] NVARCHAR(4) NULL, 
     [PeriodTypeCode] NVARCHAR(20) NULL, 
     [FundingStreamPeriodCode] NVARCHAR(20) NULL, 
+    [LearningRatePremiumFactor] Decimal(10, 2) NULL, 
     [StartDate] DATETIME NULL, 
     [EndDate] DATETIME NULL, 
     [UoPCode] NVARCHAR(20) NULL, 
