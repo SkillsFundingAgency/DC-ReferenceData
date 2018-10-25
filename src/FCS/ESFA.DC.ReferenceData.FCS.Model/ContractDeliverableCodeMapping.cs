@@ -13,9 +13,5 @@ namespace ESFA.DC.ReferenceData.FCS.Model
         public string DeliverableName { get; set; }
 
         public bool Claimable { get; set; }
-
-        public int ContractDeliverableId { get; set; }
-
-        public ContractDeliverable ContractDeliverable { get; set; }
     }
 }
