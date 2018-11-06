@@ -110,7 +110,24 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 endDate = endDate,
                 contractAllocations = new[]
                 {
-                    new contractAllocationsContractAllocation()
+                    new contractAllocationsContractAllocation
+                    {
+                         allocationOrganisationRelationships = new allocationOrganisationRelationships
+                {
+                    Organisation = new contractor
+                    {
+                        ukprn = 12345678,
+                        organisationIdentifier = "Identifier"
+                    }
+                },
+                allocationTerminationAttrs = new TerminationAllocationAttrsCT
+                {
+                    terminationDateSpecified = true,
+                    terminationDate = new DateTime(2018, 1, 1),
+                    stopNewStartsFromDateSpecified = true,
+                    stopNewStartsFromDate = new DateTime(2018, 1, 1),
+                },
+                    }
                 }
             };
 
@@ -211,9 +228,22 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 startDate = startDate,
                 endDateSpecified = true,
                 endDate = endDate,
+                allocationOrganisationRelationships = new allocationOrganisationRelationships
+                {
+                    Organisation = new contractor
+                    {
+                        ukprn = 12345678,
+                        organisationIdentifier = "Identifier"
+                    }
+                },
+                allocationTerminationAttrs = new TerminationAllocationAttrsCT
+                {
+                    terminationDate = new DateTime(2018, 1, 1),
+                    stopNewStartsFromDate = new DateTime(2018, 1, 1),
+                }
             };
 
-            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation);
+            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation, new contractor());
 
             contractAllocation.ContractAllocationNumber.Should().Be(contractAllocationNumber);
             contractAllocation.FundingStreamCode.Should().Be(fundingStreamCode);
@@ -261,13 +291,26 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                     LotReference = lotReference,
                     LearningRatePremium = learningRatePremium
                 },
+                allocationOrganisationRelationships = new allocationOrganisationRelationships
+                {
+                    Organisation = new contractor
+                    {
+                        ukprn = 12345678,
+                        organisationIdentifier = "Identifier"
+                    }
+                },
+                allocationTerminationAttrs = new TerminationAllocationAttrsCT
+                {
+                    terminationDate = new DateTime(2018, 1, 1),
+                    stopNewStartsFromDate = new DateTime(2018, 1, 1),
+                },
                 contractDeliverables = new[]
                 {
                     new contractDeliverablesTypeContractDeliverable(),
                 }
             };
 
-            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation);
+            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation, new contractor());
 
             contractAllocation.ContractAllocationNumber.Should().Be(contractAllocationNumber);
             contractAllocation.FundingStreamCode.Should().Be(fundingStreamCode);
@@ -306,9 +349,22 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 uopCode = uopCode,
                 startDateSpecified = false,
                 endDateSpecified = false,
+                allocationOrganisationRelationships = new allocationOrganisationRelationships
+                {
+                    Organisation = new contractor
+                    {
+                        ukprn = 12345678,
+                        organisationIdentifier = "Identifier"
+                    }
+                },
+                allocationTerminationAttrs = new TerminationAllocationAttrsCT
+                {
+                    terminationDate = new DateTime(2018, 1, 1),
+                    stopNewStartsFromDate = new DateTime(2018, 1, 1),
+                }
             };
 
-            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation);
+            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation, new contractor());
 
             contractAllocation.ContractAllocationNumber.Should().Be(contractAllocationNumber);
             contractAllocation.FundingStreamCode.Should().Be(fundingStreamCode);
@@ -331,6 +387,8 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             var uopCode = "uopCode";
             var startDate = new DateTime(2017, 1, 1);
             var endDate = new DateTime(2018, 1, 1);
+            var ukprn = 123456;
+            var orgIdentifier = "Org";
 
             var fcsContractAllocation = new contractAllocationsContractAllocation()
             {
@@ -347,13 +405,26 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                 startDate = startDate,
                 endDateSpecified = true,
                 endDate = endDate,
+                allocationOrganisationRelationships = new allocationOrganisationRelationships
+                {
+                    Organisation = new contractor
+                    {
+                        ukprn = ukprn,
+                        organisationIdentifier = orgIdentifier
+                    }
+                },
+                allocationTerminationAttrs = new TerminationAllocationAttrsCT
+                {
+                    terminationDate = new DateTime(2018, 1, 1),
+                    stopNewStartsFromDate = new DateTime(2018, 1, 1),
+                },
                 contractDeliverables = new[]
                 {
                     new contractDeliverablesTypeContractDeliverable(),
                 }
             };
 
-            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation);
+            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation, new contractor());
 
             contractAllocation.ContractAllocationNumber.Should().Be(contractAllocationNumber);
             contractAllocation.FundingStreamCode.Should().Be(fundingStreamCode);
@@ -365,6 +436,149 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractAllocation.EndDate.Should().Be(endDate);
             contractAllocation.TenderSpecReference.Should().BeNull();
             contractAllocation.LotReference.Should().BeNull();
+            contractAllocation.ContractDeliverables.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void MapContractAllocation_NullAllocationOrganisationRelationships()
+        {
+            var contractAllocationNumber = "contractAllocationNumber";
+            var fundingStreamCode = "fundingStreamCode";
+            var fundingStreamPeriodCode = "fundingStreamPeriodCode";
+            var period = "period";
+            var periodTypeCode = periodTypeCodeType.LEVY;
+            var uopCode = "uopCode";
+            var startDate = new DateTime(2017, 1, 1);
+            var endDate = new DateTime(2018, 1, 1);
+            var tenderSpecReference = "Tender";
+            var lotReference = "Lot";
+            var learningRatePremium = 1.2m;
+            var terminationDate = new DateTime(2018, 1, 1);
+            var stopNewStartsFromDate = new DateTime(2018, 1, 1);
+            var ukprn = 123456;
+            var orgIdentifier = "Org";
+
+            var fcsContractAllocation = new contractAllocationsContractAllocation()
+            {
+                contractAllocationNumber = contractAllocationNumber,
+                fundingStream = new fundingStream() { fundingStreamCode = fundingStreamCode },
+                fundingStreamPeriodCode = fundingStreamPeriodCode,
+                period = new period()
+                {
+                    period1 = period,
+                    periodType = new periodTypeType() { periodTypeCode = periodTypeCode }
+                },
+                uopCode = uopCode,
+                startDateSpecified = true,
+                startDate = startDate,
+                endDateSpecified = true,
+                endDate = endDate,
+                ProcurementAttrs = new ProcurementAttrsCT
+                {
+                    TenderSpecReference = tenderSpecReference,
+                    LotReference = lotReference,
+                    LearningRatePremium = learningRatePremium
+                },
+                allocationTerminationAttrs = new TerminationAllocationAttrsCT
+                {
+                    terminationDate = new DateTime(2018, 1, 1),
+                    stopNewStartsFromDate = new DateTime(2018, 1, 1),
+                },
+                contractDeliverables = new[]
+                {
+                    new contractDeliverablesTypeContractDeliverable(),
+                }
+            };
+
+            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation, new contractor { ukprn = ukprn, organisationIdentifier = orgIdentifier });
+
+            contractAllocation.ContractAllocationNumber.Should().Be(contractAllocationNumber);
+            contractAllocation.FundingStreamCode.Should().Be(fundingStreamCode);
+            contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
+            contractAllocation.Period.Should().Be(period);
+            contractAllocation.PeriodTypeCode.Should().Be("LEVY");
+            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.StartDate.Should().Be(startDate);
+            contractAllocation.EndDate.Should().Be(endDate);
+            contractAllocation.TenderSpecReference.Should().Be(tenderSpecReference);
+            contractAllocation.LotReference.Should().Be(lotReference);
+            contractAllocation.LearningRatePremiumFactor.Should().Be(learningRatePremium);
+            contractAllocation.DeliveryOrganisation.Should().Be(orgIdentifier);
+            contractAllocation.DeliveryUKPRN.Should().Be(ukprn);
+            contractAllocation.TerminationDate.Should().Be(terminationDate);
+            contractAllocation.StopNewStartsFromDate.Should().Be(stopNewStartsFromDate);
+            contractAllocation.ContractDeliverables.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void MapContractAllocation_NullAllocationTerminationAttrs()
+        {
+            var contractAllocationNumber = "contractAllocationNumber";
+            var fundingStreamCode = "fundingStreamCode";
+            var fundingStreamPeriodCode = "fundingStreamPeriodCode";
+            var period = "period";
+            var periodTypeCode = periodTypeCodeType.LEVY;
+            var uopCode = "uopCode";
+            var startDate = new DateTime(2017, 1, 1);
+            var endDate = new DateTime(2018, 1, 1);
+            var tenderSpecReference = "Tender";
+            var lotReference = "Lot";
+            var learningRatePremium = 1.2m;
+            var ukprn = 123456;
+            var orgIdentifier = "Org";
+
+            var fcsContractAllocation = new contractAllocationsContractAllocation()
+            {
+                contractAllocationNumber = contractAllocationNumber,
+                fundingStream = new fundingStream() { fundingStreamCode = fundingStreamCode },
+                fundingStreamPeriodCode = fundingStreamPeriodCode,
+                period = new period()
+                {
+                    period1 = period,
+                    periodType = new periodTypeType() { periodTypeCode = periodTypeCode }
+                },
+                uopCode = uopCode,
+                startDateSpecified = true,
+                startDate = startDate,
+                endDateSpecified = true,
+                endDate = endDate,
+                ProcurementAttrs = new ProcurementAttrsCT
+                {
+                    TenderSpecReference = tenderSpecReference,
+                    LotReference = lotReference,
+                    LearningRatePremium = learningRatePremium
+                },
+                allocationOrganisationRelationships = new allocationOrganisationRelationships
+                {
+                    Organisation = new contractor
+                    {
+                        ukprn = ukprn,
+                        organisationIdentifier = orgIdentifier
+                    }
+                },
+                contractDeliverables = new[]
+                {
+                    new contractDeliverablesTypeContractDeliverable(),
+                }
+            };
+
+            var contractAllocation = NewService().MapContractAllocation(fcsContractAllocation, new contractor());
+
+            contractAllocation.ContractAllocationNumber.Should().Be(contractAllocationNumber);
+            contractAllocation.FundingStreamCode.Should().Be(fundingStreamCode);
+            contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
+            contractAllocation.Period.Should().Be(period);
+            contractAllocation.PeriodTypeCode.Should().Be("LEVY");
+            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.StartDate.Should().Be(startDate);
+            contractAllocation.EndDate.Should().Be(endDate);
+            contractAllocation.TenderSpecReference.Should().Be(tenderSpecReference);
+            contractAllocation.LotReference.Should().Be(lotReference);
+            contractAllocation.LearningRatePremiumFactor.Should().Be(learningRatePremium);
+            contractAllocation.DeliveryOrganisation.Should().Be(orgIdentifier);
+            contractAllocation.DeliveryUKPRN.Should().Be(ukprn);
+            contractAllocation.TerminationDate.Should().BeNull();
+            contractAllocation.StopNewStartsFromDate.Should().BeNull();
             contractAllocation.ContractDeliverables.Should().HaveCount(1);
         }
 
@@ -425,6 +639,8 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
         [Fact]
         public void MapTree()
         {
+            var ukprn = 123456;
+            var orgIdentifier = "Org";
             var contractNumberMaster = "Master";
             var contractNumberA = "ContractA";
             var subContractNumberA = "SubContractA";
@@ -462,6 +678,14 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                             new contractAllocationsContractAllocation()
                             {
                                 contractAllocationNumber = contractAllocationNumberA1,
+                                allocationOrganisationRelationships = new allocationOrganisationRelationships
+                                {
+                                    Organisation = new contractor
+                                    {
+                                        ukprn = ukprn,
+                                        organisationIdentifier = orgIdentifier
+                                    }
+                                },
                                 contractDeliverables = new[]
                                 {
                                     new contractDeliverablesTypeContractDeliverable()
@@ -472,7 +696,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                                             new contractDeliverablesTypeContractDeliverable()
                                             {
                                                 deliverableDescription = subDeliverableDescriptionA1
-                                            }
+                                            },
                                         }
                                     },
                                     new contractDeliverablesTypeContractDeliverable()
@@ -484,13 +708,29 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
                                 {
                                     new contractAllocationsContractAllocation()
                                     {
-                                        contractAllocationNumber = subContractAllocationNumberA1
-                                    }
+                                        contractAllocationNumber = subContractAllocationNumberA1,
+                                        allocationOrganisationRelationships = new allocationOrganisationRelationships
+                                        {
+                                            Organisation = new contractor
+                                            {
+                                                ukprn = ukprn,
+                                                organisationIdentifier = orgIdentifier
+                                            }
+                                        },
+                                    },
                                 }
                             },
                             new contractAllocationsContractAllocation()
                             {
-                                contractAllocationNumber = contractAllocationNumberA2
+                                contractAllocationNumber = contractAllocationNumberA2,
+                                allocationOrganisationRelationships = new allocationOrganisationRelationships
+                                {
+                                    Organisation = new contractor
+                                    {
+                                        ukprn = ukprn,
+                                        organisationIdentifier = orgIdentifier
+                                    }
+                                }
                             }
                         }
                     },
