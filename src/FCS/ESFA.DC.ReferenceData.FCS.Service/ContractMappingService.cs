@@ -41,7 +41,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
             if (contract.contractAllocations != null)
             {
-                contractAllocations = contract.contractAllocations.SelectMany(FlattenContractAllocations).Select(MapContractAllocation);
+                contractAllocations = contract.contractAllocations.SelectMany(FlattenContractAllocations).Select(ca => MapContractAllocation(ca, contract.contractor));
             }
 
             return new Contract()
@@ -54,7 +54,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
             };
         }
 
-        public ContractAllocation MapContractAllocation(contractAllocationsContractAllocation contractAllocation)
+        public ContractAllocation MapContractAllocation(contractAllocationsContractAllocation contractAllocation, contractor contractor)
         {
             IEnumerable<ContractDeliverable> contractDeliverables = new List<ContractDeliverable>();
 
@@ -76,6 +76,10 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                 EndDate = contractAllocation.endDateSpecified ? contractAllocation.endDate : null,
                 TenderSpecReference = contractAllocation.ProcurementAttrs?.TenderSpecReference,
                 LotReference = contractAllocation.ProcurementAttrs?.LotReference,
+                DeliveryOrganisation = contractAllocation.allocationOrganisationRelationships?.Organisation?.organisationIdentifier ?? contractor.organisationIdentifier,
+                DeliveryUKPRN = contractAllocation.allocationOrganisationRelationships?.Organisation?.ukprn ?? contractor.ukprn,
+                TerminationDate = contractAllocation.allocationTerminationAttrs?.terminationDate,
+                StopNewStartsFromDate = contractAllocation.allocationTerminationAttrs?.stopNewStartsFromDate,
                 ContractDeliverables = contractDeliverables.ToList()
             };
         }

@@ -28,6 +28,14 @@ namespace ESFA.DC.ReferenceData.FCS.Model
 
         public string LotReference { get; set; }
 
+        public string DeliveryOrganisation { get; set; }
+
+        public int DeliveryUKPRN { get; set; }
+
+        public DateTime? TerminationDate { get; set; }
+
+        public DateTime? StopNewStartsFromDate { get; set; }
+
         public List<ContractDeliverable> ContractDeliverables { get; set; }
 
         public int ContractId { get; set; }
