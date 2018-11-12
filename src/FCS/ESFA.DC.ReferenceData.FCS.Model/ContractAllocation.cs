@@ -30,7 +30,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
 
         public string DeliveryOrganisation { get; set; }
 
-        public int DeliveryUKPRN { get; set; }
+        public int? DeliveryUKPRN { get; set; }
 
         public DateTime? TerminationDate { get; set; }
 
