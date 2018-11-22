@@ -24,6 +24,8 @@ namespace ESFA.DC.ReferenceData.FCS.Model.Interface
 
         DbSet<EsfEligibilityRuleLocalEnterprisePartnership> EsfEligibilityRuleLocalEnterprisePartnerships { get; set; }
 
+        DbSet<EsfEligibilityRuleSectorSubjectAreaLevel> EsfEligibilityRuleSectorSubjectAreaLevel { get; set; }
+
         Database Database { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

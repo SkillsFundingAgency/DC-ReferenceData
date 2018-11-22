@@ -15,6 +15,8 @@ namespace ESFA.DC.ReferenceData.FCS.Model.Config
             this.HasMany(c => c.EsfEligibilityRuleLocalAuthorities).WithRequired(c => c.EsfEligibilityRule).HasForeignKey(c => new { c.TenderSpecReference, c.LotReference }).WillCascadeOnDelete();
 
             this.HasMany(c => c.EsfEligibilityRuleLocalEnterprisePartnerships).WithRequired(c => c.EsfEligibilityRule).HasForeignKey(c => new { c.TenderSpecReference, c.LotReference }).WillCascadeOnDelete();
+
+            this.HasMany(c => c.EsfEligibilityRuleSectorSubjectAreaLevel).WithRequired(c => c.EsfEligibilityRule).HasForeignKey(c => new { c.TenderSpecReference, c.LotReference }).WillCascadeOnDelete();
         }
     }
 }
