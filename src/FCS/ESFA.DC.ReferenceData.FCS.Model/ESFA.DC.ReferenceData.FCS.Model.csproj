@@ -78,11 +78,13 @@
     <Compile Include="Config\ContractDeliverableConfig.cs" />
     <Compile Include="Config\EsfEligibilityRuleConfig.cs" />
     <Compile Include="Config\ContractorConfig.cs" />
+    <Compile Include="Config\EsfEligibilityRuleSectorSubjectAreaLevelConfig.cs" />
     <Compile Include="ContractDeliverableCodeMapping.cs" />
     <Compile Include="EsfEligibilityRule.cs" />
     <Compile Include="EsfEligibilityRuleLocalEnterprisePartnership.cs" />
     <Compile Include="EsfEligibilityRuleLocalAuthority.cs" />
     <Compile Include="EsfEligibilityRuleEmploymentStatus.cs" />
+    <Compile Include="EsfEligibilityRuleSectorSubjectAreaLevel.cs" />
     <Compile Include="Interface\IFcsContext.cs" />
     <Compile Include="Contract.cs" />
     <Compile Include="ContractAllocation.cs" />

@@ -34,6 +34,8 @@ namespace ESFA.DC.ReferenceData.FCS.Model
 
         public virtual DbSet<EsfEligibilityRuleLocalEnterprisePartnership> EsfEligibilityRuleLocalEnterprisePartnerships { get; set; }
 
+        public DbSet<EsfEligibilityRuleSectorSubjectAreaLevel> EsfEligibilityRuleSectorSubjectAreaLevel { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new ContractorConfig());
@@ -45,6 +47,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
             modelBuilder.Configurations.Add(new EsfEligibilityRuleEmploymentStatusConfig());
             modelBuilder.Configurations.Add(new EsfEligibilityRuleLocalAuthorityConfig());
             modelBuilder.Configurations.Add(new EsfEligibilityRuleLocalEnterprisePartnershipConfig());
+            modelBuilder.Configurations.Add(new EsfEligibilityRuleSectorSubjectAreaLevelConfig());
         }
     }
 }
