@@ -17,21 +17,19 @@ BEGIN
 			  AS Source 
 		    ON Target.[TenderSpecReference] = Source.[TenderSpecReference]
 	      AND Target.[LotReference] = Source.[LotReference]	
+	      AND Target.[SectorSubjectAreaCode] = Source.[SectorSubjectAreaCode]	
 			WHEN MATCHED 
 				AND EXISTS 
 					(	SELECT 
-							 Target.[SectorSubjectAreaCode]
-							,Target.[MinLevelCode]
+							 Target.[MinLevelCode]
 							,Target.[MaxLevelCode]
 					EXCEPT 
 						SELECT 
-							 Source.[SectorSubjectAreaCode]
-							,Source.[MinLevelCode]
+							 Source.[MinLevelCode]
 							,Source.[MaxLevelCode]
 					)
 		  THEN
-			UPDATE SET   [SectorSubjectAreaCode] = Source.[SectorSubjectAreaCode]
-						,[MinLevelCode] = Source.[MinLevelCode]
+			UPDATE SET   [MinLevelCode] = Source.[MinLevelCode]
 						,[MaxLevelCode] = Source.[MaxLevelCode]
 		WHEN NOT MATCHED BY TARGET THEN
 		INSERT (     [TenderSpecReference]
