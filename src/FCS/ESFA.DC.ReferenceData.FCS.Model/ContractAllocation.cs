@@ -14,6 +14,8 @@ namespace ESFA.DC.ReferenceData.FCS.Model
 
         public string PeriodTypeCode { get; set; }
 
+        public decimal? LearningRatePremiumFactor { get; set; }
+
         public string FundingStreamPeriodCode { get; set; }
 
         public DateTime? StartDate { get; set; }
@@ -25,6 +27,14 @@ namespace ESFA.DC.ReferenceData.FCS.Model
         public string TenderSpecReference { get; set; }
 
         public string LotReference { get; set; }
+
+        public string DeliveryOrganisation { get; set; }
+
+        public int? DeliveryUKPRN { get; set; }
+
+        public DateTime? TerminationDate { get; set; }
+
+        public DateTime? StopNewStartsFromDate { get; set; }
 
         public List<ContractDeliverable> ContractDeliverables { get; set; }
 
