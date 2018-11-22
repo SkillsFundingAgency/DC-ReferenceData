@@ -15,8 +15,9 @@ GO
 
 RAISERROR('		  Clean Up not used objects',10,1) WITH NOWAIT;
 GO
+
 DROP TABLE IF EXISTS [Staging].[AppsEarningsHistory]
-RAISERROR('		  Drop TABLE [Staging].[AppsEarningsHistory] if exists as Not Used any more',10,1) WITH NOWAIT;
+RAISERROR('					Drop TABLE [Staging].[AppsEarningsHistory] if exists as Not Used any more',10,1) WITH NOWAIT;
 
 GO
 RAISERROR('		   Extended Property',10,1) WITH NOWAIT;
@@ -50,25 +51,31 @@ ELSE
 	EXEC sp_updateextendedproperty @name = N'ReleaseName', @value = '$(BUILD_BRANCHNAME)';  
 GO
 
-IF EXISTS (SELECT * FROM [sys].[objects] WHERE [type] = 'V' AND Name = 'DisplayDeploymentProperties_VW')
-BEGIN 
-	DROP VIEW [dbo].[DisplayDeploymentProperties_VW];
-END
-
-GO
-EXEC ('CREATE VIEW [dbo].[DisplayDeploymentProperties_VW]
-AS
-	SELECT name, value 
-	FROM fn_listextendedproperty(default, default, default, default, default, default, default);  
-	');
-
+DROP VIEW IF EXISTS [dbo].[DisplayDeploymentProperties_VW];
 GO
 
 GO
 RAISERROR('		   Update User Account Passwords',10,1) WITH NOWAIT;
 GO
-ALTER USER [FCS_RW_User] WITH PASSWORD = N'$(ROUserPassword)';
+RAISERROR('		       RO User',10,1) WITH NOWAIT;
 ALTER USER [FCS_RO_User] WITH PASSWORD = N'$(RWUserPassword)';
+GO
+RAISERROR('		       RW User',10,1) WITH NOWAIT;
+ALTER USER [FCS_RW_User] WITH PASSWORD = N'$(ROUserPassword)';
+GO
+RAISERROR('		       DSCI User',10,1) WITH NOWAIT;
+ALTER USER [User_DSCI] WITH PASSWORD = N'$(DSCIUserPassword)';
+GO
+
+GO
+ALTER ROLE [db_datawriter] DROP MEMBER [FCS_RW_User];
+GO
+ALTER ROLE [db_datawriter] DROP MEMBER [FCS_RO_User];
+GO
+ALTER ROLE [db_datareader] DROP MEMBER [FCS_RW_User];
+GO
+ALTER ROLE [db_datareader] DROP MEMBER [FCS_RO_User];
+GO
 
 GO
 RAISERROR('Completed',10,1) WITH NOWAIT;

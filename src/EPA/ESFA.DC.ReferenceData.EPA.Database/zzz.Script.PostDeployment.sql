@@ -45,21 +45,9 @@ ELSE
 GO
 
 
-RAISERROR('		   Update : DisplayDeploymentProperties_VW (Drop and create)',10,1) WITH NOWAIT;
-
-IF EXISTS (SELECT * FROM [sys].[objects] WHERE [type] = 'V' AND Name = 'DisplayDeploymentProperties_VW')
-BEGIN 
-	DROP VIEW [dbo].[DisplayDeploymentProperties_VW];
-END
-
+DROP VIEW IF EXISTS [dbo].[DisplayDeploymentProperties_VW];
 GO
-EXEC ('CREATE VIEW [dbo].[DisplayDeploymentProperties_VW]
-AS
-	SELECT name, value 
-	FROM fn_listextendedproperty(default, default, default, default, default, default, default);  
-	');
 
-GO
 RAISERROR('		   Update User Account Passwords',10,1) WITH NOWAIT;
 GO
 RAISERROR('		       RO User',10,1) WITH NOWAIT;
@@ -67,7 +55,20 @@ ALTER USER [EPA_RO_User] WITH PASSWORD = N'$(ROUserPassword)';
 GO
 RAISERROR('		       RW User',10,1) WITH NOWAIT;
 ALTER USER [EPA_RW_User] WITH PASSWORD = N'$(RWUserPassword)';
+GO
+RAISERROR('		       DSCI User',10,1) WITH NOWAIT;
+ALTER USER [User_DSCI] WITH PASSWORD = N'$(DSCIUserPassword)';
+GO
 
 GO
+ALTER ROLE [db_datawriter] DROP MEMBER [EPA_RW_User];
+GO
+ALTER ROLE [db_datawriter] DROP MEMBER [EPA_RO_User];
+GO
+ALTER ROLE [db_datareader] DROP MEMBER [EPA_RW_User];
+GO
+ALTER ROLE [db_datareader] DROP MEMBER [EPA_RO_User];
+GO
+
 RAISERROR('Completed',10,1) WITH NOWAIT;
 GO

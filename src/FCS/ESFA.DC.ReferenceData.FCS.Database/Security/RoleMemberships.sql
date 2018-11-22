@@ -1,7 +1,8 @@
 ﻿
 GO
-ALTER ROLE [db_datawriter] ADD MEMBER [FCS_RW_User];
+ALTER ROLE [DataProcessing] ADD MEMBER [FCS_RW_User];
 GO
-ALTER ROLE [db_datareader] ADD MEMBER [FCS_RW_User];
+ALTER ROLE [DataViewing] ADD MEMBER [FCS_RO_User];
 GO
-ALTER ROLE [db_datareader] ADD MEMBER [FCS_RO_User];
+ALTER ROLE [DataViewing] ADD MEMBER [User_DSCI];
+GO

@@ -61,6 +61,7 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="Security" />
     <Folder Include="zzDeploymentProfiles" />
+    <Folder Include="dbo\Stored Procedures" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Organisation.sql" />
@@ -70,6 +71,10 @@
     <Build Include="Security\Staging.sql" />
     <Build Include="Security\User_RO.sql" />
     <Build Include="Security\User_RW.sql" />
+    <Build Include="dbo\Stored Procedures\usp_DisplayDeploymentProperties.sql" />
+    <Build Include="Security\Role_DataViewing.sql" />
+    <Build Include="Security\Role_DataProcessing.sql" />
+    <Build Include="Security\User_DSCI.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="ESFA.DC.ReferenceData.EPA.Database.refactorlog" />
@@ -91,6 +96,10 @@
     <SqlCmdVariable Include="BUILD_BUILDNUMBER">
       <DefaultValue>0.0.0</DefaultValue>
       <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
+    <SqlCmdVariable Include="DSCIUserPassword">
+      <DefaultValue>NotUseLocally##</DefaultValue>
+      <Value>$(SqlCmdVar__6)</Value>
     </SqlCmdVariable>
     <SqlCmdVariable Include="RELEASE_RELEASENAME">
       <DefaultValue>From Dev Machine</DefaultValue>

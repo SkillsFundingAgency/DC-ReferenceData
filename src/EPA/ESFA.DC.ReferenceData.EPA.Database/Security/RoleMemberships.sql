@@ -1,7 +1,9 @@
 ﻿
+
 GO
-ALTER ROLE [db_datawriter] ADD MEMBER [EPA_RW_User];
+ALTER ROLE [DataProcessing] ADD MEMBER [EPA_RW_User];
 GO
-ALTER ROLE [db_datareader] ADD MEMBER [EPA_RW_User];
+ALTER ROLE [DataViewing] ADD MEMBER [EPA_RO_User];
 GO
-ALTER ROLE [db_datareader] ADD MEMBER [EPA_RO_User];
+ALTER ROLE [DataViewing] ADD MEMBER [User_DSCI];
+GO
