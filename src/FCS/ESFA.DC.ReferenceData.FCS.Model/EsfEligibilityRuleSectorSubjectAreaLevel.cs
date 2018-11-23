@@ -12,7 +12,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
 
         public string LotReference { get; set; }
 
-        public decimal? SectorSubjectAreaCode { get; set; }
+        public decimal SectorSubjectAreaCode { get; set; }
 
         public string MinLevelCode { get; set; }
 
