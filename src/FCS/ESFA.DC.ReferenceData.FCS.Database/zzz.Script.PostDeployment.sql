@@ -58,16 +58,18 @@ GO
 RAISERROR('		   Update User Account Passwords',10,1) WITH NOWAIT;
 GO
 RAISERROR('		       RO User',10,1) WITH NOWAIT;
-ALTER USER [FCS_RO_User] WITH PASSWORD = N'$(RWUserPassword)';
+ALTER USER [FCS_RO_User] WITH PASSWORD = N'$(ROUserPassword)';
 GO
 RAISERROR('		       RW User',10,1) WITH NOWAIT;
-ALTER USER [FCS_RW_User] WITH PASSWORD = N'$(ROUserPassword)';
+ALTER USER [FCS_RW_User] WITH PASSWORD = N'$(RWUserPassword)';
+GO
+RAISERROR('		       EsfEligibilityRule RW User',10,1) WITH NOWAIT;
+ALTER USER [FCS_EsfEligibilityRule_RW_User] WITH PASSWORD = N'$(RWUserPassword)';
 GO
 RAISERROR('		       DSCI User',10,1) WITH NOWAIT;
 ALTER USER [User_DSCI] WITH PASSWORD = N'$(DSCIUserPassword)';
 GO
 
-GO
 ALTER ROLE [db_datawriter] DROP MEMBER [FCS_RW_User];
 GO
 ALTER ROLE [db_datawriter] DROP MEMBER [FCS_RO_User];
