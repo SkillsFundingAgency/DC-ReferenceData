@@ -31,7 +31,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var httpClient = new FcsHttpClientFactory(accessTokenProvider).Create();
 
-            var syndicationFeedService = new SyndicationFeedService(httpClient);
+            var syndicationFeedService = new SyndicationFeedService(httpClient, logger);
 
             var fcsSyndicationFeedParserService = new FcsSyndicationFeedParserService(new XmlSerializationService());
 

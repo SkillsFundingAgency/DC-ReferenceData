@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.Logging.Interfaces;
 using FluentAssertions;
 using Moq;
 using Moq.Protected;
@@ -35,9 +36,9 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             syndicationFeed.Id.Should().Be("uuid:12537fce-65bc-4f58-bb2d-183f8c3ad069");
         }
 
-        private SyndicationFeedService NewService(HttpClient httpClient)
+        private SyndicationFeedService NewService(HttpClient httpClient = null, ILogger logger = null)
         {
-            return new SyndicationFeedService(httpClient);
+            return new SyndicationFeedService(httpClient, logger);
         }
     }
 }
