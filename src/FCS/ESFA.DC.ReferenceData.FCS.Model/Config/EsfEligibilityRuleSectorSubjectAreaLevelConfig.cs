@@ -8,7 +8,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model.Config
         {
             this.ToTable("EsfEligibilityRuleSectorSubjectAreaLevel");
 
-            this.HasKey(pk => new { pk.TenderSpecReference, pk.LotReference, pk.SectorSubjectAreaCode });
+            this.HasKey(pk => new { pk.Id });
 
             this.HasRequired(cd => cd.EsfEligibilityRule).WithMany(ca => ca.EsfEligibilityRuleSectorSubjectAreaLevel).HasForeignKey(cd => new { cd.TenderSpecReference, cd.LotReference }).WillCascadeOnDelete();
         }
