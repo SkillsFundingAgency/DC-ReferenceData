@@ -34,7 +34,7 @@ namespace ESFA.DC.ReferenceData.FCS.Model
 
         public virtual DbSet<EsfEligibilityRuleLocalEnterprisePartnership> EsfEligibilityRuleLocalEnterprisePartnerships { get; set; }
 
-        public DbSet<EsfEligibilityRuleSectorSubjectAreaLevel> EsfEligibilityRuleSectorSubjectAreaLevel { get; set; }
+        public virtual DbSet<EsfEligibilityRuleSectorSubjectAreaLevel> EsfEligibilityRuleSectorSubjectAreaLevel { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
