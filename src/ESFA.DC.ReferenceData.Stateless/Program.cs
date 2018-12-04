@@ -39,6 +39,7 @@ using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Serialization.Xml;
 using ESFA.DC.ServiceFabric.Helpers;
+using Microsoft.EntityFrameworkCore;
 using RestSharp;
 
 namespace ESFA.DC.ReferenceData.Stateless
@@ -191,11 +192,8 @@ namespace ESFA.DC.ReferenceData.Stateless
             containerBuilder.RegisterType<FcsFeedService>().As<IFcsFeedService>();
             containerBuilder.Register(c =>
             {
-                var fcsContext = new FcsContext(fcsServiceConfiguration.FcsConnectionString);
-
-                fcsContext.Configuration.AutoDetectChangesEnabled = false;
-
-                return fcsContext;
+                DbContextOptions<FcsContext> options = new DbContextOptionsBuilder<FcsContext>().UseSqlServer(fcsServiceConfiguration.FcsConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
+                return new FcsContext(options);
             }).As<IFcsContext>().InstancePerDependency();
             containerBuilder.RegisterType<FcsContractsPersistenceService>().As<IFcsContractsPersistenceService>();
             containerBuilder.RegisterType<FcsReferenceDataTask>().As<IReferenceDataTask>();

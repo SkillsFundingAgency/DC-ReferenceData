@@ -1,0 +1,1 @@
+﻿dotnet.exe ef dbcontext scaffold "Server=.\;Database=FCS;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -c FcsContext --schema dbo --force

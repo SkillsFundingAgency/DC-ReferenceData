@@ -10,6 +10,7 @@ using ESFA.DC.ReferenceData.FCS.Service;
 using ESFA.DC.ReferenceData.FCS.Service.Config;
 using ESFA.DC.ReferenceData.FCS.Service.Config.Interface;
 using ESFA.DC.Serialization.Xml;
+using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.ReferenceData.FCS.Console
 {
@@ -41,7 +42,8 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             var existingSyndicationItemIds = new List<Guid>();
 
-            using (var fcsContext = new FcsContext(fcsClientConfig.FcsConnectionString))
+            DbContextOptions<FcsContext> options = new DbContextOptionsBuilder<FcsContext>().UseSqlServer(fcsClientConfig.FcsConnectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).Options;
+            using (var fcsContext = new FcsContext(options))
             {
                 existingSyndicationItemIds = new FcsContractsPersistenceService(fcsContext, logger).GetExistingSyndicationItemIds(CancellationToken.None).Result.ToList();
             }
@@ -52,10 +54,8 @@ namespace ESFA.DC.ReferenceData.FCS.Console
 
             File.AppendAllText(logFile, stopwatch.ElapsedMilliseconds + " ms - map to DC Contracts - " + fcsContracts.Count);
 
-            using (var fcsContext = new FcsContext(fcsClientConfig.FcsConnectionString))
+            using (var fcsContext = new FcsContext(options))
             {
-                fcsContext.Configuration.AutoDetectChangesEnabled = false;
-
                 var fcsContractsPersistenceService = new FcsContractsPersistenceService(fcsContext, logger);
 
                 fcsContractsPersistenceService.PersistContracts(fcsContracts, CancellationToken.None).Wait();
@@ -91,7 +91,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
                 LegalName = "Name : " + iteration,
                 OrganisationIdentifier = "OrganisationIdentifier : " + iteration,
                 Ukprn = iteration,
-                Contracts = new List<Contract>()
+                Contract = new List<Contract>()
                 {
                     BuildContract(iteration),
                     BuildContract(iteration),
@@ -107,7 +107,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
                 ContractVersionNumber = iteration,
                 StartDate = new DateTime(2017, 1, 1),
                 EndDate = new DateTime(2018, 1, 1),
-                ContractAllocations = new List<ContractAllocation>()
+                ContractAllocation = new List<ContractAllocation>()
                 {
                     BuildContractAllocation(iteration),
                     BuildContractAllocation(iteration),
@@ -127,7 +127,7 @@ namespace ESFA.DC.ReferenceData.FCS.Console
                 EndDate = new DateTime(2018, 1, 1),
                 Period = iteration.ToString(),
                 PeriodTypeCode = iteration.ToString(),
-                ContractDeliverables = new List<ContractDeliverable>()
+                ContractDeliverable = new List<ContractDeliverable>()
                 {
                     BuildContractDeliverable(iteration),
                     BuildContractDeliverable(iteration),

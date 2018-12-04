@@ -24,7 +24,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
         public async Task<IEnumerable<Guid>> GetExistingSyndicationItemIds(CancellationToken cancellationToken)
         {
-            return await _fcsContext.Contractors.Select(c => c.SyndicationItemId).Distinct().ToListAsync(cancellationToken);
+            return await _fcsContext.Contractor.Select(c => c.SyndicationItemId.GetValueOrDefault(Guid.Empty)).Distinct().ToListAsync(cancellationToken);
         }
 
         public async Task PersistContracts(IEnumerable<Contractor> contractors, CancellationToken cancellationToken)
@@ -35,18 +35,18 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                 {
                     contractors = contractors.ToList();
 
-                    var contractNumbers = contractors.SelectMany(c => c.Contracts).Select(c => c.ContractNumber).ToList();
+                    var contractNumbers = contractors.SelectMany(c => c.Contract).Select(c => c.ContractNumber).ToList();
 
                     var defunctContractors = _fcsContext
-                        .Contractors
-                        .Where(o => o.Contracts.Any(c => contractNumbers.Contains(c.ContractNumber)))
+                        .Contractor
+                        .Where(o => o.Contract.Any(c => contractNumbers.Contains(c.ContractNumber)))
                         .ToList();
 
                     _logger.LogVerbose($"FCS Contracts - Persisting {contractors.Count()} Contractors - Removing {defunctContractors.Count()} Contractors");
 
-                    _fcsContext.Contractors.RemoveRange(defunctContractors);
+                    _fcsContext.Contractor.RemoveRange(defunctContractors);
 
-                    _fcsContext.Contractors.AddRange(contractors);
+                    _fcsContext.Contractor.AddRange(contractors);
 
                     await _fcsContext.SaveChangesAsync(cancellationToken);
 

@@ -58,11 +58,11 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                     .Select(m => _contractMappingService.Map(m.syndicationItemId, m.contract))
                     .ToList();
 
-                newCurrentPageSyndicationItemIds = contractors.Select(c => c.SyndicationItemId);
+                newCurrentPageSyndicationItemIds = contractors.Where(x => x.SyndicationItemId != null).Select(c => c.SyndicationItemId.GetValueOrDefault(Guid.Empty));
 
                 foreach (var contractor in contractors)
                 {
-                    var contractNumber = contractor.Contracts[0].ContractNumber;
+                    var contractNumber = contractor.Contract.First().ContractNumber;
 
                     if (!contractorCache.ContainsKey(contractNumber))
                     {

@@ -20,7 +20,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
             contractor.SyndicationItemId = syndicationItemId;
 
-            contractor.Contracts = FlattenContracts(contract).Where(c => c.hierarchyType == hierarchyType.CONTRACT).Select(MapContract).ToList();
+            contractor.Contract = FlattenContracts(contract).Where(c => c.hierarchyType == hierarchyType.CONTRACT).Select(MapContract).ToList();
 
             return contractor;
         }
@@ -50,7 +50,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                 ContractVersionNumber = contract.contractVersionNumber,
                 StartDate = contract.startDateSpecified ? contract.startDate : null,
                 EndDate = contract.endDateSpecified ? contract.endDate : null,
-                ContractAllocations = contractAllocations.ToList()
+                ContractAllocation = contractAllocations.ToList()
             };
         }
 
@@ -71,16 +71,16 @@ namespace ESFA.DC.ReferenceData.FCS.Service
                 Period = contractAllocation.period?.period1,
                 PeriodTypeCode = contractAllocation.period?.periodType?.periodTypeCode.ToString(),
                 LearningRatePremiumFactor = contractAllocation.ProcurementAttrs?.LearningRatePremium,
-                UoPCode = contractAllocation.uopCode,
+                UoPcode = contractAllocation.uopCode,
                 StartDate = contractAllocation.startDateSpecified ? contractAllocation.startDate : default(DateTime?),
                 EndDate = contractAllocation.endDateSpecified ? contractAllocation.endDate : null,
                 TenderSpecReference = contractAllocation.ProcurementAttrs?.TenderSpecReference,
                 LotReference = contractAllocation.ProcurementAttrs?.LotReference,
                 DeliveryOrganisation = contractAllocation.allocationOrganisationRelationships?.Organisation?.organisationIdentifier ?? contractor.organisationIdentifier,
-                DeliveryUKPRN = contractAllocation.allocationOrganisationRelationships?.Organisation?.ukprn ?? contractor.ukprn,
+                DeliveryUkprn = contractAllocation.allocationOrganisationRelationships?.Organisation?.ukprn ?? contractor.ukprn,
                 TerminationDate = contractAllocation.allocationTerminationAttrs?.terminationDate,
                 StopNewStartsFromDate = contractAllocation.allocationTerminationAttrs?.stopNewStartsFromDate,
-                ContractDeliverables = contractDeliverables.ToList()
+                ContractDeliverable = contractDeliverables.ToList()
             };
         }
 

@@ -1,9 +1,10 @@
-﻿using ESFA.DC.ReferenceData.FCS.Model.Interface;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ESFA.DC.ReferenceData.FCS.Model
 {
-    public partial class FcsContext : DbContext, IFcsContext
+    public partial class FcsContext : DbContext
     {
         public FcsContext()
         {
