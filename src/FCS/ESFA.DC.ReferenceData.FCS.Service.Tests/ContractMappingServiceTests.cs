@@ -137,7 +137,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contract.ContractVersionNumber.Should().Be(contractVersionNumber);
             contract.StartDate.Should().Be(startDate);
             contract.EndDate.Should().Be(endDate);
-            contract.ContractAllocations.Should().HaveCount(1);
+            contract.ContractAllocation.Should().HaveCount(1);
         }
 
         [Fact]
@@ -250,7 +250,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
             contractAllocation.Period.Should().Be(period);
             contractAllocation.PeriodTypeCode.Should().Be("LEVY");
-            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.UoPcode.Should().Be(uopCode);
             contractAllocation.StartDate.Should().Be(startDate);
             contractAllocation.EndDate.Should().Be(endDate);
         }
@@ -317,13 +317,13 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
             contractAllocation.Period.Should().Be(period);
             contractAllocation.PeriodTypeCode.Should().Be("LEVY");
-            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.UoPcode.Should().Be(uopCode);
             contractAllocation.StartDate.Should().Be(startDate);
             contractAllocation.EndDate.Should().Be(endDate);
             contractAllocation.TenderSpecReference.Should().Be(tenderSpecReference);
             contractAllocation.LotReference.Should().Be(lotReference);
             contractAllocation.LearningRatePremiumFactor.Should().Be(learningRatePremium);
-            contractAllocation.ContractDeliverables.Should().HaveCount(1);
+            contractAllocation.ContractDeliverable.Should().HaveCount(1);
         }
 
         [Fact]
@@ -371,7 +371,7 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
             contractAllocation.Period.Should().Be(period);
             contractAllocation.PeriodTypeCode.Should().Be("LEVY");
-            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.UoPcode.Should().Be(uopCode);
             contractAllocation.StartDate.Should().BeNull();
             contractAllocation.EndDate.Should().BeNull();
         }
@@ -431,12 +431,12 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
             contractAllocation.Period.Should().Be(period);
             contractAllocation.PeriodTypeCode.Should().Be("LEVY");
-            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.UoPcode.Should().Be(uopCode);
             contractAllocation.StartDate.Should().Be(startDate);
             contractAllocation.EndDate.Should().Be(endDate);
             contractAllocation.TenderSpecReference.Should().BeNull();
             contractAllocation.LotReference.Should().BeNull();
-            contractAllocation.ContractDeliverables.Should().HaveCount(1);
+            contractAllocation.ContractDeliverable.Should().HaveCount(1);
         }
 
         [Fact]
@@ -497,17 +497,17 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
             contractAllocation.Period.Should().Be(period);
             contractAllocation.PeriodTypeCode.Should().Be("LEVY");
-            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.UoPcode.Should().Be(uopCode);
             contractAllocation.StartDate.Should().Be(startDate);
             contractAllocation.EndDate.Should().Be(endDate);
             contractAllocation.TenderSpecReference.Should().Be(tenderSpecReference);
             contractAllocation.LotReference.Should().Be(lotReference);
             contractAllocation.LearningRatePremiumFactor.Should().Be(learningRatePremium);
             contractAllocation.DeliveryOrganisation.Should().Be(orgIdentifier);
-            contractAllocation.DeliveryUKPRN.Should().Be(ukprn);
+            contractAllocation.DeliveryUkprn.Should().Be(ukprn);
             contractAllocation.TerminationDate.Should().Be(terminationDate);
             contractAllocation.StopNewStartsFromDate.Should().Be(stopNewStartsFromDate);
-            contractAllocation.ContractDeliverables.Should().HaveCount(1);
+            contractAllocation.ContractDeliverable.Should().HaveCount(1);
         }
 
         [Fact]
@@ -569,17 +569,17 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
             contractAllocation.FundingStreamPeriodCode.Should().Be(fundingStreamPeriodCode);
             contractAllocation.Period.Should().Be(period);
             contractAllocation.PeriodTypeCode.Should().Be("LEVY");
-            contractAllocation.UoPCode.Should().Be(uopCode);
+            contractAllocation.UoPcode.Should().Be(uopCode);
             contractAllocation.StartDate.Should().Be(startDate);
             contractAllocation.EndDate.Should().Be(endDate);
             contractAllocation.TenderSpecReference.Should().Be(tenderSpecReference);
             contractAllocation.LotReference.Should().Be(lotReference);
             contractAllocation.LearningRatePremiumFactor.Should().Be(learningRatePremium);
             contractAllocation.DeliveryOrganisation.Should().Be(orgIdentifier);
-            contractAllocation.DeliveryUKPRN.Should().Be(ukprn);
+            contractAllocation.DeliveryUkprn.Should().Be(ukprn);
             contractAllocation.TerminationDate.Should().BeNull();
             contractAllocation.StopNewStartsFromDate.Should().BeNull();
-            contractAllocation.ContractDeliverables.Should().HaveCount(1);
+            contractAllocation.ContractDeliverable.Should().HaveCount(1);
         }
 
         [Fact]
@@ -744,15 +744,15 @@ namespace ESFA.DC.ReferenceData.FCS.Service.Tests
 
             var contractor = NewService().Map(Guid.Empty, contract);
 
-            contractor.Contracts.Should().HaveCount(3);
-            contractor.Contracts.Select(c => c.ContractNumber).Should().Contain(contractNumberA, contractNumberB, subContractNumberA);
+            contractor.Contract.Should().HaveCount(3);
+            contractor.Contract.Select(c => c.ContractNumber).Should().Contain(contractNumberA, contractNumberB, subContractNumberA);
 
-            var contractAllocations = contractor.Contracts.First(c => c.ContractNumber == contractNumberA).ContractAllocations;
+            var contractAllocations = contractor.Contract.First(c => c.ContractNumber == contractNumberA).ContractAllocation;
 
             contractAllocations.Should().HaveCount(3);
             contractAllocations.Select(a => a.ContractAllocationNumber).Should().Contain(contractAllocationNumberA1, contractAllocationNumberA2, subContractAllocationNumberA1);
 
-            var contractDeliverables = contractAllocations.First(a => a.ContractAllocationNumber == contractAllocationNumberA1).ContractDeliverables;
+            var contractDeliverables = contractAllocations.First(a => a.ContractAllocationNumber == contractAllocationNumberA1).ContractDeliverable;
 
             contractDeliverables.Should().HaveCount(3);
             contractDeliverables.Select(d => d.Description).Should().Contain(deliverableDescriptionA1, deliverableDescriptionA2, subDeliverableDescriptionA1);
