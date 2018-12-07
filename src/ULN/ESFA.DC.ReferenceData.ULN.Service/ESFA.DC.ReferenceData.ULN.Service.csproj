@@ -4,4 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\ESFA.DC.ReferenceData.Interfaces\ESFA.DC.ReferenceData.Interfaces.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.ULN.Model.ULN\ESFA.DC.ReferenceData.ULN.Model.ULN.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -49,5 +49,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.ULN.Service\ESFA.DC.ReferenceData.ULN.Service.csproj">
+      <Project>{5856CE11-F19C-4A5E-BD82-029DF733772C}</Project>
+      <Name>ESFA.DC.ReferenceData.ULN.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
