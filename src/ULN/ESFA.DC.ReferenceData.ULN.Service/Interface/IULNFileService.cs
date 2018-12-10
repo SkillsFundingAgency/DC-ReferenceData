@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ESFA.DC.ReferenceData.ULN.Service.Interface
 {
-    public interface IULNFileService
+    public interface IUlnFileService
     {
         Task<Stream> GetStreamAsync(string filename, string container, CancellationToken cancellationToken);
 

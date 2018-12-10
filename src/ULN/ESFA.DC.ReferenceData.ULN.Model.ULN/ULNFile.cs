@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ESFA.DC.ReferenceData.ULN.Model.ULN
 {
-    public class ULNFile
+    public class UlnFile
     {
         public long Count { get; set; }
 

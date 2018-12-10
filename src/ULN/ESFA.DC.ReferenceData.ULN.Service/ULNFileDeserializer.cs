@@ -6,11 +6,11 @@ using ESFA.DC.ReferenceData.ULN.Service.Interface;
 
 namespace ESFA.DC.ReferenceData.ULN.Service
 {
-    public class ULNFileDeserializer : IULNFileDeserializer
+    public class UlnFileDeserializer : IUlnFileDeserializer
     {
-        public ULNFile Deserialize(Stream stream)
+        public UlnFile Deserialize(Stream stream)
         {
-            var ulnFile = new ULNFile();
+            var ulnFile = new UlnFile();
 
             using (var streamReader = new StreamReader(stream))
             {

@@ -1,11 +1,6 @@
-﻿using ESFA.DC.ReferenceData.ULN.Service.Interface;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -19,8 +14,6 @@ namespace ESFA.DC.ReferenceData.ULN.Service.Tests
             using (var stream = GetStream("Files/Success.txt"))
             {
                 var ulnFile = NewDeserializer().Deserialize(stream);
-
-                ulnFile.Count.Should().Be(10);
 
                 ulnFile.ULNs.Should().HaveCount(10);
                 ulnFile.ULNs.Should().ContainInOrder
@@ -36,6 +29,17 @@ namespace ESFA.DC.ReferenceData.ULN.Service.Tests
                     9012345678,
                     1234567890
                 );
+            }
+        }
+
+        [Fact]
+        public void Deserialize_900k()
+        {
+            using (var stream = GetStream("Files/Success900k.txt"))
+            {
+                var ulnFile = NewDeserializer().Deserialize(stream);
+
+                ulnFile.ULNs.Should().HaveCount(909099);
             }
         }
 
@@ -58,9 +62,9 @@ namespace ESFA.DC.ReferenceData.ULN.Service.Tests
             return File.OpenRead(filePath);
         }
 
-        private ULNFileDeserializer NewDeserializer()
+        private UlnFileDeserializer NewDeserializer()
         {
-            return new ULNFileDeserializer();
+            return new UlnFileDeserializer();
         }
     }
 }

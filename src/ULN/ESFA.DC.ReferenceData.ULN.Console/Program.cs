@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using ESFA.DC.ReferenceData.ULN.Service;
 
 namespace ESFA.DC.ReferenceData.ULN.Console
@@ -12,9 +7,9 @@ namespace ESFA.DC.ReferenceData.ULN.Console
     {
         static void Main(string[] args)
         {
-            var ulnReferenceDataTask = new ULNReferenceDataTask();
+            var ulnReferenceDataTask = new ULNReferenceDataTask(null, null, null, null, null);
 
-            ulnReferenceDataTask.ExecuteAsync(CancellationToken.None);
+            ulnReferenceDataTask.ExecuteAsync(CancellationToken.None).RunSynchronously();
         }
     }
 }

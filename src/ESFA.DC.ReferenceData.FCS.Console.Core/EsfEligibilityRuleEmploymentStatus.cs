@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ESFA.DC.ReferenceData.FCS.Model
+﻿namespace ESFA.DC.ReferenceData.FCS.Model
 {
     public partial class EsfEligibilityRuleEmploymentStatus
     {

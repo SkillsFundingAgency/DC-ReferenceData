@@ -3,8 +3,8 @@ using System.IO;
 
 namespace ESFA.DC.ReferenceData.ULN.Service.Interface
 {
-    public interface IULNFileDeserializer
+    public interface IUlnFileDeserializer
     {
-        ULNFile Deserialize(Stream stream);
+        UlnFile Deserialize(Stream stream);
     }
 }
