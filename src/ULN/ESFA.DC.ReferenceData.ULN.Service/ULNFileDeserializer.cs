@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using ESFA.DC.ReferenceData.ULN.Model.ULN;
 using ESFA.DC.ReferenceData.ULN.Service.Interface;
@@ -8,6 +9,9 @@ namespace ESFA.DC.ReferenceData.ULN.Service
 {
     public class UlnFileDeserializer : IUlnFileDeserializer
     {
+        private const long MinimumULN = 1000000000;
+        private const long MaximumULN = 9999999999;
+
         public UlnFile Deserialize(Stream stream)
         {
             var ulnFile = new UlnFile();
@@ -26,10 +30,15 @@ namespace ESFA.DC.ReferenceData.ULN.Service
                     ulns.Add(StringToLong(streamReader.ReadLine()));
                 }
 
-                ulnFile.ULNs = ulns;
+                ulnFile.ULNs = ulns.Where(IsValidULN).ToList();
             }
 
             return ulnFile;
+        }
+
+        private bool IsValidULN(long uln)
+        {
+            return uln >= MinimumULN && uln <= MaximumULN;
         }
 
         private long StringToLong(string input)

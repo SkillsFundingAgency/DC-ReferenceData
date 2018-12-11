@@ -5,8 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.4-beta0001" />
+    <PackageReference Include="FastMember" Version="1.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\ESFA.DC.ReferenceData.Interfaces\ESFA.DC.ReferenceData.Interfaces.csproj" />
     <ProjectReference Include="..\ESFA.DC.ReferenceData.ULN.Model.ULN\ESFA.DC.ReferenceData.ULN.Model.ULN.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.ULN.Model\ESFA.DC.ReferenceData.ULN.Model.csproj" />
   </ItemGroup>
 
 </Project>

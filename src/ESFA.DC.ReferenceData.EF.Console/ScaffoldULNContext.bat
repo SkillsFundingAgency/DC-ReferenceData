@@ -1,0 +1,1 @@
+dotnet.exe ef dbcontext scaffold "Server=.\;Database=ESFA.DC.ReferenceData.ULN.Database;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -c UlnContext --schema dbo --force --startup-project . --project ..\ULN\ESFA.DC.ReferenceData.ULN.Model --verbose

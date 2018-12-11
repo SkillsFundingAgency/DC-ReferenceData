@@ -1,5 +1,12 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using ESFA.DC.ReferenceData.ULN.Console.Stubs;
+using ESFA.DC.ReferenceData.ULN.Model;
+using ESFA.DC.ReferenceData.ULN.Model.Interface;
 using ESFA.DC.ReferenceData.ULN.Service;
+using ESFA.DC.ReferenceData.ULN.Service.Config;
+using ESFA.DC.Serialization.Json;
 
 namespace ESFA.DC.ReferenceData.ULN.Console
 {
@@ -7,9 +14,24 @@ namespace ESFA.DC.ReferenceData.ULN.Console
     {
         static void Main(string[] args)
         {
-            var ulnReferenceDataTask = new ULNReferenceDataTask(null, null, null, null, null);
+            var ulnServiceConfiguration = new UlnServiceConfiguration()
+            {
+                ContainerName = "Files"
+            };
+            
+            Func<IUlnContext> ulnContextFactory = () => new UlnContext();
+            var ulnQueryService = new UlnQueryService(new JsonSerializationService(), ulnContextFactory);
 
-            ulnReferenceDataTask.ExecuteAsync(CancellationToken.None).RunSynchronously();
+            var ulnReferenceDataTask = new ULNReferenceDataTask(
+                ulnServiceConfiguration,
+                new UlnFileServiceStub(),
+                ulnQueryService, 
+                new UlnFileDeserializer(), 
+                new UlnPersistenceService(ulnQueryService, ulnContextFactory));
+
+            ulnReferenceDataTask.ExecuteAsync(CancellationToken.None).Wait();
+
+
         }
     }
 }

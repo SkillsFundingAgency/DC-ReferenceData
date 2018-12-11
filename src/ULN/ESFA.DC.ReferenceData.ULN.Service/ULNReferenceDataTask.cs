@@ -44,7 +44,7 @@ namespace ESFA.DC.ReferenceData.ULN.Service
                 {
                     var ulnFile = _ulnFileDeserializer.Deserialize(stream);
 
-                    await _ulnPersistenceService.PersistAsync(fileName, ulnFile.ULNs);
+                    await _ulnPersistenceService.PersistAsync(fileName, ulnFile.ULNs, cancellationToken);
                 }
             }
         }
