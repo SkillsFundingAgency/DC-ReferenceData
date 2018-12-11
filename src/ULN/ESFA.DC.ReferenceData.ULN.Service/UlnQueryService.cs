@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using ESFA.DC.ReferenceData.ULN.Model.Interface;
+using ESFA.DC.ReferenceData.ULN.Service.Config.Interface;
 using ESFA.DC.ReferenceData.ULN.Service.Interface;
 using ESFA.DC.Serialization.Interfaces;
 
@@ -14,12 +15,12 @@ namespace ESFA.DC.ReferenceData.ULN.Service
     public class UlnQueryService : IUlnQueryService
     {
         private readonly IJsonSerializationService _jsonSerializationService;
-        private readonly Func<IUlnContext> _ulnContextFactory;
+        private readonly IUlnServiceConfiguration _ulnServiceConfiguration;
 
-        public UlnQueryService(IJsonSerializationService jsonSerializationService, Func<IUlnContext> ulnContextFactory)
+        public UlnQueryService(IJsonSerializationService jsonSerializationService, IUlnServiceConfiguration ulnServiceConfiguration)
         {
             _jsonSerializationService = jsonSerializationService;
-            _ulnContextFactory = ulnContextFactory;
+            _ulnServiceConfiguration = ulnServiceConfiguration;
         }
 
         public Task<IEnumerable<string>> RetrieveNewFileNamesAsync(IEnumerable<string> fileNames, CancellationToken cancellationToken)
@@ -34,12 +35,9 @@ namespace ESFA.DC.ReferenceData.ULN.Service
                     WITH (ULN bigint '$') New
                     WHERE New.ULN NOT IN (SELECT ULN FROM UniqueLearnerNumber)";
 
-            using (var ulnContext = _ulnContextFactory())
+            using (var sqlConnection = new SqlConnection(_ulnServiceConfiguration.UlnConnectionString))
             {
-                using (var sqlConnection = new SqlConnection(ulnContext.ConnectionString))
-                {
-                    return await sqlConnection.QueryAsync<long>(sql, new {ulnjson = _jsonSerializationService.Serialize(ulns)});
-                }
+                return await sqlConnection.QueryAsync<long>(sql, new {ulnjson = _jsonSerializationService.Serialize(ulns)});
             }
         }
     }

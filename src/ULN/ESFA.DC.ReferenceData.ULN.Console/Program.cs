@@ -16,18 +16,18 @@ namespace ESFA.DC.ReferenceData.ULN.Console
         {
             var ulnServiceConfiguration = new UlnServiceConfiguration()
             {
-                ContainerName = "Files"
+                ContainerName = "Files",
+                UlnConnectionString = @"Server=.\\;Database=ESFA.DC.ReferenceData.ULN.Database;Trusted_Connection=True;"
             };
             
-            Func<IUlnContext> ulnContextFactory = () => new UlnContext();
-            var ulnQueryService = new UlnQueryService(new JsonSerializationService(), ulnContextFactory);
+            var ulnQueryService = new UlnQueryService(new JsonSerializationService(), ulnServiceConfiguration);
 
             var ulnReferenceDataTask = new ULNReferenceDataTask(
                 ulnServiceConfiguration,
                 new UlnFileServiceStub(),
                 ulnQueryService, 
                 new UlnFileDeserializer(), 
-                new UlnPersistenceService(ulnQueryService, ulnContextFactory));
+                new UlnPersistenceService(ulnQueryService, ulnServiceConfiguration));
 
             ulnReferenceDataTask.ExecuteAsync(CancellationToken.None).Wait();
 
