@@ -7,7 +7,7 @@ namespace ESFA.DC.ReferenceData.ULN.Model
     {
         public Import()
         {
-            UniqueLearnerNumber = new HashSet<UniqueLearnerNumber>();
+            UniqueLearnerNumbers = new HashSet<UniqueLearnerNumber>();
         }
 
         public int Id { get; set; }
@@ -16,6 +16,6 @@ namespace ESFA.DC.ReferenceData.ULN.Model
         public int NewUlnsInFileCount { get; set; }
         public DateTime DateTime { get; set; }
 
-        public virtual ICollection<UniqueLearnerNumber> UniqueLearnerNumber { get; set; }
+        public virtual ICollection<UniqueLearnerNumber> UniqueLearnerNumbers { get; set; }
     }
 }

@@ -15,8 +15,8 @@ namespace ESFA.DC.ReferenceData.ULN.Model
         {
         }
 
-        public virtual DbSet<Import> Import { get; set; }
-        public virtual DbSet<UniqueLearnerNumber> UniqueLearnerNumber { get; set; }
+        public virtual DbSet<Import> Imports { get; set; }
+        public virtual DbSet<UniqueLearnerNumber> UniqueLearnerNumbers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -33,6 +33,8 @@ namespace ESFA.DC.ReferenceData.ULN.Model
 
             modelBuilder.Entity<Import>(entity =>
             {
+                entity.ToTable("Import");
+
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.DateTime).HasColumnType("datetime");
@@ -51,12 +53,14 @@ namespace ESFA.DC.ReferenceData.ULN.Model
                 entity.HasKey(e => e.Uln)
                     .HasName("PK__UniqueLe__C5B14FF6832DDA4F");
 
+                entity.ToTable("UniqueLearnerNumber");
+
                 entity.Property(e => e.Uln)
                     .HasColumnName("ULN")
                     .ValueGeneratedNever();
 
                 entity.HasOne(d => d.Import)
-                    .WithMany(p => p.UniqueLearnerNumber)
+                    .WithMany(p => p.UniqueLearnerNumbers)
                     .HasForeignKey(d => d.ImportId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UniqueLearnerNumber_ToImport");
