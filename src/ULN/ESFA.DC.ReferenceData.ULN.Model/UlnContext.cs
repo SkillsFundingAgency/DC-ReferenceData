@@ -35,29 +35,23 @@ namespace ESFA.DC.ReferenceData.ULN.Model
             {
                 entity.ToTable("Import");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.DateTime).HasColumnType("datetime");
+                entity.Property(e => e.EndDateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Filename)
                     .IsRequired()
                     .HasMaxLength(255);
 
-                entity.Property(e => e.NewUlnsInFileCount).HasColumnName("NewULNsInFileCount");
-
-                entity.Property(e => e.UlnsInFileCount).HasColumnName("ULNsInFileCount");
+                entity.Property(e => e.StartDateTime).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<UniqueLearnerNumber>(entity =>
             {
                 entity.HasKey(e => e.Uln)
-                    .HasName("PK__UniqueLe__C5B14FF6832DDA4F");
+                    .HasName("PK__UniqueLe__C5B633EEB474EAA2");
 
                 entity.ToTable("UniqueLearnerNumber");
 
-                entity.Property(e => e.Uln)
-                    .HasColumnName("ULN")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Uln).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Import)
                     .WithMany(p => p.UniqueLearnerNumbers)

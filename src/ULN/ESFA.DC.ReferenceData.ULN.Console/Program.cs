@@ -17,21 +17,18 @@ namespace ESFA.DC.ReferenceData.ULN.Console
             var ulnServiceConfiguration = new UlnServiceConfiguration()
             {
                 ContainerName = "Files",
-                UlnConnectionString = @"Server=.\\;Database=ESFA.DC.ReferenceData.ULN.Database;Trusted_Connection=True;"
+                UlnConnectionString = @"Server=(local);Database=ESFA.DC.ReferenceData.ULN.Database;Trusted_Connection=True;"
             };
-            
-            var ulnQueryService = new UlnQueryService(new JsonSerializationService(), ulnServiceConfiguration);
+            var dateTimeProvider = new DateTimeProvider.DateTimeProvider();
 
             var ulnReferenceDataTask = new ULNReferenceDataTask(
                 ulnServiceConfiguration,
                 new UlnFileServiceStub(),
-                ulnQueryService, 
                 new UlnFileDeserializer(), 
-                new UlnPersistenceService(ulnQueryService, ulnServiceConfiguration));
+                new UlnRepository(ulnServiceConfiguration, dateTimeProvider, new JsonSerializationService()),
+                dateTimeProvider);
 
             ulnReferenceDataTask.ExecuteAsync(CancellationToken.None).Wait();
-
-
         }
     }
 }

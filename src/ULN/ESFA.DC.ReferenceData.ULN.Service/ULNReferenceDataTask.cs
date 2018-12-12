@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ReferenceData.Interfaces;
 using ESFA.DC.ReferenceData.Interfaces.Constants;
+using ESFA.DC.ReferenceData.ULN.Model;
 using ESFA.DC.ReferenceData.ULN.Service.Config.Interface;
 using ESFA.DC.ReferenceData.ULN.Service.Interface;
 
@@ -12,31 +15,31 @@ namespace ESFA.DC.ReferenceData.ULN.Service
     {
         private readonly IUlnServiceConfiguration _ulnServiceConfiguration;
         private readonly IUlnFileService _ulnFileService;
-        private readonly IUlnQueryService _ulnQueryService;
         private readonly IUlnFileDeserializer _ulnFileDeserializer;
-        private readonly IUlnPersistenceService _ulnPersistenceService;
+        private readonly IUlnRepository _ulnRepository;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         public string TaskName => TaskNameConstants.UlnReferenceDataTaskName;
 
         public ULNReferenceDataTask(
             IUlnServiceConfiguration ulnServiceConfiguration,
             IUlnFileService ulnFileService,
-            IUlnQueryService ulnQueryService,
             IUlnFileDeserializer ulnFileDeserializer,
-            IUlnPersistenceService ulnPersistenceService)
+            IUlnRepository ulnRepository,
+            IDateTimeProvider dateTimeProvider)
         {
             _ulnServiceConfiguration = ulnServiceConfiguration;
             _ulnFileService = ulnFileService;
-            _ulnQueryService = ulnQueryService;
             _ulnFileDeserializer = ulnFileDeserializer;
-            _ulnPersistenceService = ulnPersistenceService;
+            _ulnRepository = ulnRepository;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             var fileNames = await _ulnFileService.GetFilenamesAsync(_ulnServiceConfiguration.ContainerName, cancellationToken);
 
-            var newFilenames = await _ulnQueryService.RetrieveNewFileNamesAsync(fileNames, cancellationToken);
+            var newFilenames = await _ulnRepository.RetrieveNewFileNamesAsync(fileNames, cancellationToken);
 
             foreach (var fileName in newFilenames)
             {
@@ -44,7 +47,17 @@ namespace ESFA.DC.ReferenceData.ULN.Service
                 {
                     var ulnFile = _ulnFileDeserializer.Deserialize(stream);
 
-                    await _ulnPersistenceService.PersistAsync(fileName, ulnFile.ULNs, cancellationToken);
+                    var newUlnsInFile = await _ulnRepository.RetrieveNewUlnsAsync(ulnFile.ULNs, cancellationToken);
+
+                    var import = new Import()
+                    {
+                        Filename = fileName,
+                        NewUlnsInFileCount = newUlnsInFile.Count(),
+                        UlnsInFileCount = ulnFile.ULNs.Count(),
+                        StartDateTime = _dateTimeProvider.GetNowUtc(),
+                    };
+
+                    await _ulnRepository.PersistAsync(import, newUlnsInFile, cancellationToken);
                 }
             }
         }

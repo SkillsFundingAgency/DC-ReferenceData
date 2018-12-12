@@ -1,8 +1,9 @@
 ﻿CREATE TABLE [dbo].[Import]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
     [Filename] NVARCHAR(255) NOT NULL, 
-    [ULNsInFileCount] INT NOT NULL, 
-    [NewULNsInFileCount] INT NOT NULL,
-    [DateTime] DATETIME NOT NULL
+    [UlnsInFileCount] INT NOT NULL, 
+    [NewUlnsInFileCount] INT NOT NULL,
+    [StartDateTime] DATETIME NOT NULL, 
+    [EndDateTime] DATETIME NULL
 )

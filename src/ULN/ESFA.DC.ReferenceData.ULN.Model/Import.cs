@@ -14,7 +14,8 @@ namespace ESFA.DC.ReferenceData.ULN.Model
         public string Filename { get; set; }
         public int UlnsInFileCount { get; set; }
         public int NewUlnsInFileCount { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime StartDateTime { get; set; }
+        public DateTime? EndDateTime { get; set; }
 
         public virtual ICollection<UniqueLearnerNumber> UniqueLearnerNumbers { get; set; }
     }

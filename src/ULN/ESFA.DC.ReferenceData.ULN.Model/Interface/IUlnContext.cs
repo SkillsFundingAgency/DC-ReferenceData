@@ -7,7 +7,5 @@ namespace ESFA.DC.ReferenceData.ULN.Model.Interface
     {
         DbSet<Import> Imports { get; set; }
         DbSet<UniqueLearnerNumber> UniqueLearnerNumbers { get; set; }
-
-        string ConnectionString { get; }
     }
 }

@@ -20,35 +20,58 @@ namespace ESFA.DC.ReferenceData.ULN.Service
             {
                 if (streamReader.Peek() >= 0)
                 {
-                    ulnFile.Count = StringToLong(streamReader.ReadLine());
+                    if (ConvertAndValidateHeader(streamReader.ReadLine(), out long count))
+                    {
+                        ulnFile.Count = count;
+                    }
                 }
+                else
+                {
+                    throw new SerializationException("No Header Found in File.");
+                }
+                        
 
                 var ulns = new List<long>();
 
                 while (streamReader.Peek() >= 0)
                 {
-                    ulns.Add(StringToLong(streamReader.ReadLine()));
+                    if (ConvertAndValidateUln(streamReader.ReadLine(), out long uln))
+                    {
+                        ulns.Add(uln);
+                    }
                 }
-
-                ulnFile.ULNs = ulns.Where(IsValidULN).ToList();
             }
 
             return ulnFile;
         }
-
-        private bool IsValidULN(long uln)
+        
+        private bool ConvertAndValidateHeader(string input, out long header)
         {
-            return uln >= MinimumULN && uln <= MaximumULN;
-        }
-
-        private long StringToLong(string input)
-        {
-            if (!long.TryParse(input, out long result))
+            if (!long.TryParse(input, out long intermediateHeader))
             {
-                throw new SerializationException($"Failed To Deserialize ULN Exception, {input} not parseable as a long.");
+                throw new SerializationException($"Failed To Deserialize ULN header, {input} not parseable as a long.");
             }
 
-            return result;
+            header = intermediateHeader;
+
+            return true;
+        }
+
+        private bool ConvertAndValidateUln(string input, out long uln)
+        {
+            if (!long.TryParse(input, out long intermediateUln))
+            {
+                throw new SerializationException($"Failed To Deserialize ULN, {input} not parseable as a long.");
+            }
+
+            if (intermediateUln < MinimumULN && intermediateUln > MaximumULN)
+            {
+                throw new SerializationException($"ULN {intermediateUln} not between {MinimumULN} and {MaximumULN}.");
+            }
+
+            uln = intermediateUln;
+
+            return true;
         }
     }
 }

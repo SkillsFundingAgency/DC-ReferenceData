@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="62c0d675-56d2-45d7-9cde-f975f5a5a35d" ChangeDateTime="12/11/2018 11:23:54">
+    <Property Name="ElementName" Value="[dbo].[UniqueLearnerNumber].[ULN]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UniqueLearnerNumber]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Uln" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5afa1ca5-6de1-4e2b-b4e8-469e2c132441" ChangeDateTime="12/11/2018 11:24:01">
+    <Property Name="ElementName" Value="[dbo].[Import].[ULNsInFileCount]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Import]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UlnsInFileCount" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f6a150e9-1234-4420-9334-756f548bff13" ChangeDateTime="12/11/2018 11:24:07">
+    <Property Name="ElementName" Value="[dbo].[Import].[NewULNsInFileCount]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Import]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NewUlnsInFileCount" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6f7af64b-8fd8-44d4-9b04-9a85ce555b14" ChangeDateTime="12/11/2018 11:33:16">
+    <Property Name="ElementName" Value="[dbo].[Import].[DateTime]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Import]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="StartDateTime" />
+  </Operation>
+</Operations>
