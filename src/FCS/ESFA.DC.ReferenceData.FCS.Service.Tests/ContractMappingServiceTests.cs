@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ESFA.DC.ReferenceData.FCS.Model.FCS;
 using FluentAssertions;
 using Xunit;
