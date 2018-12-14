@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.ReferenceData.Interfaces;
 using ESFA.DC.ReferenceData.Interfaces.Constants;
 using ESFA.DC.ReferenceData.ULN.Model;
@@ -18,6 +19,7 @@ namespace ESFA.DC.ReferenceData.ULN.Service
         private readonly IUlnFileDeserializer _ulnFileDeserializer;
         private readonly IUlnRepository _ulnRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ILogger _logger;
 
         public string TaskName => TaskNameConstants.UlnReferenceDataTaskName;
 
@@ -26,39 +28,60 @@ namespace ESFA.DC.ReferenceData.ULN.Service
             IUlnFileService ulnFileService,
             IUlnFileDeserializer ulnFileDeserializer,
             IUlnRepository ulnRepository,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            ILogger logger)
         {
             _ulnServiceConfiguration = ulnServiceConfiguration;
             _ulnFileService = ulnFileService;
             _ulnFileDeserializer = ulnFileDeserializer;
             _ulnRepository = ulnRepository;
             _dateTimeProvider = dateTimeProvider;
+            _logger = logger;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            var fileNames = await _ulnFileService.GetFilenamesAsync(_ulnServiceConfiguration.ContainerName, cancellationToken);
-
-            var newFilenames = await _ulnRepository.RetrieveNewFileNamesAsync(fileNames, cancellationToken);
-
-            foreach (var fileName in newFilenames)
+            try
             {
-                using (var stream = await _ulnFileService.GetStreamAsync(fileName, _ulnServiceConfiguration.ContainerName, cancellationToken))
+                var fileNames = await _ulnFileService.GetFilenamesAsync(_ulnServiceConfiguration.ContainerName, cancellationToken);
+                _logger.LogInfo($"Found {fileNames.Count()} ULN Files.");
+
+                var newFilenames = await _ulnRepository.RetrieveNewFileNamesAsync(fileNames, cancellationToken);
+                _logger.LogInfo($"Found {newFilenames.Count()} new ULN Files.");
+
+                foreach (var fileName in newFilenames)
                 {
-                    var ulnFile = _ulnFileDeserializer.Deserialize(stream);
-
-                    var newUlnsInFile = await _ulnRepository.RetrieveNewUlnsAsync(ulnFile.ULNs, cancellationToken);
-
-                    var import = new Import()
+                    _logger.LogInfo($"Processing {fileName}.");
+                    using (var stream = await _ulnFileService.GetStreamAsync(fileName, _ulnServiceConfiguration.ContainerName, cancellationToken))
                     {
-                        Filename = fileName,
-                        NewUlnsInFileCount = newUlnsInFile.Count(),
-                        UlnsInFileCount = ulnFile.ULNs.Count(),
-                        StartDateTime = _dateTimeProvider.GetNowUtc(),
-                    };
+                        var ulnFile = _ulnFileDeserializer.Deserialize(stream);
+                       
+                        _logger.LogInfo($"Found {ulnFile.ULNs.Count()} ULNs in {fileName}.");
 
-                    await _ulnRepository.PersistAsync(import, newUlnsInFile, cancellationToken);
+                        var newUlnsInFile = await _ulnRepository.RetrieveNewUlnsAsync(ulnFile.ULNs, cancellationToken);
+
+                        _logger.LogInfo($"Found {newUlnsInFile.Count()} new ULNs in {fileName}.");
+
+                        var import = new Import()
+                        {
+                            Filename = fileName,
+                            NewUlnsInFileCount = newUlnsInFile.Count(),
+                            UlnsInFileCount = ulnFile.ULNs.Count(),
+                            StartDateTime = _dateTimeProvider.GetNowUtc(),
+                        };
+
+                        _logger.LogInfo($"Starting Persisting ULNs from {fileName}");
+
+                        await _ulnRepository.PersistAsync(import, newUlnsInFile, cancellationToken);
+
+                        _logger.LogInfo($"Finished Persisting ULNs from {fileName}");
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError("ULN Reference Data Task Failed.", exception);
+                throw;
             }
         }
     }

@@ -31,12 +31,15 @@ namespace ESFA.DC.ReferenceData.ULN.Console
 
             var fileService = new AzureStorageFileService(azureStorageFileServiceConfiguration);
 
+            var logger = new ConsoleLoggerStub();
+
             var ulnReferenceDataTask = new ULNReferenceDataTask(
                 ulnServiceConfiguration,
                 new UlnFileService(ulnServiceConfiguration, fileService),
                 new UlnFileDeserializer(), 
                 new UlnRepository(ulnServiceConfiguration, dateTimeProvider, new JsonSerializationService()),
-                dateTimeProvider);
+                dateTimeProvider,
+                logger);
 
             ulnReferenceDataTask.ExecuteAsync(CancellationToken.None).Wait();
         }
