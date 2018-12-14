@@ -14,24 +14,22 @@ namespace ESFA.DC.ReferenceData.ULN.Service
 
         public UlnFile Deserialize(Stream stream)
         {
-            var ulnFile = new UlnFile();
-
+            var ulns = new List<long>();
+            long headerCount = 0;
+            
             using (var streamReader = new StreamReader(stream))
             {
                 if (streamReader.Peek() >= 0)
                 {
                     if (ConvertAndValidateHeader(streamReader.ReadLine(), out long count))
                     {
-                        ulnFile.Count = count;
+                        headerCount = count;
                     }
                 }
                 else
                 {
                     throw new SerializationException("No Header Found in File.");
                 }
-                        
-
-                var ulns = new List<long>();
 
                 while (streamReader.Peek() >= 0)
                 {
@@ -42,7 +40,11 @@ namespace ESFA.DC.ReferenceData.ULN.Service
                 }
             }
 
-            return ulnFile;
+            return new UlnFile()
+            {
+                Count = headerCount,
+                ULNs = ulns,
+            };
         }
         
         private bool ConvertAndValidateHeader(string input, out long header)

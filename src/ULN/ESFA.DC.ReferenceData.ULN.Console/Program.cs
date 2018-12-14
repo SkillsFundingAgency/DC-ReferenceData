@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.FileService;
+using ESFA.DC.FileService.Config;
 using ESFA.DC.ReferenceData.ULN.Console.Stubs;
 using ESFA.DC.ReferenceData.ULN.Model;
 using ESFA.DC.ReferenceData.ULN.Model.Interface;
@@ -16,14 +18,22 @@ namespace ESFA.DC.ReferenceData.ULN.Console
         {
             var ulnServiceConfiguration = new UlnServiceConfiguration()
             {
-                ContainerName = "Files",
+                StorageConnectionString = "UseDevelopmentStorage=true",
+                ContainerName = "uln",
                 UlnConnectionString = @"Server=(local);Database=ESFA.DC.ReferenceData.ULN.Database;Trusted_Connection=True;"
             };
             var dateTimeProvider = new DateTimeProvider.DateTimeProvider();
 
+            var azureStorageFileServiceConfiguration = new AzureStorageFileServiceConfiguration()
+            {
+                ConnectionString = "UseDevelopmentStorage=true"
+            };
+
+            var fileService = new AzureStorageFileService(azureStorageFileServiceConfiguration);
+
             var ulnReferenceDataTask = new ULNReferenceDataTask(
                 ulnServiceConfiguration,
-                new UlnFileServiceStub(),
+                new UlnFileService(ulnServiceConfiguration, fileService),
                 new UlnFileDeserializer(), 
                 new UlnRepository(ulnServiceConfiguration, dateTimeProvider, new JsonSerializationService()),
                 dateTimeProvider);

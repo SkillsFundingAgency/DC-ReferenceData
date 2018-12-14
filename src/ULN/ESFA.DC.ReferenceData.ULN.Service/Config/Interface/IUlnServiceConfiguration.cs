@@ -2,6 +2,8 @@
 {
     public interface IUlnServiceConfiguration
     {
+        string StorageConnectionString { get; }
+
         string ContainerName { get; }
 
         string UlnConnectionString { get; }
