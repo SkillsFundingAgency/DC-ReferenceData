@@ -53,7 +53,7 @@ namespace ESFA.DC.ReferenceData.ULN.Console.Stubs
             
         private CloudBlobContainer GetCloudBlobContainer(string container)
         {
-            var cloudStorageAccount = CloudStorageAccount.Parse(_ulnServiceConfiguruation.StorageConnectionString);
+            var cloudStorageAccount = CloudStorageAccount.Parse(_ulnServiceConfiguruation.UlnStorageConnectionString);
             var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
             return cloudBlobClient.GetContainerReference(container);
         }

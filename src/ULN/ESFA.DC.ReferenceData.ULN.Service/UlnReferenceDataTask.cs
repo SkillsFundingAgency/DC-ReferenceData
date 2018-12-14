@@ -43,7 +43,7 @@ namespace ESFA.DC.ReferenceData.ULN.Service
         {
             try
             {
-                var fileNames = await _ulnFileService.GetFilenamesAsync(_ulnServiceConfiguration.ContainerName, cancellationToken);
+                var fileNames = await _ulnFileService.GetFilenamesAsync(_ulnServiceConfiguration.UlnStorageContainerName, cancellationToken);
                 _logger.LogInfo($"Found {fileNames.Count()} ULN Files.");
 
                 var newFilenames = await _ulnRepository.RetrieveNewFileNamesAsync(fileNames, cancellationToken);
@@ -52,7 +52,7 @@ namespace ESFA.DC.ReferenceData.ULN.Service
                 foreach (var fileName in newFilenames)
                 {
                     _logger.LogInfo($"Processing {fileName}.");
-                    using (var stream = await _ulnFileService.GetStreamAsync(fileName, _ulnServiceConfiguration.ContainerName, cancellationToken))
+                    using (var stream = await _ulnFileService.GetStreamAsync(fileName, _ulnServiceConfiguration.UlnStorageContainerName, cancellationToken))
                     {
                         var ulnFile = _ulnFileDeserializer.Deserialize(stream);
                        

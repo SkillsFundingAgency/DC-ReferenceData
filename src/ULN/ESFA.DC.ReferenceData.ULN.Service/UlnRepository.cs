@@ -29,7 +29,7 @@ namespace ESFA.DC.ReferenceData.ULN.Service
         
         public async Task PersistAsync(Import import, IEnumerable<long> ulns, CancellationToken cancellationToken)
         {
-            using (var sqlConnection = new SqlConnection(_ulnServiceConfiguration.UlnConnectionString))
+            using (var sqlConnection = new SqlConnection(_ulnServiceConfiguration.UlnSqlConnectionString))
             {
                 await sqlConnection.OpenAsync(cancellationToken);
 
@@ -55,7 +55,7 @@ namespace ESFA.DC.ReferenceData.ULN.Service
 
             var commandDefinition = new CommandDefinition(sql, new { json }, cancellationToken: cancellationToken);
 
-            using (var sqlConnection = new SqlConnection(_ulnServiceConfiguration.UlnConnectionString))
+            using (var sqlConnection = new SqlConnection(_ulnServiceConfiguration.UlnSqlConnectionString))
             {
                 return await sqlConnection.QueryAsync<string>(commandDefinition);
             }
@@ -70,7 +70,7 @@ namespace ESFA.DC.ReferenceData.ULN.Service
 
             var json = _jsonSerializationService.Serialize(ulns);
 
-            using (var sqlConnection = new SqlConnection(_ulnServiceConfiguration.UlnConnectionString))
+            using (var sqlConnection = new SqlConnection(_ulnServiceConfiguration.UlnSqlConnectionString))
             {
                 var commandDefinition = new CommandDefinition(sql, new { json }, cancellationToken: cancellationToken);
                 return await sqlConnection.QueryAsync<long>(commandDefinition);

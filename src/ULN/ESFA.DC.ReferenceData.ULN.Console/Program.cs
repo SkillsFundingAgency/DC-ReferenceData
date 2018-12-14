@@ -18,9 +18,9 @@ namespace ESFA.DC.ReferenceData.ULN.Console
         {
             var ulnServiceConfiguration = new UlnServiceConfiguration()
             {
-                StorageConnectionString = "UseDevelopmentStorage=true",
-                ContainerName = "uln",
-                UlnConnectionString = @"Server=(local);Database=ESFA.DC.ReferenceData.ULN.Database;Trusted_Connection=True;"
+                UlnStorageConnectionString = "UseDevelopmentStorage=true",
+                UlnStorageContainerName = "uln",
+                UlnSqlConnectionString = @"Server=(local);Database=ESFA.DC.ReferenceData.ULN.Database;Trusted_Connection=True;"
             };
             var dateTimeProvider = new DateTimeProvider.DateTimeProvider();
 

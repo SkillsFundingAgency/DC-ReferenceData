@@ -16,5 +16,8 @@
     <Parameter Name="AppKey" Value="__FCSAppKey__" />
     <Parameter Name="EpaConnectionString" Value="__EPAConnectionString__" />
     <Parameter Name="EpaEndpointUri" Value="__EPAEndpointUri__" />
+    <Parameter Name="UlnStorageConnectionString" Value="__UlnStorageConnectionString__" />
+    <Parameter Name="UlnStorageContainerName" Value="__UlnStorageContainerName__" />
+    <Parameter Name="UlnSqlConnectionString" Value="__UlnSqlConnectionString__" />
   </Parameters>
 </Application>

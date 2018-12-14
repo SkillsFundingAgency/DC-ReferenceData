@@ -7,6 +7,10 @@ using Autofac;
 using Autofac.Integration.ServiceFabric;
 using ESFA.DC.Auditing.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.FileService;
+using ESFA.DC.FileService.Config;
+using ESFA.DC.FileService.Config.Interface;
+using ESFA.DC.FileService.Interface;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager;
 using ESFA.DC.JobContextManager.Interface;
@@ -35,6 +39,11 @@ using ESFA.DC.ReferenceData.FCS.Service.Interface;
 using ESFA.DC.ReferenceData.Interfaces;
 using ESFA.DC.ReferenceData.Stateless.Config;
 using ESFA.DC.ReferenceData.Stateless.Config.Interfaces;
+using ESFA.DC.ReferenceData.ULN.Console.Stubs;
+using ESFA.DC.ReferenceData.ULN.Service;
+using ESFA.DC.ReferenceData.ULN.Service.Config;
+using ESFA.DC.ReferenceData.ULN.Service.Config.Interface;
+using ESFA.DC.ReferenceData.ULN.Service.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.Serialization.Xml;
@@ -65,6 +74,8 @@ namespace ESFA.DC.ReferenceData.Stateless
 
                 using (var container = builder.Build())
                 {
+                    container.Resolve<IEnumerable<IReferenceDataTask>>();
+
                     ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Stateless).Name);
 
                     // Prevents this host process from terminating so services keep running.
@@ -83,6 +94,7 @@ namespace ESFA.DC.ReferenceData.Stateless
             var referenceDataConfiguration = GetReferenceDataConfiguration();
             var fcsServiceConfiguration = GetFcsServiceConfiguration();
             var epaServiceConfiguration = GetEpaServiceConfiguration();
+            var ulnServiceConfiguration = GetUlnServiceConfiguration();
 
             return new ContainerBuilder()
                 .RegisterJobContextManagementServices()
@@ -90,7 +102,8 @@ namespace ESFA.DC.ReferenceData.Stateless
                 .RegisterLogger(referenceDataConfiguration)
                 .RegisterSerializers()
                 .RegisterFcsServices(fcsServiceConfiguration)
-                .RegisterEpaServices(epaServiceConfiguration);
+                .RegisterEpaServices(epaServiceConfiguration)
+                .RegisterUlnService(ulnServiceConfiguration);
         }
 
         private static ContainerBuilder RegisterSerializers(this ContainerBuilder containerBuilder)
@@ -216,6 +229,25 @@ namespace ESFA.DC.ReferenceData.Stateless
             return containerBuilder;
         }
 
+        private static ContainerBuilder RegisterUlnService(this ContainerBuilder containerBuilder, IUlnServiceConfiguration ulnServiceConfiguration)
+        {
+            containerBuilder.RegisterInstance(ulnServiceConfiguration).As<IUlnServiceConfiguration>();
+
+            var azureStorageFileServiceConfiguration = new AzureStorageFileServiceConfiguration()
+            {
+                ConnectionString = ulnServiceConfiguration.UlnStorageConnectionString
+            };
+
+            containerBuilder.RegisterInstance(azureStorageFileServiceConfiguration).As<IAzureStorageFileServiceConfiguration>();
+            containerBuilder.RegisterType<AzureStorageFileService>().As<IFileService>();
+            containerBuilder.RegisterType<UlnFileService>().As<IUlnFileService>();
+            containerBuilder.RegisterType<UlnFileDeserializer>().As<IUlnFileDeserializer>();
+            containerBuilder.RegisterType<UlnRepository>().As<IUlnRepository>();
+            containerBuilder.RegisterType<UlnReferenceDataTask>().As<IReferenceDataTask>();
+
+            return containerBuilder;
+        }
+
         private static ReferenceDataConfiguration GetReferenceDataConfiguration()
         {
             var configHelper = new ConfigurationHelper();
@@ -235,6 +267,13 @@ namespace ESFA.DC.ReferenceData.Stateless
             var configHelper = new ConfigurationHelper();
 
             return configHelper.GetSectionValues<EpaServiceConfiguration>("EpaServiceConfiguration");
+        }
+
+        private static IUlnServiceConfiguration GetUlnServiceConfiguration()
+        {
+            var configHelper = new ConfigurationHelper();
+
+            return configHelper.GetSectionValues<UlnServiceConfiguration>("UlnServiceConfiguration");
         }
     }
 }

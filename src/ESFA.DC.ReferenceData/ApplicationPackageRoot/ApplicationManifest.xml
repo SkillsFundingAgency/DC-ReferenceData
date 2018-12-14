@@ -16,6 +16,9 @@
     <Parameter Name="AppKey" DefaultValue="" />
     <Parameter Name="EpaConnectionString" DefaultValue="" />
     <Parameter Name="EpaEndpointUri" DefaultValue="" />
+    <Parameter Name="UlnStorageConnectionString" DefaultValue="" />
+    <Parameter Name="UlnStorageContainerName" DefaultValue="" />
+    <Parameter Name="UlnSqlConnectionString" DefaultValue="" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -44,6 +47,11 @@
           <Section Name="EpaServiceConfiguration">
             <Parameter Name="EpaConnectionString" Value="[EpaConnectionString]" />
             <Parameter Name="EpaEndpointUri" Value="[EpaEndpointUri]" />
+          </Section>
+          <Section Name="UlnServiceConfiguration">
+            <Parameter Name="UlnStorageConnectionString" Value="[UlnStorageConnectionString]" />
+            <Parameter Name="UlnStorageContainerName" Value="[UlnStorageContainerName]" />
+            <Parameter Name="UlnSqlConnectionString" Value="[UlnSqlConnectionString]" />
           </Section>
         </Settings>
       </ConfigOverride>
