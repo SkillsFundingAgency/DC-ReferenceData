@@ -28,4 +28,10 @@
     <Parameter Name="EpaConnectionString" Value=""/>
     <Parameter Name="EpaEndpointUri" Value=""/>
   </Section>
+
+  <Section Name="UlnServiceConfiguration">
+    <Parameter Name="UlnStorageConnectionString" Value="" />
+    <Parameter Name="UlnStorageContainerName" Value="" />
+    <Parameter Name="UlnSqlConnectionString" Value="" />
+  </Section>
 </Settings>

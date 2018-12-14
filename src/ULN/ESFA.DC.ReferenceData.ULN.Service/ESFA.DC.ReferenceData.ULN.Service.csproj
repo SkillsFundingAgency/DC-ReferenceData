@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="ESFA.DC.DateTimeProvider.Interface" Version="0.1.6-beta0001" />
+    <PackageReference Include="ESFA.DC.FileService.Interface" Version="0.1.15-beta0001" />
+    <PackageReference Include="ESFA.DC.Logging" Version="0.1.1-beta0001" />
+    <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.4-beta0001" />
+    <PackageReference Include="FastMember" Version="1.4.1" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ESFA.DC.ReferenceData.Interfaces\ESFA.DC.ReferenceData.Interfaces.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.ULN.Model.ULN\ESFA.DC.ReferenceData.ULN.Model.ULN.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ReferenceData.ULN.Model\ESFA.DC.ReferenceData.ULN.Model.csproj" />
+  </ItemGroup>
+
+</Project>

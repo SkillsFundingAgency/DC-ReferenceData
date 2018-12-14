@@ -5,5 +5,7 @@
         public const string FcsReferenceDataTaskName = "Fcs";
 
         public const string EpaReferenceDataTaskName = "Epa";
+
+        public const string UlnReferenceDataTaskName = "Uln";
     }
 }
