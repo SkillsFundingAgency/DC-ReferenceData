@@ -2,7 +2,7 @@
 
 namespace ESFA.DC.ReferenceData.ULN.Service.Tests
 {
-    public class ULNReferenceDataTaskTests1
+    public class UlnReferenceDataTaskTests
     {
         [Fact]
         public void ExecuteAsync()

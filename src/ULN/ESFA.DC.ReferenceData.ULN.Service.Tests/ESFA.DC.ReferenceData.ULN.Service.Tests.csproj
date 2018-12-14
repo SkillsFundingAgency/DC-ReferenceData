@@ -66,8 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ULNFileDeserializerTests1.cs" />
-    <Compile Include="ULNReferenceDataTaskTests1.cs" />
+    <Compile Include="UlnFileDeserializerTests.cs" />
+    <Compile Include="UlnReferenceDataTaskTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

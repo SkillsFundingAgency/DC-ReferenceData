@@ -12,7 +12,7 @@ using ESFA.DC.ReferenceData.ULN.Service.Interface;
 
 namespace ESFA.DC.ReferenceData.ULN.Service
 {
-    public class ULNReferenceDataTask : IReferenceDataTask
+    public class UlnReferenceDataTask : IReferenceDataTask
     {
         private readonly IUlnServiceConfiguration _ulnServiceConfiguration;
         private readonly IUlnFileService _ulnFileService;
@@ -23,7 +23,7 @@ namespace ESFA.DC.ReferenceData.ULN.Service
 
         public string TaskName => TaskNameConstants.UlnReferenceDataTaskName;
 
-        public ULNReferenceDataTask(
+        public UlnReferenceDataTask(
             IUlnServiceConfiguration ulnServiceConfiguration,
             IUlnFileService ulnFileService,
             IUlnFileDeserializer ulnFileDeserializer,

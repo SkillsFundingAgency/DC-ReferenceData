@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ESFA.DC.ReferenceData.ULN.Service.Tests
 {
-    public class ULNFileDeserializerTests1
+    public class UlnFileDeserializerTests
     {
         [Fact]
         public void Deserialize_Success()

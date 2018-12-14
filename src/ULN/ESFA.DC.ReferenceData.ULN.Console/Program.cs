@@ -33,7 +33,7 @@ namespace ESFA.DC.ReferenceData.ULN.Console
 
             var logger = new ConsoleLoggerStub();
 
-            var ulnReferenceDataTask = new ULNReferenceDataTask(
+            var ulnReferenceDataTask = new UlnReferenceDataTask(
                 ulnServiceConfiguration,
                 new UlnFileService(ulnServiceConfiguration, fileService),
                 new UlnFileDeserializer(), 
