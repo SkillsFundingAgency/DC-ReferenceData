@@ -1,0 +1,6 @@
+﻿
+GO
+ALTER ROLE [DataProcessor] ADD MEMBER [ULN_RW_User];
+GO
+ALTER ROLE [DataViewer] ADD MEMBER [ULN_RO_User];
+GO
