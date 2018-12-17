@@ -14,13 +14,25 @@ using FastMember;
 
 namespace ESFA.DC.ReferenceData.ULN.Service
 {
-    public class UlnRepository : IUlnRepository
+    public class UlnSqlRepository : IUlnRepository
     {
+        private const string UniqueLearnerNumbersTableName = @"UniqueLearnerNumber";
+        private const string ImportTableName = @"Import";
+
+        private const string UniqueLearnerNumberColumnName = @"Uln";
+        private const string ImportIdColumnName = @"ImportId";
+        private const string FilenameColumnName = @"Filename";
+        private const string UlnsInFileCountColumnName = @"UlnsInFileCount";
+        private const string NewUlnsInFileCountColumnName = @"NewUlnsInFileCount";
+        private const string StartDateTimeColumnName = @"StartDateTime";
+        private const string EndDateTimeColumnName = @"EndDateTime";
+        private const string IdColumnName = @"Id";
+
         private readonly IUlnServiceConfiguration _ulnServiceConfiguration;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IJsonSerializationService _jsonSerializationService;
 
-        public UlnRepository(IUlnServiceConfiguration ulnServiceConfiguration, IDateTimeProvider dateTimeProvider, IJsonSerializationService jsonSerializationService)
+        public UlnSqlRepository(IUlnServiceConfiguration ulnServiceConfiguration, IDateTimeProvider dateTimeProvider, IJsonSerializationService jsonSerializationService)
         {
             _ulnServiceConfiguration = ulnServiceConfiguration;
             _dateTimeProvider = dateTimeProvider;
@@ -47,9 +59,9 @@ namespace ESFA.DC.ReferenceData.ULN.Service
         public async Task<IEnumerable<string>> RetrieveNewFileNamesAsync(IEnumerable<string> fileNames, CancellationToken cancellationToken)
         {
             var sql =
-                @"SELECT New.Filename  FROM OPENJSON(@json)
+                $@"SELECT New.Filename FROM OPENJSON(@json)
                     WITH (Filename nvarchar(255) '$') New
-                    WHERE New.Filename NOT IN (SELECT [Filename] FROM [Import])";
+                    WHERE New.Filename NOT IN (SELECT [{FilenameColumnName}] FROM [{ImportTableName}])";
 
             var json = _jsonSerializationService.Serialize(fileNames);
 
@@ -64,9 +76,9 @@ namespace ESFA.DC.ReferenceData.ULN.Service
         public async Task<IEnumerable<long>> RetrieveNewUlnsAsync(IEnumerable<long> ulns, CancellationToken cancellationToken)
         {
             var sql =
-                @"SELECT New.ULN  FROM OPENJSON(@json)
+                $@"SELECT New.ULN FROM OPENJSON(@json)
                     WITH (ULN bigint '$') New
-                    WHERE New.ULN NOT IN (SELECT [ULN] FROM [UniqueLearnerNumber])";
+                    WHERE New.ULN NOT IN (SELECT [{UniqueLearnerNumberColumnName}] FROM [{UniqueLearnerNumbersTableName}])";
 
             var json = _jsonSerializationService.Serialize(ulns);
 
@@ -88,12 +100,12 @@ namespace ESFA.DC.ReferenceData.ULN.Service
             {
                 BatchSize = 5000,
                 BulkCopyTimeout = 300,
-                DestinationTableName = "UniqueLearnerNumber",
+                DestinationTableName = UniqueLearnerNumbersTableName,
                 EnableStreaming = true,
             };
             
-            sqlBulkCopy.ColumnMappings.Add(new SqlBulkCopyColumnMapping("Uln", "Uln"));
-            sqlBulkCopy.ColumnMappings.Add(new SqlBulkCopyColumnMapping("ImportId", "ImportId"));
+            sqlBulkCopy.ColumnMappings.Add(new SqlBulkCopyColumnMapping(UniqueLearnerNumberColumnName, UniqueLearnerNumberColumnName));
+            sqlBulkCopy.ColumnMappings.Add(new SqlBulkCopyColumnMapping(ImportIdColumnName, ImportIdColumnName));
 
             return sqlBulkCopy;
         }
@@ -110,7 +122,7 @@ namespace ESFA.DC.ReferenceData.ULN.Service
 
         private async Task<int> InsertImport(SqlConnection sqlConnection, SqlTransaction sqlTransaction, Import import, CancellationToken cancellationToken)
         {
-            var insertImportSql = @"INSERT INTO [Import] ([Filename], [UlnsInFileCount], [NewUlnsInFileCount], [StartDateTime])
+            var insertImportSql = $@"INSERT INTO [{ImportTableName}] ([{FilenameColumnName}], [{UlnsInFileCountColumnName}], [{NewUlnsInFileCountColumnName}], [{StartDateTimeColumnName}])
                                 VALUES (@Filename, @UlnsInFileCount, @NewUlnsInFileCount, @StartDateTime);
                                 SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
@@ -123,7 +135,7 @@ namespace ESFA.DC.ReferenceData.ULN.Service
 
         private async Task UpdateImport(SqlConnection sqlConnection, SqlTransaction sqlTransaction, int id, DateTime endDateTime, CancellationToken cancellationToken)
         {
-            var updateImportSql = @"UPDATE [Import] SET [EndDateTime] = @EndDateTime WHERE [Id] = @Id";
+            var updateImportSql = $@"UPDATE [{ImportTableName}] SET [{EndDateTimeColumnName}] = @EndDateTime WHERE [{IdColumnName}] = @Id";
 
             var updateImportCommandDefinition = new CommandDefinition(updateImportSql, new { Id = id, EndDateTime = endDateTime }, sqlTransaction, cancellationToken: cancellationToken);
 

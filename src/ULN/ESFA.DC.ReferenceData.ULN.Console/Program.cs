@@ -37,7 +37,7 @@ namespace ESFA.DC.ReferenceData.ULN.Console
                 ulnServiceConfiguration,
                 new UlnFileService(ulnServiceConfiguration, fileService),
                 new UlnFileDeserializer(), 
-                new UlnRepository(ulnServiceConfiguration, dateTimeProvider, new JsonSerializationService()),
+                new UlnSqlRepository(ulnServiceConfiguration, dateTimeProvider, new JsonSerializationService()),
                 dateTimeProvider,
                 logger);
 

@@ -242,7 +242,7 @@ namespace ESFA.DC.ReferenceData.Stateless
             containerBuilder.RegisterType<AzureStorageFileService>().As<IFileService>();
             containerBuilder.RegisterType<UlnFileService>().As<IUlnFileService>();
             containerBuilder.RegisterType<UlnFileDeserializer>().As<IUlnFileDeserializer>();
-            containerBuilder.RegisterType<UlnRepository>().As<IUlnRepository>();
+            containerBuilder.RegisterType<UlnSqlRepository>().As<IUlnRepository>();
             containerBuilder.RegisterType<UlnReferenceDataTask>().As<IReferenceDataTask>();
 
             return containerBuilder;
