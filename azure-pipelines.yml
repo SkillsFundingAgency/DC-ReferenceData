@@ -1,0 +1,235 @@
+queue:
+  name: DCT
+  demands: 
+  - IsBuildServer
+  - msbuild
+  - visualstudio
+  - vstest
+  - Cmd
+
+#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘BuildPlatform’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘BuildPlatformAnyCPU’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘ConfigFileURL’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘NugetFilter’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘PrivateSettingsCheckerURL’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘ServiceFabricProjectFolderName’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘VersionNumberMajor’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘VersionNumberMinor’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+
+variables:
+  PrivateSettingsCheckerURL: 'https://raw.githubusercontent.com/SkillsFundingAgency/DC-Tools/master/Scripts/PrivateSettingsChecker.ps1'
+steps:
+- task: gittools.gitversion.gitversion-task.GitVersion@3
+  displayName: GitVersion
+
+  enabled: false
+
+- powershell: |
+   Copy-Item "Cloud.xml" "Local.1Node.xml" -Force
+   Copy-Item "Cloud.xml" "Local.5Node.xml" -Force
+  workingDirectory: 'src\ESFA.DC.ReferenceData\ApplicationParameters'
+
+  displayName: 'Generate Fake Config Files'
+
+- powershell: |
+   $WebClient = New-Object System.Net.WebClient
+   $WebClient.DownloadFile("$(PrivateSettingsCheckerURL)","$env:BUILD_REPOSITORY_LOCALPATH\src\PrivateSettingsChecker.ps1")
+   write-host "download finished"
+   
+  workingDirectory: '$(System.DefaultWorkingDirectory)/src/'
+
+  displayName: 'Download Private Settings Checker powershell script from Github'
+
+- task: PowerShell@2
+  displayName: 'Generate missing Private Setting files'
+  inputs:
+    targetType: ./
+
+    filePath: 'src\PrivateSettingsChecker.ps1'
+
+    workingDirectory: '$(System.DefaultWorkingDirectory)/src/'
+
+
+- task: NuGetToolInstaller@0
+  displayName: 'Use NuGet <=4.8.0'
+  inputs:
+    versionSpec: '<=4.8.0'
+
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    vstsFeed: '1d5deb2d-cf8b-4bb1-b147-d13bc246e3f4'
+
+
+- task: VSBuild@1
+  displayName: 'Build solution **\*.sln'
+  inputs:
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\applicationpackage" /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
+
+    platform: '$(BuildPlatformAnyCPU)'
+
+    configuration: '$(BuildConfiguration)'
+
+    clean: true
+
+    maximumCpuCount: true
+
+    msbuildArchitecture: x64
+
+
+- task: CopyFiles@2
+  displayName: 'Copy Database Files to: NugetPackages'
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)\src'
+
+    Contents: |
+     **\*.$(NugetFilter).*.nupkg
+     !**\packages\**
+     !**\bin\x64\**
+
+    TargetFolder: '$(build.artifactstagingdirectory)\NugetPackages'
+
+    CleanTargetFolder: true
+
+    flattenFolders: true
+
+
+- task: CopyFiles@2
+  displayName: 'Copy Database Files to: Artifact Databases Directory'
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)'
+
+    Contents: '**\*.dacpac'
+
+    TargetFolder: '$(build.artifactstagingdirectory)\Databases'
+
+    CleanTargetFolder: true
+
+    flattenFolders: true
+
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: Acceptance Tests to Artifact Folder'
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)/src/'
+
+    Contents: '**\*AcceptanceTests\bin\$(BuildConfiguration)\*.*'
+
+    TargetFolder: '$(build.artifactstagingdirectory)\AcceptanceTests'
+
+    CleanTargetFolder: true
+
+    flattenFolders: true
+
+
+- task: NuGetCommand@2
+  displayName: 'NuGet pack FCS'
+  inputs:
+    command: pack
+
+    packagesToPack: '**/ESFA.DC.ReferenceData.FCS.Model.csproj'
+
+    packDestination: '$(Build.ArtifactStagingDirectory)\NugetPackages'
+
+    versioningScheme: byBuildNumber
+
+    buildProperties: '-MSBuildVersion'
+
+  enabled: false
+
+- task: NuGetCommand@2
+  displayName: 'NuGet pack EPA'
+  inputs:
+    command: pack
+
+    packagesToPack: '**/ESFA.DC.ReferenceData.EPA.Model.csproj'
+
+    packDestination: '$(Build.ArtifactStagingDirectory)\NugetPackages'
+
+    versioningScheme: byBuildNumber
+
+    buildProperties: '-MSBuildVersion'
+
+
+- task: VSBuild@1
+  displayName: 'Build solution $(build.sourcesdirectory)\src\$(ServiceFabricProjectFolderName)\*.sfproj'
+  inputs:
+    solution: '$(build.sourcesdirectory)\src\$(ServiceFabricProjectFolderName)\*.sfproj'
+
+    msbuildArgs: '/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\applicationpackage /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
+
+    platform: '$(BuildPlatform)'
+
+    configuration: '$(BuildConfiguration)'
+
+    maximumCpuCount: true
+
+    msbuildArchitecture: x64
+
+
+- task: VSTest@2
+  displayName: 'VsTest - testAssemblies'
+  inputs:
+    testAssemblyVer2: |
+     **\*test*.dll
+     !**\*TestAdapter.dll
+     !**\*AcceptanceTests.dll
+     !**\obj\**
+
+
+- task: CopyFiles@2
+  displayName: 'Copy Symbols Files to: Artifact Symbols Directory'
+  inputs:
+    SourceFolder: '$(build.artifactstagingdirectory)\applicationpackage'
+
+    Contents: '**\*.pdb'
+
+    TargetFolder: '$(build.artifactstagingdirectory)\Symbols_$(BuildConfiguration)'
+
+
+- task: DeleteFiles@1
+  displayName: 'Delete Symbols files from $(build.artifactstagingdirectory)\applicationpackage'
+  inputs:
+    SourceFolder: '$(build.artifactstagingdirectory)\applicationpackage'
+
+    Contents: '**\*.pdb'
+
+
+- task: ServiceFabricUpdateManifests@2
+  displayName: 'Update Service Fabric Manifests (Manifest versions)'
+  inputs:
+    applicationPackagePath: '$(build.artifactstagingdirectory)\ApplicationPackage'
+
+    versionBehavior: Replace
+
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)\PublishProfiles '
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)\src\$(ServiceFabricProjectFolderName)'
+
+    Contents: '**\PublishProfiles\*.xml'
+
+    TargetFolder: '$(build.artifactstagingdirectory)\PublishProfiles '
+
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)\ApplicationParameters'
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)\src\$(ServiceFabricProjectFolderName)'
+
+    Contents: '**\ApplicationParameters\*.xml'
+
+    TargetFolder: '$(build.artifactstagingdirectory)\ApplicationParameters'
+
+    CleanTargetFolder: true
+
+    flattenFolders: true
+
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+
+

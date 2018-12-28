@@ -56,9 +56,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESFA.DC.ReferenceData.ULN.M
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ESFA.DC.ReferenceData.ULN.Database", "ULN\ESFA.DC.ReferenceData.ULN.Database\ESFA.DC.ReferenceData.ULN.Database.sqlproj", "{353667D0-9D67-4F23-BB07-6B9C31096EC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ReferenceData.EF.Console", "ESFA.DC.ReferenceData.EF.Console\ESFA.DC.ReferenceData.EF.Console.csproj", "{C76B7FEF-645C-465C-A9F9-6C0A031FE10A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESFA.DC.ReferenceData.EF.Console", "ESFA.DC.ReferenceData.EF.Console\ESFA.DC.ReferenceData.EF.Console.csproj", "{C76B7FEF-645C-465C-A9F9-6C0A031FE10A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ReferenceData.ULN.Model", "ULN\ESFA.DC.ReferenceData.ULN.Model\ESFA.DC.ReferenceData.ULN.Model.csproj", "{D3E55A0E-5C6D-47D0-B2F7-861176ED0256}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESFA.DC.ReferenceData.ULN.Model", "ULN\ESFA.DC.ReferenceData.ULN.Model\ESFA.DC.ReferenceData.ULN.Model.csproj", "{D3E55A0E-5C6D-47D0-B2F7-861176ED0256}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ReferenceData.AcceptanceTests", "ESFA.DC.ReferenceData.AcceptanceTests\ESFA.DC.ReferenceData.AcceptanceTests.csproj", "{7FD67662-3CE0-42C7-9E74-7AEC140AF736}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -264,6 +266,14 @@ Global
 		{D3E55A0E-5C6D-47D0-B2F7-861176ED0256}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D3E55A0E-5C6D-47D0-B2F7-861176ED0256}.Release|x64.ActiveCfg = Release|Any CPU
 		{D3E55A0E-5C6D-47D0-B2F7-861176ED0256}.Release|x64.Build.0 = Release|Any CPU
+		{7FD67662-3CE0-42C7-9E74-7AEC140AF736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FD67662-3CE0-42C7-9E74-7AEC140AF736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FD67662-3CE0-42C7-9E74-7AEC140AF736}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7FD67662-3CE0-42C7-9E74-7AEC140AF736}.Debug|x64.Build.0 = Debug|Any CPU
+		{7FD67662-3CE0-42C7-9E74-7AEC140AF736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FD67662-3CE0-42C7-9E74-7AEC140AF736}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FD67662-3CE0-42C7-9E74-7AEC140AF736}.Release|x64.ActiveCfg = Release|Any CPU
+		{7FD67662-3CE0-42C7-9E74-7AEC140AF736}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
