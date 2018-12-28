@@ -32,8 +32,6 @@ namespace ESFA.DC.ReferenceData.AcceptanceTests
 
             Assert.NotNull(ConfigurationManager.AppSettings[configItemName]);
             DbConnectionString = ConfigurationManager.AppSettings[configItemName];
-
-            //output.WriteLine("ConnectionString  : {DbConnectionString}");
         }
 
         [When(@"I try and Get the Datetime Now")]
