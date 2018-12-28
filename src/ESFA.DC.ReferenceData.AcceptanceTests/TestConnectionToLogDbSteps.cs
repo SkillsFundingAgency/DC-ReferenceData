@@ -28,7 +28,7 @@ namespace ESFA.DC.ReferenceData.AcceptanceTests
             Assert.NotEmpty(ConfigItemName);
             configItemName = ConfigItemName;
 
-            output.WriteLine("ConfigItemName : {ConfigItemName}");
+            output.WriteLine("ConfigItemName : {0}", ConfigItemName);
 
             Assert.NotNull(ConfigurationManager.AppSettings[configItemName]);
             DbConnectionString = ConfigurationManager.AppSettings[configItemName];
