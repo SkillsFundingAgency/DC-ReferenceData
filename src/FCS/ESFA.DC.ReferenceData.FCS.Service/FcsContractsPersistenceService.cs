@@ -24,7 +24,15 @@ namespace ESFA.DC.ReferenceData.FCS.Service
 
         public async Task<IEnumerable<Guid>> GetExistingSyndicationItemIds(CancellationToken cancellationToken)
         {
-            return await _fcsContext.Contractor.Select(c => c.SyndicationItemId.GetValueOrDefault(Guid.Empty)).Distinct().ToListAsync(cancellationToken);
+            var syndicationItemIds = await _fcsContext
+                .Contractor
+                .Select(c => c.SyndicationItemId)
+                .ToListAsync(cancellationToken);
+
+            return syndicationItemIds
+                .Where(c => c.HasValue)
+                .Select(c => c.Value)
+                .Distinct();
         }
 
         public async Task PersistContracts(IEnumerable<Contractor> contractors, CancellationToken cancellationToken)
